@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>cis6280-world-models · 复习卡片 · 世界模型与 WAM 流派</title>
+<style>
+:root{--bg:#fbfbfa;--fg:#1f2328;--mute:#5d6470;--line:#e3e5e8;--card:#fff;--acc:#2f6fdf;--code:#f2f3f5;--quote:#f4f6fa}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15181d;--fg:#e4e7ec;--mute:#9aa3b2;--line:#2c323b;--card:#1c2026;--acc:#7aa7ff;--code:#22272f;--quote:#1b2029}}
+:root[data-theme="dark"]{--bg:#15181d;--fg:#e4e7ec;--mute:#9aa3b2;--line:#2c323b;--card:#1c2026;--acc:#7aa7ff;--code:#22272f;--quote:#1b2029}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.75 -apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Helvetica Neue",sans-serif}
+a{color:var(--acc)}
+header.top{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+header.top .in{max-width:860px;margin:0 auto;padding:10px 16px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;font-size:14px}
+header.top .brand{font-weight:600;color:var(--fg);text-decoration:none;margin-right:auto}
+header.top a{text-decoration:none}
+main{max-width:860px;margin:0 auto;padding:24px 16px 72px;overflow-wrap:anywhere}
+h1{font-size:28px;line-height:1.35;margin:8px 0 16px} h2{font-size:22px;margin:40px 0 12px;padding-top:8px;border-top:1px solid var(--line)} h3{font-size:18px;margin:28px 0 8px}
+img{max-width:100%;height:auto;border-radius:8px;border:1px solid var(--line);background:#fff}
+blockquote{margin:16px 0;padding:10px 16px;background:var(--quote);border-left:3px solid var(--acc);border-radius:4px;color:var(--mute)}
+blockquote p{margin:4px 0}
+code{background:var(--code);padding:1px 5px;border-radius:4px;font-size:.9em}
+pre{background:var(--code);padding:12px 14px;border-radius:8px;overflow-x:auto} pre code{padding:0;background:none}
+table{border-collapse:collapse;display:block;overflow-x:auto;max-width:100%;margin:12px 0;font-size:15px}
+th,td{border:1px solid var(--line);padding:6px 10px;vertical-align:top} th{background:var(--code)}
+details{border:1px solid var(--line);border-radius:8px;padding:6px 12px;margin:8px 0;background:var(--card)}
+details[open]{padding-bottom:10px} summary{cursor:pointer;color:var(--acc);font-weight:500}
+mjx-container{overflow-x:auto;overflow-y:hidden;max-width:100%}
+.btn{display:inline-block;margin:4px 8px 4px 0;padding:6px 14px;border:1px solid var(--acc);border-radius:999px;text-decoration:none;font-size:14px}
+.pager{display:flex;justify-content:space-between;gap:12px;margin-top:48px;padding-top:16px;border-top:1px solid var(--line);font-size:15px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin:16px 0}
+.card{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;color:inherit;text-decoration:none}
+.card:hover{border-color:var(--acc)} .card img{border:0;border-bottom:1px solid var(--line);border-radius:0;aspect-ratio:16/10;object-fit:contain;width:100%}
+.card .no{color:var(--mute);font-size:13px;padding:8px 12px 0} .card .t{padding:0 12px 12px;font-weight:500;line-height:1.5}
+.lead{font-size:17px;color:var(--mute)}
+footer{max-width:860px;margin:0 auto;padding:0 16px 40px;color:var(--mute);font-size:13px}
+</style>
+<script>window.MathJax={tex:{inlineMath:[["\\(","\\)"]],displayMath:[["\\[","\\]"],["$$","$$"]],processEscapes:true,processEnvironments:true}};</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
+</head><body>
+<header class="top"><div class="in">
+<a class="brand" href="index.html">世界模型与 WAM 流派</a>
+<a href="lessons/index.html">讲义目录</a>
+<a href="animations/index.html">动画</a>
+<a href="review.html">复习卡片</a>
+<a href="lessons/appendix-glossary.html">缩写表</a>
+<a href="https://wikieden.github.io/ai-books/">← 全部讲义书</a>
+</div></header>
+<main>
+<h1 id="cis6280-world-models">cis6280-world-models · 复习卡片</h1>
+<p>讲解中卡住、追问、答错的地方，以及必须记住的公式和符号，都会自动追加到这里。每张卡片的"来源"链接到 <a href="lessons/index.html">lessons/</a> 里对应的讲义章节，忘了就回去重读那一章。</p>
+<h2 id="_1">怎么用</h2>
+<ol>
+<li>先只看<strong>问题</strong>，自己说出或写出答案；</li>
+<li>再点开"答案"核对；</li>
+<li>答对了，在"复习记录"里补一个日期；答错了就当天再看一遍。</li>
+</ol>
+<p><strong>复习间隔</strong>（按答对的次数）：第 1 次 → 隔 1 天 → 隔 3 天 → 隔 7 天 → 隔 14 天 → 隔 30 天。连续答对 5 次的卡片移到文末"已掌握"。</p>
+<p>想复习时说一声"复习"，我会挑到期的卡片来考你。</p>
+<hr />
+<h2 id="vs-wam">世界模型 vs WAM</h2>
+<h3 id="c01-py-a-h">C01 · 联合分布 p(Y, A | h) 怎么拆成两半？每一半是谁学的？</h3>
+<p>来源：<a href="lessons/01-two-questions.html#第-2-步一个公式把三者串起来">第 1 章 · 第 2 步</a> · 加入 2026-11-04 · 复习记录：</p>
+<details>
+<summary>答案</summary>
+<div class="arithmatex">\[p(Y, A \mid h) = p(A \mid h)\cdot p(Y \mid h, A)\]</div>
+<ul>
+<li><span class="arithmatex">\(p(A\mid h)\)</span>：policy / VLA，看历史出动作（"该做什么"）；</li>
+<li><span class="arithmatex">\(p(Y\mid h,A)\)</span>：世界模型，看历史和动作出未来（"做了会怎样"）；</li>
+<li>WAM 把两半绑在一起学，但交出去的是动作，评价看任务成功率。</li>
+</ul>
+<p>记号：<span class="arithmatex">\(h\)</span> 历史，<span class="arithmatex">\(A\)</span> 未来动作，<span class="arithmatex">\(Y\)</span> 未来世界；小写 <span class="arithmatex">\(a\)</span> 是给定的，大写是要预测的。</p>
+<p>口诀：给动作问后果是世界模型，给目标要动作是 policy。</p>
+</details>
+<h3 id="c02-dreamzero-policy">C02 · DreamZero 推理时生成视频又丢掉、只执行动作：它是 policy 还是世界模型？该用什么指标评价？</h3>
+<p>来源：<a href="lessons/01-two-questions.html#练习与作答记录">第 1 章 · 练习</a> · 加入 2026-11-10 · 复习记录：2026-11-10 ◐（只答出"看它出动作还是视频"，没说结论和评价标准）；追问 ✓（"按照实际执行效果"）</p>
+<details>
+<summary>答案</summary>
+<p>看它最后<strong>交出去</strong>的是什么：DreamZero 交出去的是动作，视频用完就丢，所以它是 policy（WAM）。</p>
+<p>评价看<strong>任务成功率</strong>（实际执行效果），不看生成的视频像不像。世界模型交出去的是预测，才看预测准不准（FVD、特征误差）。</p>
+<p>易错点：只给出判断方法，没落到结论和评价指标上。</p>
+</details>
+</main>
+<footer>来自个人学习仓库的对话讲义，含练习作答记录。源码：<a href="https://github.com/wikieden/world-models-wam">github.com/wikieden/world-models-wam</a>。更多讲义书：<a href="https://wikieden.github.io/ai-books/">Physical AI 0-1-♾️（合集）</a></footer>
+</body></html>

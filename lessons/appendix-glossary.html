@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>附录 · 缩写与术语表 · 世界模型与 WAM 流派</title>
+<style>
+:root{--bg:#fbfbfa;--fg:#1f2328;--mute:#5d6470;--line:#e3e5e8;--card:#fff;--acc:#2f6fdf;--code:#f2f3f5;--quote:#f4f6fa}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15181d;--fg:#e4e7ec;--mute:#9aa3b2;--line:#2c323b;--card:#1c2026;--acc:#7aa7ff;--code:#22272f;--quote:#1b2029}}
+:root[data-theme="dark"]{--bg:#15181d;--fg:#e4e7ec;--mute:#9aa3b2;--line:#2c323b;--card:#1c2026;--acc:#7aa7ff;--code:#22272f;--quote:#1b2029}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.75 -apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Helvetica Neue",sans-serif}
+a{color:var(--acc)}
+header.top{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+header.top .in{max-width:860px;margin:0 auto;padding:10px 16px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;font-size:14px}
+header.top .brand{font-weight:600;color:var(--fg);text-decoration:none;margin-right:auto}
+header.top a{text-decoration:none}
+main{max-width:860px;margin:0 auto;padding:24px 16px 72px;overflow-wrap:anywhere}
+h1{font-size:28px;line-height:1.35;margin:8px 0 16px} h2{font-size:22px;margin:40px 0 12px;padding-top:8px;border-top:1px solid var(--line)} h3{font-size:18px;margin:28px 0 8px}
+img{max-width:100%;height:auto;border-radius:8px;border:1px solid var(--line);background:#fff}
+blockquote{margin:16px 0;padding:10px 16px;background:var(--quote);border-left:3px solid var(--acc);border-radius:4px;color:var(--mute)}
+blockquote p{margin:4px 0}
+code{background:var(--code);padding:1px 5px;border-radius:4px;font-size:.9em}
+pre{background:var(--code);padding:12px 14px;border-radius:8px;overflow-x:auto} pre code{padding:0;background:none}
+table{border-collapse:collapse;display:block;overflow-x:auto;max-width:100%;margin:12px 0;font-size:15px}
+th,td{border:1px solid var(--line);padding:6px 10px;vertical-align:top} th{background:var(--code)}
+details{border:1px solid var(--line);border-radius:8px;padding:6px 12px;margin:8px 0;background:var(--card)}
+details[open]{padding-bottom:10px} summary{cursor:pointer;color:var(--acc);font-weight:500}
+mjx-container{overflow-x:auto;overflow-y:hidden;max-width:100%}
+.btn{display:inline-block;margin:4px 8px 4px 0;padding:6px 14px;border:1px solid var(--acc);border-radius:999px;text-decoration:none;font-size:14px}
+.pager{display:flex;justify-content:space-between;gap:12px;margin-top:48px;padding-top:16px;border-top:1px solid var(--line);font-size:15px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin:16px 0}
+.card{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;color:inherit;text-decoration:none}
+.card:hover{border-color:var(--acc)} .card img{border:0;border-bottom:1px solid var(--line);border-radius:0;aspect-ratio:16/10;object-fit:contain;width:100%}
+.card .no{color:var(--mute);font-size:13px;padding:8px 12px 0} .card .t{padding:0 12px 12px;font-weight:500;line-height:1.5}
+.lead{font-size:17px;color:var(--mute)}
+footer{max-width:860px;margin:0 auto;padding:0 16px 40px;color:var(--mute);font-size:13px}
+</style>
+<script>window.MathJax={tex:{inlineMath:[["\\(","\\)"]],displayMath:[["\\[","\\]"],["$$","$$"]],processEscapes:true,processEnvironments:true}};</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
+</head><body>
+<header class="top"><div class="in">
+<a class="brand" href="../index.html">世界模型与 WAM 流派</a>
+<a href="../lessons/index.html">讲义目录</a>
+<a href="../animations/index.html">动画</a>
+<a href="../review.html">复习卡片</a>
+<a href="../lessons/appendix-glossary.html">缩写表</a>
+<a href="https://wikieden.github.io/ai-books/">← 全部讲义书</a>
+</div></header>
+<main>
+<h1 id="_1">附录 · 缩写与术语表</h1>
+<p>讲义里缩写第一次出现时给全称；这里集中列出，按字母排序。中文拆词说明每个词的意思。</p>
+<p>| 缩写 | 英文全称 | 中文拆词 | 一句话 | 首次出现 |
+|---|---|---|---|
+| DiT | Diffusion Transformer | 扩散 / Transformer | 用 Transformer 做去噪网络的扩散模型 | 第 2 章（待讲） |
+| FVD | Fréchet Video Distance | Fréchet / 视频 / 距离 | 衡量生成视频和真实视频分布有多接近，越小越像 | <a href="../lessons/01-two-questions.html">第 1 章</a> |
+| IDM | Inverse Dynamics Model | 逆 / 动力学 / 模型 | 看前后两帧，反推中间做了什么动作 | 第 2 章（待讲） |
+| VLA | Vision-Language-Action | 视觉 / 语言 / 动作 | 看图、听指令、出动作的 policy | <a href="../lessons/01-two-questions.html">第 1 章</a> |
+| WAM | World Action Model | 世界 / 动作 / 模型 | 出动作时同时建模未来的 policy | <a href="../lessons/01-two-questions.html">第 1 章</a> |
+| WM | World Model | 世界 / 模型 | 给定动作，预测世界会怎么变 | <a href="../lessons/01-two-questions.html">第 1 章</a> |</p>
+<table>
+<thead>
+<tr>
+<th>术语</th>
+<th>意思</th>
+<th>首次出现</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>policy</td>
+<td>策略：看历史，决定做什么动作</td>
+<td><a href="../lessons/01-two-questions.html">第 1 章</a></td>
+</tr>
+<tr>
+<td>联合分布</td>
+<td><span class="arithmatex">\(p(Y,A\mid h)\)</span>：未来世界和未来动作一起出现的概率</td>
+<td><a href="../lessons/01-two-questions.html">第 1 章</a></td>
+</tr>
+</tbody>
+</table>
+</main>
+<footer>来自个人学习仓库的对话讲义，含练习作答记录。源码：<a href="https://github.com/wikieden/world-models-wam">github.com/wikieden/world-models-wam</a>。更多讲义书：<a href="https://wikieden.github.io/ai-books/">Physical AI 0-1-♾️（合集）</a></footer>
+</body></html>

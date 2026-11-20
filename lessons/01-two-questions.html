@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>第 1 章 · 两个问题：做了会怎样 vs 该做什么 · 世界模型与 WAM 流派</title>
+<style>
+:root{--bg:#fbfbfa;--fg:#1f2328;--mute:#5d6470;--line:#e3e5e8;--card:#fff;--acc:#2f6fdf;--code:#f2f3f5;--quote:#f4f6fa}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15181d;--fg:#e4e7ec;--mute:#9aa3b2;--line:#2c323b;--card:#1c2026;--acc:#7aa7ff;--code:#22272f;--quote:#1b2029}}
+:root[data-theme="dark"]{--bg:#15181d;--fg:#e4e7ec;--mute:#9aa3b2;--line:#2c323b;--card:#1c2026;--acc:#7aa7ff;--code:#22272f;--quote:#1b2029}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.75 -apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Helvetica Neue",sans-serif}
+a{color:var(--acc)}
+header.top{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+header.top .in{max-width:860px;margin:0 auto;padding:10px 16px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;font-size:14px}
+header.top .brand{font-weight:600;color:var(--fg);text-decoration:none;margin-right:auto}
+header.top a{text-decoration:none}
+main{max-width:860px;margin:0 auto;padding:24px 16px 72px;overflow-wrap:anywhere}
+h1{font-size:28px;line-height:1.35;margin:8px 0 16px} h2{font-size:22px;margin:40px 0 12px;padding-top:8px;border-top:1px solid var(--line)} h3{font-size:18px;margin:28px 0 8px}
+img{max-width:100%;height:auto;border-radius:8px;border:1px solid var(--line);background:#fff}
+blockquote{margin:16px 0;padding:10px 16px;background:var(--quote);border-left:3px solid var(--acc);border-radius:4px;color:var(--mute)}
+blockquote p{margin:4px 0}
+code{background:var(--code);padding:1px 5px;border-radius:4px;font-size:.9em}
+pre{background:var(--code);padding:12px 14px;border-radius:8px;overflow-x:auto} pre code{padding:0;background:none}
+table{border-collapse:collapse;display:block;overflow-x:auto;max-width:100%;margin:12px 0;font-size:15px}
+th,td{border:1px solid var(--line);padding:6px 10px;vertical-align:top} th{background:var(--code)}
+details{border:1px solid var(--line);border-radius:8px;padding:6px 12px;margin:8px 0;background:var(--card)}
+details[open]{padding-bottom:10px} summary{cursor:pointer;color:var(--acc);font-weight:500}
+mjx-container{overflow-x:auto;overflow-y:hidden;max-width:100%}
+.btn{display:inline-block;margin:4px 8px 4px 0;padding:6px 14px;border:1px solid var(--acc);border-radius:999px;text-decoration:none;font-size:14px}
+.pager{display:flex;justify-content:space-between;gap:12px;margin-top:48px;padding-top:16px;border-top:1px solid var(--line);font-size:15px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin:16px 0}
+.card{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;color:inherit;text-decoration:none}
+.card:hover{border-color:var(--acc)} .card img{border:0;border-bottom:1px solid var(--line);border-radius:0;aspect-ratio:16/10;object-fit:contain;width:100%}
+.card .no{color:var(--mute);font-size:13px;padding:8px 12px 0} .card .t{padding:0 12px 12px;font-weight:500;line-height:1.5}
+.lead{font-size:17px;color:var(--mute)}
+footer{max-width:860px;margin:0 auto;padding:0 16px 40px;color:var(--mute);font-size:13px}
+</style>
+<script>window.MathJax={tex:{inlineMath:[["\\(","\\)"]],displayMath:[["\\[","\\]"],["$$","$$"]],processEscapes:true,processEnvironments:true}};</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
+</head><body>
+<header class="top"><div class="in">
+<a class="brand" href="../index.html">世界模型与 WAM 流派</a>
+<a href="../lessons/index.html">讲义目录</a>
+<a href="../animations/index.html">动画</a>
+<a href="../review.html">复习卡片</a>
+<a href="../lessons/appendix-glossary.html">缩写表</a>
+<a href="https://wikieden.github.io/ai-books/">← 全部讲义书</a>
+</div></header>
+<main>
+<h1 id="1-vs">第 1 章 · 两个问题：做了会怎样 vs 该做什么</h1><p><a class="btn" href="../animations/01-two-questions.html">▶ 打开本章可交互动画</a></p>
+<blockquote>
+<p>本章回答：世界模型和世界动作模型（WAM）各自在回答什么问题？两者是什么关系？为什么说 WAM 首先是 policy？<br />
+讲解日期：2026-11-04 · 下一章：第 2 章 加噪还是不加噪（待讲）<br />
+来源：调研报告 §0 记号<br />
+本章缩写：WAM = World Action Model（世界 / 动作 / 模型）；VLA = Vision-Language-Action（视觉 / 语言 / 动作）；FVD = Fréchet Video Distance（Fréchet / 视频 / 距离）。全表见 <a href="../lessons/appendix-glossary.html">appendix-glossary.md</a>。</p>
+</blockquote>
+<h2 id="_1">讲解</h2>
+<h3 id="1">第 1 步：两个问题</h3>
+<p><strong>白话类比：下棋</strong></p>
+<p>下棋时脑子里会冒出两种问题：</p>
+<ul>
+<li><strong>"如果我走这一步，局面会变成什么样？"</strong> 这是在推演后果。你先假设一步棋，再想结果。</li>
+<li><strong>"我现在该走哪一步？"</strong> 这是在做决定。你要交出一步棋。</li>
+</ul>
+<p>两个问题都用得上，但它们不一样：第一个问题里，棋步是<strong>你给定的</strong>；第二个问题里，棋步是<strong>要你给出的</strong>。</p>
+<p>换到机器人身上：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>问的问题</th>
+<th>动作是输入还是输出</th>
+<th>名字</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>推演后果</td>
+<td>做了这个动作，世界会变成什么样？</td>
+<td>输入（别人给定）</td>
+<td><strong>世界模型</strong>（world model）</td>
+</tr>
+<tr>
+<td>做决定</td>
+<td>现在该做什么动作？</td>
+<td>输出（自己给出）</td>
+<td><strong>policy</strong>（策略），VLA 是一种 policy</td>
+</tr>
+</tbody>
+</table>
+<p><strong>世界动作模型（World Action Model，WAM）</strong> 是第三种：它也回答"该做什么"，所以它是 policy。不同的是，它给出动作的过程里<strong>同时在想象未来</strong>。像一个棋手，交出一步棋之前在脑子里把后几步的局面也摆了一遍。</p>
+<h3 id="2">第 2 步：一个公式把三者串起来</h3>
+<p>先统一记号（沿用 CIS 6280 第 2 讲）：</p>
+<ul>
+<li><span class="arithmatex">\(h\)</span>：历史，就是到现在为止看到的画面和做过的动作，<span class="arithmatex">\(h_t=(o_{\le t},a_{&lt;t})\)</span>；</li>
+<li><span class="arithmatex">\(A\)</span>：未来要做的一串动作；</li>
+<li><span class="arithmatex">\(Y\)</span>：未来的世界，比如未来几帧画面。</li>
+</ul>
+<p>小写 <span class="arithmatex">\(a\)</span> 表示"别人给定的"，大写 <span class="arithmatex">\(A\)</span>、<span class="arithmatex">\(Y\)</span> 表示"模型要预测的、带不确定性的"（第 2 讲 Slide 71 的约定）。</p>
+<p>"未来的动作和未来的世界一起出现"的概率，可以拆成两半相乘：</p>
+<div class="arithmatex">\[
+p(Y, A \mid h) \;=\; \underbrace{p(A \mid h)}_{\text{policy：该做什么}} \;\cdot\; \underbrace{p(Y \mid h, A)}_{\text{世界模型：做了会怎样}}
+\]</div>
+<p>读法：先决定做什么，再看做了以后世界怎么变。这就是概率里的链式法则（<span class="arithmatex">\(p(x,y)=p(x)\,p(y\mid x)\)</span>），没有新东西。</p>
+<ul>
+<li>policy / VLA 学的是左边那一半：看历史，出动作；</li>
+<li>世界模型学的是右边那一半：看历史和动作，出未来；</li>
+<li>WAM 在训练或推理时把两半<strong>绑在一起</strong>学，但最后交出去的是动作。</li>
+</ul>
+<p>第 2 讲 Slide 72 把这三种问法叫 action query、world query、joint query，并提醒：<em>"Joint behavior modeling does not by itself choose the best action."</em>（<code>materials/text/lecture-02-interactive-deck.md</code> 第 958–964 行）。</p>
+<h3 id="3">第 3 步：评价标准不同，所以身份不同</h3>
+<p>区分世界模型和 WAM，最简单的办法是问：<strong>它好不好，看什么？</strong></p>
+<ul>
+<li>世界模型：看<strong>预测准不准</strong>。生成的未来视频像不像真的（比如 FVD 指标），预测的特征误差大不大，能不能拿来做规划。</li>
+<li>WAM：看<strong>任务成没成功</strong>。机器人把衣服叠好没有、把方块推到位没有。它想象出的未来画得再好，任务失败也是失败。</li>
+</ul>
+<p>所以综述给 WAM 的定义是先说"它是一个 policy"：</p>
+<blockquote>
+<p><em>"A world action model is a policy whose action generation is coupled, during training or inference, with a model or representation of future world evolution."</em>（Zhang et al. 2026，<code>materials/readings/text/survey-world-models-to-world-action-models.md</code> 第 106–110 行）</p>
+</blockquote>
+<p>后面紧跟一句：这种耦合可以是 explicit、latent、joint 或 auxiliary。这四种耦合方式就是第 5 章要讲的那条"耦合强度轴"，现在先认识名字。</p>
+<h3 id="_2">动画演示</h3>
+<p><img alt="同一个场景，问不同的问题" src="../animations/01-two-questions.gif" /></p>
+<p>可交互版：<a href="../animations/01-two-questions.html">animations/01-two-questions.html</a>（用浏览器打开就自动循环播放；点任一按钮切成手动，可暂停、单步、重来）。</p>
+<p><strong>怎么看</strong>：</p>
+<ol>
+<li>第一行（世界模型）的动作 a 在<strong>输入</strong>那一侧，是别人给的；输出是未来的画面。</li>
+<li>第二行（policy）没有给动作，输入是指令；输出是动作 A。</li>
+<li>第三行（WAM）输入和 policy 一样，输出多了一张虚线画面：那是它想象的未来，用完可以丢掉，机器人只执行实线箭头。</li>
+<li>最后一帧：底下的公式把左右两半标出来，左边各行贴着评价标准。</li>
+</ol>
+<h2 id="_3">练习与作答记录</h2>
+<p><strong>题 1</strong>（检查理解）：GAIA 是一个自动驾驶模型：输入当前的车载摄像头画面，加上一段方向盘和油门操作，输出接下来几秒的视频。它是世界模型还是 WAM？你的判断依据是什么？</p>
+<p><strong>作答</strong>（2026-11-10，原话）：是 WM，WAM 要输出动作序列 ✓</p>
+<p><strong>点评</strong>：对。你是从"输出"这一侧判断的：GAIA 输出的是视频，不出动作，所以不是 policy，也就不是 WAM。从"输入"这一侧看也能得到同样的结论：方向盘和油门是<strong>给定</strong>的，动作在竖线右边，正是 <span class="arithmatex">\(p(Y\mid h,a)\)</span>。两种看法合起来就是判断口诀：动作在输入一侧 → 世界模型；动作在输出一侧 → policy / WAM。</p>
+<p><strong>题 2</strong>（检查理解）：DreamZero 推理时同时生成未来视频和动作，然后把视频丢掉，只执行动作。为什么说它是 policy、不是世界模型？评价它的时候，该看"生成的视频像不像真的"，还是看别的？</p>
+<p><strong>作答</strong>（2026-11-10，原话，语音输入"饰品"应为"视频"）：看他到底是出动作还是视频 ◐</p>
+<p><strong>点评</strong>：判断方法对，就是题 1 用的那一条：看它最后交出去的是什么。还差两步没说出来：(1) 结论：DreamZero 交出去的是动作，视频用完就丢，所以它是 policy（WAM）；(2) 评价：既然交出去的是动作，就看任务成功率，不看视频像不像。已追问第 (2) 步。</p>
+<p><strong>追问</strong>：DreamZero 叠衬衫，一次想象的画面逼真但没叠好，一次画面模糊但叠好了。哪次算干得好？评价 WAM 看什么？</p>
+<p><strong>作答</strong>（2026-11-10，原话）：肯定第二种，按照实际执行效果 ✓</p>
+<p><strong>点评</strong>：对。WAM 交出去的是动作，评价就看任务成功率（实际执行效果）。视频再逼真，任务失败也是失败；视频只是帮它把动作想对的草稿。反过来，世界模型交出去的是预测，才看预测准不准（如 FVD）。</p>
+<p><strong>题 3</strong>（拓展，大胆猜）：如果你手里只有一个很准的世界模型 <span class="arithmatex">\(p(Y\mid h,a)\)</span>，没有 policy，机器人能干活吗？还缺什么？（提示：第 2 讲 Slide 72 最后一句。）</p>
+<p><strong>作答</strong>：（待作答）</p>
+<h2 id="_4">口诀</h2>
+<blockquote>
+<p>给动作、问后果，是世界模型；<br />
+给目标、要动作，是 policy；<br />
+要动作时顺便想未来，是 WAM，看的还是成没成功。</p>
+</blockquote>
+<h2 id="_5">本章复习卡片</h2>
+<p>C01 联合分布的两半、C02 WAM 是 policy 还是世界模型、怎么评价（见 <a href="../review.html">review.md</a>）。</p>
+<h2 id="_6">附录 · 延伸阅读</h2>
+<p><strong>推荐阅读</strong>（★ 先读）</p>
+<ul>
+<li>★ CIS 6280 第 2 讲 Slide 66–72：形式化与三种接口。本地 <code>materials/text/lecture-02-interactive-deck.md</code> 第 930–964 行；我的笔记 lecture-02 §4 形式化。</li>
+<li>★ Zhang et al., <em>From World Models to World Action Models: A Concise Tutorial for Robotics</em>（arXiv 2607.00836），"World Models and World Action Models"一节。本地 <code>materials/readings/text/survey-world-models-to-world-action-models.md</code> 第 80–110 行。</li>
+<li>Ha &amp; Schmidhuber, <em>World Models</em>（2018）：最早把"世界模型 + 小 controller"分开的工作，可以对照本章的两半。本地 <code>materials/readings/text/essay-ha-schmidhuber-world-models.md</code>。</li>
+<li>调研报告 §1 分类坐标系：两张分类表，后面几章会逐行展开。</li>
+</ul>
+<p><strong>本章用到的数学原理</strong></p>
+<ul>
+<li>链式法则：<span class="arithmatex">\(p(x,y)=p(x)\,p(y\mid x)\)</span>。把联合分布拆成"先 x 再 y"。</li>
+<li>条件概率里竖线右边是"已知 / 给定"的东西，左边是"要预测"的东西。动作放在哪一边，决定了模型是世界模型还是 policy。</li>
+</ul>
+<p><strong>公式清单</strong></p>
+<table>
+<thead>
+<tr>
+<th>公式</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(h_t=(o_{\le t},a_{&lt;t})\)</span></td>
+<td>历史：到 t 为止的观测和之前的动作</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(p(Y\mid h,a)\)</span></td>
+<td>世界模型：给定动作，预测未来</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(p(A\mid h)\)</span></td>
+<td>policy / VLA：给定历史，出动作</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(p(Y,A\mid h)=p(A\mid h)\,p(Y\mid h,A)\)</span></td>
+<td>联合分布 = policy × 世界模型</td>
+</tr>
+</tbody>
+</table><nav class="pager"><span></span><span></span></nav>
+</main>
+<footer>来自个人学习仓库的对话讲义，含练习作答记录。源码：<a href="https://github.com/wikieden/world-models-wam">github.com/wikieden/world-models-wam</a>。更多讲义书：<a href="https://wikieden.github.io/ai-books/">Physical AI 0-1-♾️（合集）</a></footer>
+</body></html>

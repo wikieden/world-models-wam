@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>两个问题动画</title><link rel="stylesheet" href="anim.css"></head>
+<body><main>
+<h1>第 1 章 · 同一个场景，问不同的问题</h1>
+<p class="sub">配套讲义：<a href="../lessons/01-two-questions.html">第 1 章 · 两个问题：做了会怎样 vs 该做什么</a>。场景：桌上一个蓝色方块，夹爪在它左边。三行是三种模型接口。</p>
+<div class="panel"><svg id="sv" viewBox="0 0 720 480"></svg></div>
+<p id="cap" style="min-height:3.2em;margin:8px 4px"></p>
+<div class="row"><button id="play">▶ 播放</button><button id="step">→ 单步</button><button id="reset">↺ 重来</button></div>
+<p class="note">看点：小写 a 是"别人给的动作"（输入），大写 A 是"模型自己出的动作"（输出）。WAM 那一行的虚线画面是想象，执行的只有实线箭头。</p>
+</main>
+<script src="anim.js"></script>
+<script>
+const sv=$('sv');
+const ROWS=[
+  {y:12,title:'世界模型',f:'p(Y | h, a)',col:'var(--teal)'},
+  {y:150,title:'policy / VLA',f:'p(A | h)',col:'var(--warm)'},
+  {y:288,title:'世界动作模型 WAM',f:'policy + 想象未来',col:'var(--purple)'},
+];
+function frame(g,x,y,dx,dashed){ // 一个小画面：桌面 + 方块 + 夹爪
+  el('rect',{x,y,width:96,height:72,rx:6,fill:'var(--bg)',stroke:'var(--line)','stroke-dasharray':dashed?'5 4':'none'},g);
+  el('line',{x1:x+6,y1:y+58,x2:x+90,y2:y+58,stroke:'var(--muted)'},g);
+  el('rect',{x:x+44+dx,y:y+36,width:22,height:22,rx:3,fill:'var(--accent)',opacity:dashed?.55:.9},g);
+  el('rect',{x:x+24+dx,y:y+26,width:10,height:32,rx:2,fill:'var(--muted)',opacity:dashed?.55:1},g);
+}
+function arrowRight(g,x1,x2,y,col,w){el('path',{d:`M${x1} ${y} L${x2} ${y} M${x2-8} ${y-6} L${x2} ${y} L${x2-8} ${y+6}`,stroke:col,'stroke-width':w||2,fill:'none'},g)}
+function actionChip(g,x,y,label,col){
+  el('rect',{x,y,width:78,height:34,rx:8,fill:'var(--bg)',stroke:col,'stroke-width':1.5},g);
+  arrowRight(g,x+10,x+40,y+17,col,3);
+  txt(label,{x:x+50,y:y+22},g);
+}
+const parts=[]; // 每个元素：{g, step}
+function part(step){const g=el('g',{opacity:0},sv);parts.push({g,step});return g}
+ROWS.forEach((r,i)=>{
+  const base=1+i*2; // 每行两步：输入、输出
+  const head=part(base);
+  el('rect',{x:4,y:r.y,width:712,height:126,rx:10,fill:'var(--card)'},head);
+  txt(r.title,{x:16,y:r.y+26,style:'font-weight:500',fill:r.col},head).setAttribute('style','font-weight:500;fill:'+r.col);
+  txt(r.f,{x:16,y:r.y+48,class:'m'},head);
+  txt('现在 h',{x:150,y:r.y+22,class:'m'},head);
+  frame(head,150,r.y+30,0,false);
+  if(i===0){actionChip(head,256,r.y+48,'a 推',r.col);txt('给定动作 a',{x:256,y:r.y+40,class:'m'},head)}
+  else{el('rect',{x:256,y:r.y+48,width:78,height:34,rx:8,fill:'var(--bg)',stroke:'var(--line)'},head);txt('"推到右边"',{x:262,y:r.y+70},head);txt('指令',{x:256,y:r.y+40,class:'m'},head)}
+  arrowRight(head,340,372,r.y+65,'var(--muted)');
+  el('rect',{x:376,y:r.y+44,width:96,height:42,rx:8,fill:'var(--bg)',stroke:r.col,'stroke-width':1.5},head);
+  txt('模型',{x:424,y:r.y+70,'text-anchor':'middle'},head);
+  arrowRight(head,476,508,r.y+65,'var(--muted)');
+  const out=part(base+1);
+  if(i===0){frame(out,516,r.y+30,22,false);txt('预测的未来 Y',{x:516,y:r.y+22,class:'m'},out)}
+  if(i===1){actionChip(out,516,r.y+48,'A 推',r.col);txt('输出动作 A',{x:516,y:r.y+40,class:'m'},out)}
+  if(i===2){actionChip(out,516,r.y+20,'A 推',r.col);txt('执行',{x:600,y:r.y+42,class:'m'},out);
+    frame(out,516,r.y+60,22,true);
+    txt('想象的未来',{x:618,y:r.y+92,class:'m'},out);txt('（可丢掉）',{x:618,y:r.y+110,class:'m'},out)}
+});
+// 评价标准
+const ev=part(8);
+[['看：预测准不准',0],['看：任务成没成功',1],['看：任务成没成功',2]].forEach(([s,i])=>{
+  const y=ROWS[i].y;el('rect',{x:16,y:y+70,width:124,height:26,rx:6,fill:i?'var(--accent-bg)':'var(--bg)',stroke:'var(--line)'},ev);
+  txt(s,{x:24,y:y+88,style:'font-size:12px'},ev)});
+// 底部公式
+const fm=part(7);
+const F={y:448,style:'font-size:17px'};
+txt('p(Y, A | h)  =',{...F,x:330,'text-anchor':'end'},fm);
+const fa=txt('p(A | h)',{...F,x:342},fm);
+txt('·',{...F,x:342+fa.getComputedTextLength()+10},fm);
+const fy=txt('p(Y | h, A)',{...F,x:342+fa.getComputedTextLength()+26},fm);
+function under(t,col,label){const x=+t.getAttribute('x'),w=t.getComputedTextLength();
+  el('line',{x1:x,y1:455,x2:x+w,y2:455,stroke:col,'stroke-width':3},fm);
+  txt(label,{x:x+w/2,y:470,'text-anchor':'middle',style:'font-size:12px;fill:'+col},fm)}
+under(fa,'var(--warm)','policy');under(fy,'var(--teal)','世界模型');
+const CAP=[
+  '同一个场景，三种模型各问一个问题。先看第一行。',
+  '世界模型的输入：现在的画面 h，加上一个<b>别人给定</b>的动作 a（"往右推"）。',
+  '它输出：做了这个动作以后，世界会变成什么样（方块被推到右边）。它回答<b>"做了会怎样"</b>，自己不挑动作。',
+  'policy / VLA 的输入：现在的画面 + 一句指令，没有给动作。',
+  '它输出：该做的动作 A。它回答<b>"该做什么"</b>，不管未来长什么样。',
+  'WAM 的输入和 policy 一样：画面 + 指令。',
+  '它同时生成动作和想象的未来（虚线）。机器人只执行动作；想象帮它把动作想对，用完可以丢掉。',
+  '一个公式把三者串起来：联合分布 = policy 那一半 × 世界模型那一半（L2 Slide 71–72）。',
+  '评价标准不同：世界模型看预测准不准；policy 和 WAM 看任务成没成功。所以 WAM <b>首先是 policy</b>。',
+];
+let k;
+const row=s=>s>=1&&s<=6?Math.floor((s-1)/2):-1;
+function show(){ // 讲某一行时，其他已出现的行变淡；讲到公式后全部恢复
+  parts.forEach(p=>{let o=p.step<=k?1:0;if(o&&k<=6&&row(p.step)!==row(k))o=0.4;p.g.setAttribute('opacity',o)});
+  $('cap').innerHTML=CAP[k]}
+setupPlayer({captureSeed:7,reset(){k=0;show()},next(){if(k>=CAP.length-1)return false;k++;show();return true}},1800);
+</script>
+<a href="https://wikieden.github.io/ai-books/" style="position:fixed;right:12px;bottom:12px;z-index:99;padding:4px 10px;border-radius:14px;background:rgba(127,127,127,.18);color:inherit;font:13px/1.6 system-ui,sans-serif;text-decoration:none">← 全部讲义书</a>
+</body></html>

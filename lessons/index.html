@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>世界模型与 WAM 流派 · 讲义目录 · 世界模型与 WAM 流派</title>
+<style>
+:root{--bg:#fbfbfa;--fg:#1f2328;--mute:#5d6470;--line:#e3e5e8;--card:#fff;--acc:#2f6fdf;--code:#f2f3f5;--quote:#f4f6fa}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15181d;--fg:#e4e7ec;--mute:#9aa3b2;--line:#2c323b;--card:#1c2026;--acc:#7aa7ff;--code:#22272f;--quote:#1b2029}}
+:root[data-theme="dark"]{--bg:#15181d;--fg:#e4e7ec;--mute:#9aa3b2;--line:#2c323b;--card:#1c2026;--acc:#7aa7ff;--code:#22272f;--quote:#1b2029}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.75 -apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Helvetica Neue",sans-serif}
+a{color:var(--acc)}
+header.top{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+header.top .in{max-width:860px;margin:0 auto;padding:10px 16px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;font-size:14px}
+header.top .brand{font-weight:600;color:var(--fg);text-decoration:none;margin-right:auto}
+header.top a{text-decoration:none}
+main{max-width:860px;margin:0 auto;padding:24px 16px 72px;overflow-wrap:anywhere}
+h1{font-size:28px;line-height:1.35;margin:8px 0 16px} h2{font-size:22px;margin:40px 0 12px;padding-top:8px;border-top:1px solid var(--line)} h3{font-size:18px;margin:28px 0 8px}
+img{max-width:100%;height:auto;border-radius:8px;border:1px solid var(--line);background:#fff}
+blockquote{margin:16px 0;padding:10px 16px;background:var(--quote);border-left:3px solid var(--acc);border-radius:4px;color:var(--mute)}
+blockquote p{margin:4px 0}
+code{background:var(--code);padding:1px 5px;border-radius:4px;font-size:.9em}
+pre{background:var(--code);padding:12px 14px;border-radius:8px;overflow-x:auto} pre code{padding:0;background:none}
+table{border-collapse:collapse;display:block;overflow-x:auto;max-width:100%;margin:12px 0;font-size:15px}
+th,td{border:1px solid var(--line);padding:6px 10px;vertical-align:top} th{background:var(--code)}
+details{border:1px solid var(--line);border-radius:8px;padding:6px 12px;margin:8px 0;background:var(--card)}
+details[open]{padding-bottom:10px} summary{cursor:pointer;color:var(--acc);font-weight:500}
+mjx-container{overflow-x:auto;overflow-y:hidden;max-width:100%}
+.btn{display:inline-block;margin:4px 8px 4px 0;padding:6px 14px;border:1px solid var(--acc);border-radius:999px;text-decoration:none;font-size:14px}
+.pager{display:flex;justify-content:space-between;gap:12px;margin-top:48px;padding-top:16px;border-top:1px solid var(--line);font-size:15px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin:16px 0}
+.card{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;color:inherit;text-decoration:none}
+.card:hover{border-color:var(--acc)} .card img{border:0;border-bottom:1px solid var(--line);border-radius:0;aspect-ratio:16/10;object-fit:contain;width:100%}
+.card .no{color:var(--mute);font-size:13px;padding:8px 12px 0} .card .t{padding:0 12px 12px;font-weight:500;line-height:1.5}
+.lead{font-size:17px;color:var(--mute)}
+footer{max-width:860px;margin:0 auto;padding:0 16px 40px;color:var(--mute);font-size:13px}
+</style>
+<script>window.MathJax={tex:{inlineMath:[["\\(","\\)"]],displayMath:[["\\[","\\]"],["$$","$$"]],processEscapes:true,processEnvironments:true}};</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
+</head><body>
+<header class="top"><div class="in">
+<a class="brand" href="../index.html">世界模型与 WAM 流派</a>
+<a href="../lessons/index.html">讲义目录</a>
+<a href="../animations/index.html">动画</a>
+<a href="../review.html">复习卡片</a>
+<a href="../lessons/appendix-glossary.html">缩写表</a>
+<a href="https://wikieden.github.io/ai-books/">← 全部讲义书</a>
+</div></header>
+<main>
+<h1 id="wam">世界模型与 WAM 流派 · 讲义目录</h1>
+<blockquote>
+<p>13 章（连载中，已写第 1 章）· 每章一个动画（GIF + 可交互页面）· 复习卡片编号 C · 覆盖 2026 年 11 月以前的世界模型与世界动作模型（WAM）主要流派</p>
+</blockquote>
+<h2 id="_1">这本书讲什么</h2>
+<p>从"世界模型和 WAM 各回答什么问题"讲起：联合生成怎么用一个网络当世界模型、逆动力学和 policy 三种角色，怎么训练、怎么推理；再看 2026 年下半年的新进展（推理时不想象的 Fast-WAM、慢想象快动作的双频设计、长上下文、开源模型和公共榜单），最后把先想后做、借视频特征、辅助 loss、隐动作、世界模型五派放到同一张地图上，落到"什么场景选哪派"。</p>
+<ul>
+<li><strong>适合谁</strong>：知道 policy / VLA 是什么，听说过扩散或 flow matching；概率只用到条件概率和链式法则，用到时现场讲。</li>
+<li><strong>读完能做什么</strong>：拿到一篇新的世界模型或 WAM 论文，能说出它属于哪一派、训练时和推理时各生成什么、快慢和数据要求大概在哪个量级、榜单分数该怎么看。</li>
+<li><strong>怎么读</strong>：按章顺序读。每章先看讲解和动画，再自己做练习，最后用复习卡片隔几天考自己。</li>
+</ul>
+<h2 id="_2">讲解的特点</h2>
+<ul>
+<li><strong>每章一个动画</strong>：GIF 嵌在讲义"动画演示"一节，同名 <code>.html</code> 打开就自动播放，点按钮可单步，目录见 <a href="../animations/index.html">animations/README.md</a>。</li>
+<li><strong>一次一小步</strong>：每个概念按"白话类比 → 公式（每个符号说清楚怎么读）→ 小数字算一遍"讲。</li>
+<li><strong>对照原文</strong>：引用的课程讲义和论文标了本地文本的行号；新论文只读了摘要的、来自新闻或公司自报的数字都单独标注。</li>
+<li><strong>保留真实的学习过程</strong>：练习与作答记录里是学习时的原话、对错和点评。</li>
+<li><strong>术语不设门槛</strong>：缩写第一次出现就给英文全称并逐词解释，全书缩写见 <a href="../lessons/appendix-glossary.html">缩写与术语表</a>。</li>
+</ul>
+<h2 id="_3">示例动画</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img alt="" src="../animations/01-two-questions.gif" /><br><strong>第 1 章</strong> 同一个场景，世界模型、policy、WAM 各问什么 · <a href="../lessons/01-two-questions.html">讲义</a> · <a href="../animations/01-two-questions.html">▶ 交互</a></td>
+</tr>
+</tbody>
+</table>
+<p>全部动画见 <a href="../animations/index.html">animations/README.md</a>。</p>
+<h2 id="_4">和其他材料的关系</h2>
+<p>由调研报告 ../survey-wm-vs-wam-schools.md 拆成的分步讲解，一章一个小概念。每章结构相同：<strong>本章回答的问题 → 讲解（白话类比 → 公式 → 例子）→ 动画演示 → 练习与作答记录 → 口诀 → 本章复习卡片 → 附录 · 延伸阅读</strong>。</p>
+<ul>
+<li>前置：CIS 6280 第 2 讲的形式化（../lecture-02-history-foundations-formulation.md）；flow matching 的直觉见 vla-deep-dive 第 8 章 π0；</li>
+<li>JEPA、隐动作、LaWAM 的细节放在 nvidia-cosmos3 讲义 路线的第 5–8 步，本系列只讲它们在"流派地图"里的位置；</li>
+<li>复习卡片集中在 <a href="../review.html">../review.md</a>，编号以 C 开头；</li>
+<li>每章动画见 <a href="../animations/index.html">../animations/</a>（讲义里嵌 GIF，html 可交互）；</li>
+<li>缩写与术语见 <a href="../lessons/appendix-glossary.html">appendix-glossary.md</a>。</li>
+</ul>
+<h2 id="2026-11-04-2026-11-20-2026-9-13">路线（2026-11-04 定，2026-11-20 加入 2026 年下半年的新进展，9 章 → 13 章）</h2>
+<table>
+<thead>
+<tr>
+<th>步</th>
+<th>主题</th>
+<th>一句话</th>
+<th>新增</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>两个问题：做了会怎样 vs 该做什么</td>
+<td>世界模型预测后果，WAM 首先是 policy</td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td>加噪还是不加噪：一个网络当四种角色</td>
+<td>联合生成（P3）里，谁干净、谁加噪决定了它是世界模型、IDM 还是 policy；GR00T 2 的单塔做例子</td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td>联合生成怎么训练</td>
+<td>flow matching 损失、动作 loss 加权、无动作视频怎么用</td>
+<td></td>
+</tr>
+<tr>
+<td>4</td>
+<td>联合生成怎么推理</td>
+<td>去噪步数、丢掉视频、用真实观测重新锚定（DreamZero）</td>
+<td></td>
+</tr>
+<tr>
+<td>5</td>
+<td>推理时还要想象吗</td>
+<td>训练时想象、推理时不想象也行：Fast-WAM、HWAM</td>
+<td>✚</td>
+</tr>
+<tr>
+<td>6</td>
+<td>慢想象、快动作</td>
+<td>视频低频、动作高频：AHA-WAM 双塔、GR00T 2 的 2v4a 缓存</td>
+<td>✚</td>
+</tr>
+<tr>
+<td>7</td>
+<td>记得更久：长上下文</td>
+<td>从 6 s 到 19 s：Long-WAM</td>
+<td>✚</td>
+</tr>
+<tr>
+<td>8</td>
+<td>耦合强度这条轴</td>
+<td>先想后做（P1）→ 借特征（P2）→ 联合（P3）→ 辅助 loss（P4）→ 纯 VLA；对照新综述的三分法</td>
+<td></td>
+</tr>
+<tr>
+<td>9</td>
+<td>隐动作：用无标签视频的桥</td>
+<td>从前后两帧反推"发生了什么变化"（细节接 cosmos3 第 7–8 步）</td>
+<td></td>
+</tr>
+<tr>
+<td>10</td>
+<td>世界模型五派：在哪个空间预测</td>
+<td>隐状态、任务信号、特征、像素、3D/物理</td>
+<td></td>
+</tr>
+<tr>
+<td>11</td>
+<td>推理的四种用法</td>
+<td>离线想象、在线规划、直接出动作、交互模拟；频率和延迟</td>
+<td></td>
+</tr>
+<tr>
+<td>12</td>
+<td>2026 年的 WAM 版图：开源模型和榜单</td>
+<td>GR00T 2、Praxis-1、FLUX 3 Action、Cosmos 3；RoboLab-120 的分数怎么读</td>
+<td>✚</td>
+</tr>
+<tr>
+<td>13</td>
+<td>选型与前沿</td>
+<td>场景 → 流派；代码流（AW-0）、可控 WAM（CtrlWAM）、人形</td>
+<td>扩充</td>
+</tr>
+</tbody>
+</table>
+<p>新进展的出处和数字见调研报告 §10。GR00T 2 已有单独一本讲义（gr00t2/notes/lessons），这里第 2、6、12 章只用它做例子，细节去那边读。</p>
+<h2 id="_5">目录</h2>
+<p>| 章 | 主题 | 卡片 | 动画 | 状态 |
+|---|---|---|---|
+| <a href="../lessons/01-two-questions.html">1</a> | 两个问题：做了会怎样 vs 该做什么 | C01 | <a href="../animations/01-two-questions.html">▶</a> | 进行中 |
+| <a href="../lessons/appendix-glossary.html">附录</a> | 缩写与术语表 | — | — | 随讲随补 |</p>
+</main>
+<footer>来自个人学习仓库的对话讲义，含练习作答记录。源码：<a href="https://github.com/wikieden/world-models-wam">github.com/wikieden/world-models-wam</a>。更多讲义书：<a href="https://wikieden.github.io/ai-books/">Physical AI 0-1-♾️（合集）</a></footer>
+</body></html>
