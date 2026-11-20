@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>耦合强度这条轴</title><link rel="stylesheet" href="anim.css"></head>
+<body><main>
+<h1>第 8 章 · 耦合强度这条轴</h1>
+<p class="sub">配套讲义：<a href="../lessons/08-coupling-axis.html">第 8 章 · 耦合强度这条轴：P1 → P2 → P3 → P4 → 纯 VLA</a>。从左到右，想象和动作绑得越来越松，推理时生成的未来越来越少。每一格写：推理时生成什么、未来怎么变成动作、代表。</p>
+<div class="panel"><svg id="sv" viewBox="0 0 720 470"></svg></div>
+<p id="cap" style="min-height:3.2em;margin:8px 4px"></p>
+<div class="row"><button id="play">▶ 播放</button><button id="step">→ 单步</button><button id="reset">↺ 重来</button></div>
+<p class="note">看点：轴的两端是“画完整段视频再照着做”和“完全不想未来”；P3 在中间偏左，Fast-WAM 和 P4 在中间偏右。</p>
+</main>
+<script src="anim.js"></script>
+<script>
+const C=[
+ {n:'P1 先想后做',g:'完整视频 / 子目标图',h:'另一个 IDM 去“跟”',e:'UniPi · SuSIE',c:'var(--teal)'},
+ {n:'P2 借特征',g:'视频模型一次前向的特征',h:'动作头读中间特征',e:'VPP · AHA-WAM',c:'var(--accent)'},
+ {n:'P3 联合生成',g:'视频 + 动作一起去噪',h:'同一个网络出动作',e:'DreamZero · GR00T 2',c:'var(--purple)'},
+ {n:'P4 辅助 loss',g:'不生成，分支已拆',h:'训练时塑造表示',e:'FLARE · Fast-WAM*',c:'var(--amber)'},
+ {n:'纯 VLA',g:'不生成',h:'不建模未来',e:'π0 · OpenVLA',c:'var(--muted)'},
+];
+const g0=P(0);arrow(g0,30,60,700,60,'var(--muted)',{w:2});label(g0,'耦合紧、推理时想象多',30,40,{m:1});label(g0,'松、推理时不想象',700,40,{a:'end',m:1});
+C.forEach((c,i)=>{const x=20+i*138,g=P(i+1);
+  el('circle',{cx:x+64,cy:60,r:8,fill:c.c},g);
+  el('rect',{x,y:84,width:128,height:236,rx:10,fill:'var(--card)',stroke:c.c},g);
+  label(g,c.n,x+64,108,{a:'middle',b:1,c:c.c});
+  label(g,'推理时生成',x+10,138,{m:1,fs:11});wrap(g,c.g,x+10,158);
+  label(g,'怎么变成动作',x+10,208,{m:1,fs:11});wrap(g,c.h,x+10,228);
+  label(g,'代表',x+10,278,{m:1,fs:11});label(g,c.e,x+10,298,{fs:11});
+});
+function wrap(g,s,x,y){const L=8;for(let i=0;i*L<s.length;i++)label(g,s.slice(i*L,i*L+L),x,y+i*18,{fs:13})}
+const b=P(6);const br=(x1,x2,t,c)=>{el('path',{d:`M${x1} 336 L${x1} 346 L${x2} 346 L${x2} 336`,stroke:c,fill:'none','stroke-width':2},b);label(b,t,(x1+x2)/2,368,{a:'middle',fs:12,c})};
+br(24,146,'rendered futures','var(--teal)');br(156,422,'latent futures（隐空间的未来）','var(--purple)');br(432,560,'video-generation-free','var(--amber)');
+label(b,'新综述（arXiv 2606.20781）按“必须生成什么”的三分法，和这条轴大致对应（摘要）',360,400,{a:'middle',fs:12,m:1});
+label(b,'* Fast-WAM：训练像 P3、推理像 P4（第 5 章）',360,428,{a:'middle',fs:12,m:1});
+runSteps([
+  '把所有 WAM 排在一条轴上：横坐标是“想象和动作绑得多紧”。',
+  'P1 最左：先画出一整段未来视频，再让另一个模型（IDM）照着视频做动作。',
+  'P2：视频模型只跑一次前向，不画完，动作头读它的中间特征。',
+  'P3：一个网络把视频和动作一起去噪，第 2–4 章讲的就是这一派。',
+  'P4：训练时多一个预测未来的分支，部署时拆掉，推理就是普通 VLA。',
+  '最右是纯 VLA：完全不建模未来，只是对照。',
+  '新综述换了个说法：按推理时“必须生成什么”分三类，正好把轴切成三段。',
+],1900);
+</script>
+<a href="https://wikieden.github.io/ai-books/" style="position:fixed;right:12px;bottom:12px;z-index:99;padding:4px 10px;border-radius:14px;background:rgba(127,127,127,.18);color:inherit;font:13px/1.6 system-ui,sans-serif;text-decoration:none">← 全部讲义书</a>
+</body></html>

@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>第 11 章 · 推理的四种用法：离线想象、在线规划、直接出动作、交互模拟 · 世界模型与 WAM 流派</title>
+<style>
+:root{--bg:#fbfbfa;--fg:#1f2328;--mute:#5d6470;--line:#e3e5e8;--card:#fff;--acc:#2f6fdf;--code:#f2f3f5;--quote:#f4f6fa}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15181d;--fg:#e4e7ec;--mute:#9aa3b2;--line:#2c323b;--card:#1c2026;--acc:#7aa7ff;--code:#22272f;--quote:#1b2029}}
+:root[data-theme="dark"]{--bg:#15181d;--fg:#e4e7ec;--mute:#9aa3b2;--line:#2c323b;--card:#1c2026;--acc:#7aa7ff;--code:#22272f;--quote:#1b2029}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.75 -apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Helvetica Neue",sans-serif}
+a{color:var(--acc)}
+header.top{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+header.top .in{max-width:860px;margin:0 auto;padding:10px 16px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;font-size:14px}
+header.top .brand{font-weight:600;color:var(--fg);text-decoration:none;margin-right:auto}
+header.top a{text-decoration:none}
+main{max-width:860px;margin:0 auto;padding:24px 16px 72px;overflow-wrap:anywhere}
+h1{font-size:28px;line-height:1.35;margin:8px 0 16px} h2{font-size:22px;margin:40px 0 12px;padding-top:8px;border-top:1px solid var(--line)} h3{font-size:18px;margin:28px 0 8px}
+img{max-width:100%;height:auto;border-radius:8px;border:1px solid var(--line);background:#fff}
+blockquote{margin:16px 0;padding:10px 16px;background:var(--quote);border-left:3px solid var(--acc);border-radius:4px;color:var(--mute)}
+blockquote p{margin:4px 0}
+code{background:var(--code);padding:1px 5px;border-radius:4px;font-size:.9em}
+pre{background:var(--code);padding:12px 14px;border-radius:8px;overflow-x:auto} pre code{padding:0;background:none}
+table{border-collapse:collapse;display:block;overflow-x:auto;max-width:100%;margin:12px 0;font-size:15px}
+th,td{border:1px solid var(--line);padding:6px 10px;vertical-align:top} th{background:var(--code)}
+details{border:1px solid var(--line);border-radius:8px;padding:6px 12px;margin:8px 0;background:var(--card)}
+details[open]{padding-bottom:10px} summary{cursor:pointer;color:var(--acc);font-weight:500}
+mjx-container{overflow-x:auto;overflow-y:hidden;max-width:100%}
+.btn{display:inline-block;margin:4px 8px 4px 0;padding:6px 14px;border:1px solid var(--acc);border-radius:999px;text-decoration:none;font-size:14px}
+.pager{display:flex;justify-content:space-between;gap:12px;margin-top:48px;padding-top:16px;border-top:1px solid var(--line);font-size:15px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin:16px 0}
+.card{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;color:inherit;text-decoration:none}
+.card:hover{border-color:var(--acc)} .card img{border:0;border-bottom:1px solid var(--line);border-radius:0;aspect-ratio:16/10;object-fit:contain;width:100%}
+.card .no{color:var(--mute);font-size:13px;padding:8px 12px 0} .card .t{padding:0 12px 12px;font-weight:500;line-height:1.5}
+.lead{font-size:17px;color:var(--mute)}
+footer{max-width:860px;margin:0 auto;padding:0 16px 40px;color:var(--mute);font-size:13px}
+</style>
+<script>window.MathJax={tex:{inlineMath:[["\\(","\\)"]],displayMath:[["\\[","\\]"],["$$","$$"]],processEscapes:true,processEnvironments:true}};</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
+</head><body>
+<header class="top"><div class="in">
+<a class="brand" href="../index.html">世界模型与 WAM 流派</a>
+<a href="../lessons/index.html">讲义目录</a>
+<a href="../animations/index.html">动画</a>
+<a href="../review.html">复习卡片</a>
+<a href="../lessons/appendix-glossary.html">缩写表</a>
+<a href="https://wikieden.github.io/ai-books/">← 全部讲义书</a>
+</div></header>
+<main>
+<h1 id="11">第 11 章 · 推理的四种用法：离线想象、在线规划、直接出动作、交互模拟</h1><p><a class="btn" href="../animations/11-four-uses.html">▶ 打开本章可交互动画</a></p>
+<blockquote>
+<p>本章回答：世界模型训好以后，部署时怎么用？四种用法各自要跑世界模型几次、多快？为什么"怎么用"比"怎么训"更能区分流派？<br />
+讲解日期：2026-11-20 · 上一章：<a href="../lessons/10-five-schools.html">第 10 章 世界模型五派</a> · 下一章：<a href="../lessons/12-landscape-2026.html">第 12 章 2026 年的 WAM 版图</a><br />
+对应原文：调研报告 §6 推理过程的四种模式；CIS 6280 第 2 讲 Slide 72 最后一句（<code>materials/text/lecture-02-interactive-deck.md</code> 第 964 行）<br />
+本章缩写：MPC = Model Predictive Control（模型 / 预测 / 控制）；MCTS = Monte Carlo Tree Search（蒙特卡洛 / 树 / 搜索）；CEM = Cross-Entropy Method（交叉熵 / 方法）；fps = frames per second（每秒帧数）；Hz = Hertz（赫兹）；RTC = Real-Time Chunking（实时 / 分块）。全部缩写见 <a href="../lessons/appendix-glossary.html">附录 · 缩写与术语表</a></p>
+</blockquote>
+<h2 id="_1">讲解</h2>
+<h3 id="2026-11-20">第一步：会预测，还要会"用"（2026-11-20）</h3>
+<p>第 2 讲 Slide 72 的最后一句：<em>"Joint behavior modeling does not by itself choose the best action."</em>（联合建模本身不会挑出最好的动作。）世界模型知道"做了会怎样"，但要变成机器人的行动，还得决定<strong>怎么用</strong>它。</p>
+<p><strong>类比：一本很准的天气预报，四种用法。</strong></p>
+<ul>
+<li>提前用它排好一整季的训练计划，到时照计划走（A 离线想象）；</li>
+<li>每次出门前都查一遍，比较几条路线挑最好的（B 在线规划）；</li>
+<li>把"判断天气"和"决定穿什么"合成一个习惯，看一眼就穿好（C 直接出动作）；</li>
+<li>做成一个天气模拟游戏，让人自己调参数玩（D 交互模拟）。</li>
+</ul>
+<p><strong>一句话</strong>：同一个模型，用法不同，速度差几个数量级。</p>
+<h3 id="a-b-2026-11-20">第二步：A 离线想象 和 B 在线规划（2026-11-20）</h3>
+<p><strong>A 离线想象，部署只跑策略</strong>：</p>
+<ul>
+<li>世界模型在训练时生成想象轨迹，用来训练策略或造数据；</li>
+<li>部署时世界模型<strong>不跑</strong>，只跑策略，一次前向；</li>
+<li>代表：Dreamer（第 10 章 W1）、DreamGen（视频模型造数据给 GR00T N1）、在世界模型里评测策略；</li>
+<li>速度：和普通策略一样快。</li>
+</ul>
+<p><strong>B 在线规划（MPC / 搜索）</strong>：</p>
+<ul>
+<li>每一步都在模型里展开很多候选未来，打分，挑最好的动作，执行第一步后重来；</li>
+<li>开销 = 候选数 × horizon（往前看几步）× 一次前向；</li>
+<li>代表：MuZero（MCTS）、TD-MPC2、V-JEPA 2-AC（CEM）、DINO-WM；</li>
+<li>速度：V-JEPA 2-AC 每个动作约 16 s，用视频模型规划约 4 分钟 <em>（二手）</em>。</li>
+</ul>
+<p><strong>例子</strong>（编的数）：CEM 每轮采样 100 条动作序列，每条往前看 10 步，迭代 5 轮，就是 <span class="arithmatex">\(100\times10\times5=5000\)</span> 次世界模型前向，才换来一个动作。</p>
+<p><strong>一句话</strong>：A 把世界模型的开销挪到训练时；B 把它放在每一步里，所以慢。</p>
+<h3 id="c-d-2026-11-20">第三步：C 直接出动作 和 D 交互模拟（2026-11-20）</h3>
+<p><strong>C 直接出动作（WAM policy）</strong>：</p>
+<ul>
+<li>世界模型和动作一起去噪（第 2–4 章），想象和决策在同一次计算里完成；</li>
+<li>代表：P3 的 WAM；P2 只跑一次视频前向；P1 的在线版（慢得多）；</li>
+<li>速度：DreamZero 7 Hz（2 块 GB200，约 150 ms）；Cosmos 3 policy 4 步去噪出 32 步动作 @15 Hz。</li>
+</ul>
+<p><strong>D 交互模拟</strong>：</p>
+<ul>
+<li>持续自回归生成画面，实时响应人或 agent 的输入；</li>
+<li>产出的是<strong>画面</strong>不是动作，用来玩、评测、造数据；</li>
+<li>代表：Genie 3（720p、24 fps）、GameNGen（DOOM，20 fps）；</li>
+<li>速度：每帧 1–4 步去噪。</li>
+</ul>
+<p><strong>一句话</strong>：C 让想象和决策合成一步；D 把模型本身变成一个可以玩的世界。</p>
+<h3 id="2026-11-20_1">第四步：放在一张表里比（2026-11-20）</h3>
+<p>| 用法 | 推理时世界模型做什么 | 每次决策开销 | 典型速度 | 代表 |
+|---|---|---|---|
+| A 离线想象 | 不跑 | 一次策略前向 | 和 VLA 一样（最高约 50 Hz） | Dreamer、DreamGen |
+| B 在线规划 | 展开很多候选未来 | 候选数 × horizon × 前向 | 每个动作几秒到几分钟 | MuZero、V-JEPA 2-AC |
+| C 直接出动作 | 和动作一起去噪 | 一次多步去噪 | 7–24 Hz | DreamZero、GR00T 2、AHA-WAM |
+| D 交互模拟 | 持续生成帧 | 每帧 1–4 步 | 20–24 fps | Genie 3、GameNGen |</p>
+<p>换算：50 Hz ↔ 20 ms 一次；7 Hz ↔ 约 143 ms 一次；16 s 一次 ↔ 约 0.06 Hz。</p>
+<p><strong>三条共同的推理技巧</strong>（调研报告 §6）：</p>
+<ul>
+<li><strong>动作分块 + 异步执行</strong>：一次出 1–2 s 的动作，执行的同时算下一块（π0 的 RTC、DreamZero 的异步执行）；</li>
+<li><strong>闭环锚定</strong>：B 每步重规划，C 每块用真实观测替换预测帧（第 4 章），D 靠记忆和一致性训练。本质都是不让模型长时间"闭眼想象"；</li>
+<li><strong>能不能检查</strong>：A、B、D 都能把想象画出来（W3 除外）；C 可以选择性解码。</li>
+</ul>
+<p><strong>一句话</strong>：A 最快、B 最慢、C 居中、D 产出的是画面。</p>
+<h3 id="2026-11-20_2">第五步：用法决定了哪派合适（2026-11-20）</h3>
+<table>
+<thead>
+<tr>
+<th>你要的</th>
+<th>用法</th>
+<th>流派</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>高频、便宜的部署</td>
+<td>A</td>
+<td>W1 + actor；或者用世界模型造数据训 VLA</td>
+</tr>
+<tr>
+<td>换个目标就能干，数据很少，不在乎慢</td>
+<td>B</td>
+<td>W3（给目标图）、W2（有奖励和模拟器）</td>
+</tr>
+<tr>
+<td>泛化强的通用操作 policy</td>
+<td>C</td>
+<td>P3 / P2</td>
+</tr>
+<tr>
+<td>仿真、评测、造数据、娱乐</td>
+<td>D</td>
+<td>W4</td>
+</tr>
+</tbody>
+</table>
+<p>这就是第 13 章选型的前一半：先想清楚<strong>推理时</strong>要它干什么。</p>
+<p><strong>一句话</strong>：先选用法，再选流派。</p>
+<h3 id="1">动画演示：1 秒内各做几次决策</h3>
+<p><img alt="推理的四种用法" src="../animations/11-four-uses.gif" /></p>
+<p>可交互版：<a href="../animations/11-four-uses.html">animations/11-four-uses.html</a>（打开自动循环播放；点任一按钮切成手动）</p>
+<p><strong>怎么看</strong>：</p>
+<ol>
+<li>横轴 1 秒，每个竖条是一次决策（D 是一帧画面）。</li>
+<li>灰色对照 VLA 50 Hz；A 和它一样密（第二步）。</li>
+<li>B 是一整条虚线框：一次决策要 16 s，1 秒内还没算完（第二步）。</li>
+<li>C 7 个、D 24 个（第三步）。</li>
+</ol>
+<h2 id="_2">练习与作答记录</h2>
+<p><strong>题 1</strong>（第二步）：一个 MPC 规划器每轮采样 64 条动作序列、每条看 8 步、迭代 3 轮，世界模型一次前向 5 ms。一个动作要多久？能做到几 Hz？</p>
+<p><strong>作答</strong>：（待作答）</p>
+<p><strong>题 2</strong>（第三步）：DreamGen 用视频模型生成数据、再训练 VLA。它属于 A、B、C、D 中的哪一种？部署时视频模型跑不跑？</p>
+<p><strong>作答</strong>：（待作答）</p>
+<p><strong>题 3</strong>（第五步）：给一家做家庭清洁机器人的公司建议：想用世界模型做<strong>上线前的策略评测</strong>（新版本策略先在模型里跑 1000 次再上真机）。选哪种用法、哪派？担心什么风险？</p>
+<p><strong>作答</strong>：（待作答）</p>
+<h2 id="_3">口诀</h2>
+<blockquote>
+<p>离线想，部署不想，快如 VLA；<br />
+在线规划步步搜，慢到几秒几分钟；<br />
+直接出动作想做一体，几 Hz 到二十几；<br />
+交互模拟出画面，给人玩来给策略考。</p>
+</blockquote>
+<h2 id="_4">本章复习卡片</h2>
+<p>C12 世界模型推理的四种用法和各自的速度量级。练习做完后，按答错、卡住的地方补上。</p>
+<h2 id="_5">附录 · 延伸阅读</h2>
+<h3 id="_6">推荐阅读</h3>
+<table>
+<thead>
+<tr>
+<th>读什么</th>
+<th>读哪里</th>
+<th>读它为了什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>★ 调研报告</td>
+<td>§6</td>
+<td>本章出处和表</td>
+</tr>
+<tr>
+<td>★ CIS 6280 第 2 讲</td>
+<td>Slide 22（MPC）、Slide 72（<code>materials/text/lecture-02-interactive-deck.md</code> 第 955–964 行）</td>
+<td>规划和"联合建模不会自己挑动作"</td>
+</tr>
+<tr>
+<td>DeepMind 关于"想象与规划"的文章</td>
+<td><code>materials/readings/text/essay-deepmind-imagine-and-plan.md</code></td>
+<td>B 用法的历史</td>
+</tr>
+<tr>
+<td>DreamGen（GR00T 团队）</td>
+<td>项目页</td>
+<td>A 用法：视频模型造数据</td>
+</tr>
+<tr>
+<td>Ctrl-World、1X world model</td>
+<td>项目页</td>
+<td>D 用法做策略评测</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_7">数学原理</h3>
+<ul>
+<li><strong>MPC</strong>：每一步解一个有限步数的优化问题 <span class="arithmatex">\(\max_{a_{t:t+H}}\sum\hat r\)</span>，只执行第一个动作，下一步重解。</li>
+<li><strong>频率换算</strong>：Hz = 1000 / 毫秒数。</li>
+</ul>
+<h3 id="_8">公式清单</h3>
+<table>
+<thead>
+<tr>
+<th>公式</th>
+<th>意思</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>规划开销 = 候选数 × horizon × 迭代轮数 × 一次前向</td>
+<td>B 用法</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(a_t=\arg\max_{a_{t:t+H}}\sum_{k}\hat r_{t+k}\)</span>，只执行 <span class="arithmatex">\(a_t\)</span></td>
+<td>MPC</td>
+</tr>
+</tbody>
+</table>
+<p>本章无代码对照。</p><nav class="pager"><a href="10-five-schools.html">← 第 10 章 · 世界模型五派：在哪个空间预测</a><a href="12-landscape-2026.html">第 12 章 · 2026 年的 WAM 版图：开源模型和榜单 →</a></nav>
+</main>
+<footer>来自个人学习仓库的对话讲义，含练习作答记录。源码：<a href="https://github.com/wikieden/world-models-wam">github.com/wikieden/world-models-wam</a>。更多讲义书：<a href="https://wikieden.github.io/ai-books/">Physical AI 0-1-♾️（合集）</a></footer>
+</body></html>

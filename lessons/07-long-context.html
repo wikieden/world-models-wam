@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>第 7 章 · 记得更久：从 6 秒到 19 秒的上下文 · 世界模型与 WAM 流派</title>
+<style>
+:root{--bg:#fbfbfa;--fg:#1f2328;--mute:#5d6470;--line:#e3e5e8;--card:#fff;--acc:#2f6fdf;--code:#f2f3f5;--quote:#f4f6fa}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15181d;--fg:#e4e7ec;--mute:#9aa3b2;--line:#2c323b;--card:#1c2026;--acc:#7aa7ff;--code:#22272f;--quote:#1b2029}}
+:root[data-theme="dark"]{--bg:#15181d;--fg:#e4e7ec;--mute:#9aa3b2;--line:#2c323b;--card:#1c2026;--acc:#7aa7ff;--code:#22272f;--quote:#1b2029}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.75 -apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Helvetica Neue",sans-serif}
+a{color:var(--acc)}
+header.top{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+header.top .in{max-width:860px;margin:0 auto;padding:10px 16px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;font-size:14px}
+header.top .brand{font-weight:600;color:var(--fg);text-decoration:none;margin-right:auto}
+header.top a{text-decoration:none}
+main{max-width:860px;margin:0 auto;padding:24px 16px 72px;overflow-wrap:anywhere}
+h1{font-size:28px;line-height:1.35;margin:8px 0 16px} h2{font-size:22px;margin:40px 0 12px;padding-top:8px;border-top:1px solid var(--line)} h3{font-size:18px;margin:28px 0 8px}
+img{max-width:100%;height:auto;border-radius:8px;border:1px solid var(--line);background:#fff}
+blockquote{margin:16px 0;padding:10px 16px;background:var(--quote);border-left:3px solid var(--acc);border-radius:4px;color:var(--mute)}
+blockquote p{margin:4px 0}
+code{background:var(--code);padding:1px 5px;border-radius:4px;font-size:.9em}
+pre{background:var(--code);padding:12px 14px;border-radius:8px;overflow-x:auto} pre code{padding:0;background:none}
+table{border-collapse:collapse;display:block;overflow-x:auto;max-width:100%;margin:12px 0;font-size:15px}
+th,td{border:1px solid var(--line);padding:6px 10px;vertical-align:top} th{background:var(--code)}
+details{border:1px solid var(--line);border-radius:8px;padding:6px 12px;margin:8px 0;background:var(--card)}
+details[open]{padding-bottom:10px} summary{cursor:pointer;color:var(--acc);font-weight:500}
+mjx-container{overflow-x:auto;overflow-y:hidden;max-width:100%}
+.btn{display:inline-block;margin:4px 8px 4px 0;padding:6px 14px;border:1px solid var(--acc);border-radius:999px;text-decoration:none;font-size:14px}
+.pager{display:flex;justify-content:space-between;gap:12px;margin-top:48px;padding-top:16px;border-top:1px solid var(--line);font-size:15px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin:16px 0}
+.card{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;color:inherit;text-decoration:none}
+.card:hover{border-color:var(--acc)} .card img{border:0;border-bottom:1px solid var(--line);border-radius:0;aspect-ratio:16/10;object-fit:contain;width:100%}
+.card .no{color:var(--mute);font-size:13px;padding:8px 12px 0} .card .t{padding:0 12px 12px;font-weight:500;line-height:1.5}
+.lead{font-size:17px;color:var(--mute)}
+footer{max-width:860px;margin:0 auto;padding:0 16px 40px;color:var(--mute);font-size:13px}
+</style>
+<script>window.MathJax={tex:{inlineMath:[["\\(","\\)"]],displayMath:[["\\[","\\]"],["$$","$$"]],processEscapes:true,processEnvironments:true}};</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
+</head><body>
+<header class="top"><div class="in">
+<a class="brand" href="../index.html">世界模型与 WAM 流派</a>
+<a href="../lessons/index.html">讲义目录</a>
+<a href="../animations/index.html">动画</a>
+<a href="../review.html">复习卡片</a>
+<a href="../lessons/appendix-glossary.html">缩写表</a>
+<a href="https://wikieden.github.io/ai-books/">← 全部讲义书</a>
+</div></header>
+<main>
+<h1 id="7-6-19">第 7 章 · 记得更久：从 6 秒到 19 秒的上下文</h1><p><a class="btn" href="../animations/07-long-context.html">▶ 打开本章可交互动画</a></p>
+<blockquote>
+<p>本章回答：WAM 的"记忆"是什么、为什么只有几秒？哪些任务必须记得更久？Long-WAM 怎么把上下文拉到 19.2 秒，代价是什么？<br />
+讲解日期：2026-11-20 · 上一章：<a href="../lessons/06-slow-fast.html">第 6 章 慢想象、快动作</a> · 下一章：<a href="../lessons/08-coupling-axis.html">第 8 章 耦合强度这条轴</a><br />
+对应原文：调研报告 §3 P3 缺点（"视觉记忆短，约 6 s"）、§10.3；Long-WAM（arXiv 2610.10528，<strong>只读了摘要</strong>）<br />
+本章缩写：AR = AutoRegressive（自 / 回归，一块接一块往后生成）；KV = Key / Value（键 / 值）；GPU = Graphics Processing Unit（图形 / 处理 / 单元）。全部缩写见 <a href="../lessons/appendix-glossary.html">附录 · 缩写与术语表</a></p>
+</blockquote>
+<h2 id="_1">讲解</h2>
+<h3 id="wam-2026-11-20">第一步：WAM 的"记忆"就是它能看到的上下文（2026-11-20）</h3>
+<p><strong>类比：猜杯子游戏。</strong> 魔术师把球扣在左边杯子下，然后把杯子挪来挪去。你要找到球，靠的是<strong>记住</strong>几秒前那一幕。如果你只记得最后 5 秒，而球是 13 秒前扣进去的，就只能瞎猜。</p>
+<p>WAM 没有单独的"记忆模块"。它的记忆就是<strong>上下文</strong>：条件 <span class="arithmatex">\(c\)</span> 里放进去的历史帧（第 2、3 章）。放进去多少秒，就记得多少秒。</p>
+<p>DreamZero 自述视觉记忆约 6 秒（调研报告 §3 P3 缺点），所以它本质上是 System 1：反应快，但记不住"刚才做到哪一步了"。</p>
+<p><strong>一句话</strong>：上下文有多长，记忆就有多长。</p>
+<h3 id="2026-11-20">第二步：为什么上下文短（2026-11-20）</h3>
+<p>视频 token 多，而且随时长<strong>线性</strong>增长：</p>
+<p><strong>例子</strong>（编的数，只看比例）：假设每秒视频压成 500 个 latent token。</p>
+<table>
+<thead>
+<tr>
+<th>上下文</th>
+<th>视频 token 数</th>
+<th>相对 6 s</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>6 s</td>
+<td>3000</td>
+<td>1×</td>
+</tr>
+<tr>
+<td>19.2 s</td>
+<td>9600</td>
+<td>3.2×</td>
+</tr>
+</tbody>
+</table>
+<p><span class="arithmatex">\(19.2/6=3.2\)</span>。token 多 3.2 倍，KV cache 也大 3.2 倍；如果是全注意力，计算量随 token 数的平方涨，最多到 <span class="arithmatex">\(3.2^2\approx10\)</span> 倍。这就是各家不敢把上下文拉长的原因。</p>
+<p><strong>一句话</strong>：多记一秒，就多一秒的 token，全注意力下代价按平方涨。</p>
+<h3 id="2026-11-20_1">第三步：哪些任务需要长记忆（2026-11-20）</h3>
+<ul>
+<li><strong>被遮挡的东西</strong>：球在杯子下、零件被手挡住；</li>
+<li><strong>多步流程</strong>：叠衣服要记得已经折了左袖还是右袖；</li>
+<li><strong>动态目标</strong>：叠杯子时杯子在动，要从过去几秒的轨迹判断它往哪去；</li>
+<li><strong>"刚才试过不行"</strong>：抓了一次滑掉，下一次要换个角度，前提是记得上一次失败了。</li>
+</ul>
+<p><strong>一句话</strong>：看不见的、做到一半的、在动的、失败过的，都要靠记忆。</p>
+<h3 id="long-wam-2026-11-20">第四步：Long-WAM 的做法和结果（2026-11-20）</h3>
+<p>Long-WAM（2026-10，作者含 Song Han、Linxi Fan；摘要）：</p>
+<ol>
+<li><strong>先自回归预训练视频底座</strong>：视频按时间一块接一块生成，每块只看前面的块（causal，因果注意力）。这样历史块的 KV 可以一直缓存着往后用，不用每次重算；</li>
+<li><strong>再接上动作</strong>：每个动作块都带着对未来视频 latent 的预测（仍是 P3 联合生成）；</li>
+<li><strong>上下文从 0 拉到 19.2 秒</strong>。</li>
+</ol>
+<p>结果（摘要）：</p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>数字</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RoboCasa GR-1 成功率</td>
+<td>上下文 0 → 19.2 s：63.3% → 78.7%</td>
+</tr>
+<tr>
+<td>动态叠杯（Unitree G1、YAM）</td>
+<td>95%；π0.5 和 Fast-WAM 都是 0/20</td>
+</tr>
+<tr>
+<td>延迟</td>
+<td>RTX 5090 上每个动作块 107.4 ms（含未来视频预测）</td>
+</tr>
+<tr>
+<td>部署</td>
+<td>还能跑在 DGX Spark、Jetson AGX Thor 上</td>
+</tr>
+</tbody>
+</table>
+<p>注意 107.4 ms 是在<strong>单张消费级显卡</strong>上，比 DreamZero 的两块 GB200 便宜得多。因果结构加 KV 缓存是关键：历史只算一次。</p>
+<p><strong>一句话</strong>：因果预训练让历史能缓存，记忆拉长了，延迟没炸。</p>
+<h3 id="2026-11-20_2">第五步：长上下文之外的另一条路（2026-11-20）</h3>
+<p>19 秒对"叠一件衣服"可能够，对"收拾一整间房"不够。更长的记忆有另一条路：不靠堆视频帧，而是把过去<strong>压成符号</strong>。</p>
+<ul>
+<li>AW-0 加一条"代码"流，把技能和进度存成程序（第 13 章）；</li>
+<li>Hi Robot 一类用语言做高层计划，低层 policy 只管当前几秒。</li>
+</ul>
+<p>这就是常说的 System 2（慢思考、长记忆）补 System 1（快反应、短记忆）。</p>
+<p><strong>一句话</strong>：秒级记忆靠长上下文，分钟级以上靠代码或语言。</p>
+<h3 id="_2">动画演示：记忆窗口够不够长</h3>
+<p><img alt="长上下文" src="../animations/07-long-context.gif" /></p>
+<p>可交互版：<a href="../animations/07-long-context.html">animations/07-long-context.html</a>（打开自动循环播放；点任一按钮切成手动）</p>
+<p><strong>怎么看</strong>：</p>
+<ol>
+<li>第 3 秒球被扣进左杯，第 16 秒要找球（第一步的猜杯子类比）。</li>
+<li>红色窗口 6 秒（10–16 s），够不到第 3 秒；绿色窗口 19.2 秒（截到 0 s），够得到。</li>
+<li>底部蓝框：Long-WAM 的数字（第四步）。</li>
+</ol>
+<h2 id="_3">练习与作答记录</h2>
+<p><strong>题 1</strong>（第二步）：上下文从 6 秒拉到 12 秒，视频 token 多几倍？如果注意力代价按 token 数平方算，代价多几倍？</p>
+<p><strong>作答</strong>：（待作答）</p>
+<p><strong>题 2</strong>（第三步）：从你熟悉的场景里举一个"需要 1 分钟以上记忆"的机器人任务，说说只靠 19 秒上下文会在哪一步出错。</p>
+<p><strong>作答</strong>：（待作答）</p>
+<p><strong>题 3</strong>（第四步，拓展）：Long-WAM 用因果（causal）注意力，每块只能看前面的块。这对"把历史缓存起来"为什么重要？如果用双向注意力会怎样？</p>
+<p><strong>作答</strong>：（待作答）</p>
+<h2 id="_4">口诀</h2>
+<blockquote>
+<p>记忆就是上下文，几秒就记几秒；<br />
+多记一秒多一秒 token，全注意力按平方涨；<br />
+因果预训练，历史只算一次；<br />
+秒级靠帧，分钟靠码。</p>
+</blockquote>
+<h2 id="_5">本章复习卡片</h2>
+<p>C08 WAM 的记忆由什么决定，Long-WAM 靠什么把上下文拉长而延迟不炸。练习做完后，按答错、卡住的地方补上。</p>
+<h2 id="_6">附录 · 延伸阅读</h2>
+<h3 id="_7">推荐阅读</h3>
+<table>
+<thead>
+<tr>
+<th>读什么</th>
+<th>读哪里</th>
+<th>读它为了什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>★ Long-WAM（arXiv 2610.10528）</td>
+<td>方法和上下文长度消融</td>
+<td>本章主角（只读了摘要）</td>
+</tr>
+<tr>
+<td>★ 调研报告</td>
+<td>§10.3、§9 开放问题"长程记忆"</td>
+<td>出处</td>
+</tr>
+<tr>
+<td>Genie 3 的介绍</td>
+<td>记忆与一致性</td>
+<td>视频世界模型里"几分钟一致性"的做法</td>
+</tr>
+<tr>
+<td>AW-0（arXiv 2610.30136）</td>
+<td>引言</td>
+<td>用代码做长程记忆（第 13 章）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_8">数学原理</h3>
+<ul>
+<li><strong>线性 vs 平方</strong>：token 数 <span class="arithmatex">\(N\)</span> 随时长线性涨；全注意力的计算量 <span class="arithmatex">\(\propto N^2\)</span>。</li>
+<li><strong>因果注意力 + KV 缓存</strong>：每个 token 只看前面的 token，前面 token 的 <span class="arithmatex">\(K,V\)</span> 算好后不会再变，可以一直缓存。</li>
+</ul>
+<h3 id="_9">公式清单</h3>
+<table>
+<thead>
+<tr>
+<th>公式</th>
+<th>意思</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(N=r\cdot T\)</span></td>
+<td>token 数 = 每秒 token 数 × 时长</td>
+</tr>
+<tr>
+<td>代价 <span class="arithmatex">\(\propto N^2\)</span></td>
+<td>全注意力</td>
+</tr>
+</tbody>
+</table>
+<p>本章无代码对照。</p><nav class="pager"><a href="06-slow-fast.html">← 第 6 章 · 慢想象、快动作：视频低频、动作高频</a><a href="08-coupling-axis.html">第 8 章 · 耦合强度这条轴：P1 → P2 → P3 → P4 → 纯 VLA →</a></nav>
+</main>
+<footer>来自个人学习仓库的对话讲义，含练习作答记录。源码：<a href="https://github.com/wikieden/world-models-wam">github.com/wikieden/world-models-wam</a>。更多讲义书：<a href="https://wikieden.github.io/ai-books/">Physical AI 0-1-♾️（合集）</a></footer>
+</body></html>

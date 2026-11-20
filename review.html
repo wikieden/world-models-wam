@@ -78,6 +78,244 @@ footer{max-width:860px;margin:0 auto;padding:0 16px 40px;color:var(--mute);font-
 <p>评价看<strong>任务成功率</strong>（实际执行效果），不看生成的视频像不像。世界模型交出去的是预测，才看预测准不准（FVD、特征误差）。</p>
 <p>易错点：只给出判断方法，没落到结论和评价指标上。</p>
 </details>
+<h2 id="p3">联合生成（P3）：角色、训练、推理</h2>
+<h3 id="c03">C03 · 联合生成模型里，视频和动作"谁加噪、谁干净"的四种配置，各让网络当什么角色？</h3>
+<p>来源：<a href="lessons/02-noise-roles.html">第 2 章 · 第三步</a> · 加入 2026-11-20 · 复习记录：</p>
+<details>
+<summary>答案</summary>
+<table>
+<thead>
+<tr>
+<th>未来视频</th>
+<th>动作</th>
+<th>角色</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>加噪</td>
+<td>干净</td>
+<td>世界模型 <span class="arithmatex">\(p(Y\mid h,a)\)</span></td>
+</tr>
+<tr>
+<td>干净</td>
+<td>加噪</td>
+<td>逆动力学 IDM</td>
+</tr>
+<tr>
+<td>加噪</td>
+<td>加噪</td>
+<td>policy / WAM</td>
+</tr>
+<tr>
+<td>加噪</td>
+<td>缺失</td>
+<td>纯视频预测（能吃无动作视频）</td>
+</tr>
+</tbody>
+</table>
+<p>加噪 <span class="arithmatex">\(x_\tau=(1-\tau)x_0+\tau\epsilon\)</span>：<span class="arithmatex">\(\tau=0\)</span> 是已知条件，<span class="arithmatex">\(\tau=1\)</span> 是要生成的。上下文永远干净。</p>
+<p>口诀：挖结果是世界模型，挖动作是 IDM，两样都挖是 policy。</p>
+</details>
+<h3 id="c04-flow-matching-loss-loss">C04 · 联合 flow matching 的 loss 长什么样？为什么动作 loss 要乘一个大权重？</h3>
+<p>来源：<a href="lessons/03-joint-training.html">第 3 章 · 第二、三步</a> · 加入 2026-11-20 · 复习记录：</p>
+<details>
+<summary>答案</summary>
+<div class="arithmatex">\[\mathcal{L}=\sum_{m\in\{v,a\}}\lambda_m\big\|u_\theta(x^v_\tau,x^a_\tau,c)_m-(\epsilon^m-x^m_0)\big\|^2\]</div>
+<p>网络预测速度 <span class="arithmatex">\(\epsilon-x_0\)</span>。loss 对 token 求和，视频几千个 token、动作几十个：3000 vs 32 时动作只占约 1%，乘 10 后约 9.6%（Cosmos 3 动作 ×10）。无动作视频令 <span class="arithmatex">\(\lambda_a=0\)</span>。</p>
+<p>口诀：动作 token 少，不加权就被视频淹没。</p>
+</details>
+<h3 id="c05-dreamzero-kv-cache">C05 · DreamZero 推理时，执行完一个动作块后为什么要用真实观测替换 KV cache 里的预测帧？</h3>
+<p>来源：<a href="lessons/04-joint-inference.html">第 4 章 · 第四步</a> · 加入 2026-11-20 · 复习记录：</p>
+<details>
+<summary>答案</summary>
+<p>训练时前面的块用真实帧当条件（teacher forcing），推理时如果用自己预测的帧当条件，就和训练不一致，误差一块块累积（compounding error / exposure bias）。用真实观测的 VAE 编码替换预测帧，等于每块"睁一次眼"，重新锚定到现实。</p>
+<p>其他对策：V-JEPA 2-AC 的 rollout loss、GameNGen 给条件帧加噪、MPC 每步重规划。</p>
+<p>口诀：执行一块睁次眼，预测换成真画面。</p>
+</details>
+<h2 id="2026">2026 年下半年的新进展</h2>
+<h3 id="c06-fast-wam-wam">C06 · Fast-WAM 的对照实验说明 WAM 的收益主要来自哪里？</h3>
+<p>来源：<a href="lessons/05-imagine-or-not.html">第 5 章 · 第二步</a> · 加入 2026-11-20 · 复习记录：</p>
+<details>
+<summary>答案</summary>
+<p>三组（摘要）：A 训练和推理都有视频；B 训练有视频、推理跳过（Fast-WAM，约 190 ms）；C 训练就没视频。A ≈ B，C 掉得多。</p>
+<p>结论：收益主要来自<strong>训练时</strong>学"世界怎么变"，不是推理时把未来画出来。代价是推理时看不见想象、不能拿来规划。它训练像 P3、推理像 P4。</p>
+<p>口诀：练时想象，用时不想；A 比 B 看推理，B 比 C 看训练。</p>
+</details>
+<h3 id="c07-gr00t-2-2v4acached">C07 · GR00T 2 的"2v4a"是什么？cached 那几次去噪为什么便宜？</h3>
+<p>来源：<a href="lessons/06-slow-fast.html">第 6 章 · 第三、四步</a> · 加入 2026-11-20 · 复习记录：</p>
+<details>
+<summary>答案</summary>
+<p>一次决策 4 次去噪：joint、cached、joint、cached。视频真正去噪 2 次，动作 4 次，记作 2v4a（G1 Turbo 降到 1v2a）。</p>
+<p>cached 时视频不变，它在 attention 里的 K、V 可以复用，只让几十个动作 token 当查询重算。粗算（视频 4000、动作 32 token）2v4a 约是 4v4a 的一半。</p>
+<p>对照 AHA-WAM：两个 DiT，视频塔低频、动作塔高频读视频特征，24.17 Hz（≈41 ms）。</p>
+<p>口诀：贵的少算，便宜的多算。</p>
+</details>
+<h3 id="c08-wam-long-wam">C08 · WAM 的"记忆"由什么决定？Long-WAM 靠什么把上下文拉长而延迟不炸？</h3>
+<p>来源：<a href="lessons/07-long-context.html">第 7 章</a> · 加入 2026-11-20 · 复习记录：</p>
+<details>
+<summary>答案</summary>
+<p>记忆 = 上下文里放了多少秒的历史帧。DreamZero 约 6 s。token 数随时长线性涨，全注意力代价按平方涨（19.2/6 = 3.2 倍 token，最多约 10 倍计算）。</p>
+<p>Long-WAM：先自回归（因果）预训练视频底座，历史块的 KV 可以一直缓存、只算一次；上下文 0 → 19.2 s，RoboCasa GR-1 63.3% → 78.7%；RTX 5090 每块 107.4 ms（摘要）。</p>
+<p>更长的记忆靠代码或语言（AW-0、Hi Robot）。</p>
+<p>口诀：秒级靠帧，分钟靠码。</p>
+</details>
+<h2 id="_2">流派地图</h2>
+<h3 id="c09-p1p4">C09 · P1–P4 各自推理时生成什么、未来怎么变成动作？各举一个代表。</h3>
+<p>来源：<a href="lessons/08-coupling-axis.html">第 8 章 · 第二步</a> · 加入 2026-11-20 · 复习记录：</p>
+<details>
+<summary>答案</summary>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>推理时生成</th>
+<th>怎么变成动作</th>
+<th>代表</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P1 先想后做</td>
+<td>完整视频 / 子目标图</td>
+<td>另一个 IDM 去跟</td>
+<td>UniPi、SuSIE</td>
+</tr>
+<tr>
+<td>P2 借特征</td>
+<td>视频模型一次前向的特征</td>
+<td>动作头读中间特征</td>
+<td>VPP</td>
+</tr>
+<tr>
+<td>P3 联合生成</td>
+<td>视频 + 动作一起去噪</td>
+<td>同一个网络出动作</td>
+<td>DreamZero、GR00T 2</td>
+</tr>
+<tr>
+<td>P4 辅助 loss</td>
+<td>不生成</td>
+<td>训练时塑造表示</td>
+<td>FLARE</td>
+</tr>
+</tbody>
+</table>
+<p>往左越慢越看得见，往右越快越看不见。新综述三分法：rendered futures / latent futures / video-generation-free。</p>
+<p>口诀：先想后做最松，联合生成边想边做，辅助 loss 练完就拆。</p>
+</details>
+<h3 id="c10-lam">C10 · 隐动作模型（LAM）怎么从无标签视频里学出"动作"？接到真实机器人要哪三步？</h3>
+<p>来源：<a href="lessons/09-latent-action.html">第 9 章</a> · 加入 2026-11-20 · 复习记录：</p>
+<details>
+<summary>答案</summary>
+<p>encoder 看 <span class="arithmatex">\((o_t,o_{t+\Delta})\)</span> 输出很窄的隐动作 <span class="arithmatex">\(\tilde a\)</span>（如 8 选 1 ≈ 3 bit）；decoder 只拿 <span class="arithmatex">\((o_t,\tilde a)\)</span> 重建 <span class="arithmatex">\(o_{t+\Delta}\)</span>。瓶颈窄，<span class="arithmatex">\(\tilde a\)</span> 只能装"变了什么"。</p>
+<p>三步：① 无标签视频上训 LAM；② VLM policy 预测 <span class="arithmatex">\(\tilde a\)</span>（吃全部人类视频）；③ 少量真实动作学 <span class="arithmatex">\(\tilde a\)</span> → 关节动作。推理不生成视频，和 VLA 一样快。</p>
+<p>难点：人和机器人的 <span class="arithmatex">\(\tilde a\)</span> 不一定对齐；相机运动等会混进去。</p>
+<p>口诀：只许发一个表情，只够说变了什么。</p>
+</details>
+<h3 id="c11">C11 · 世界模型五派各预测什么？推理时各怎么用？</h3>
+<p>来源：<a href="lessons/10-five-schools.html">第 10 章</a> · 加入 2026-11-20 · 复习记录：</p>
+<details>
+<summary>答案</summary>
+<table>
+<thead>
+<tr>
+<th>派</th>
+<th>预测</th>
+<th>推理时</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>W1 Dreamer</td>
+<td>随机隐状态 z（可解码）</td>
+<td>在想象里练 actor，部署只跑 actor</td>
+</tr>
+<tr>
+<td>W2 MuZero</td>
+<td>奖励、价值、策略</td>
+<td>每步 MCTS / MPPI</td>
+</tr>
+<tr>
+<td>W3 JEPA</td>
+<td>冻结 encoder 的特征</td>
+<td>CEM 规划到目标图</td>
+</tr>
+<tr>
+<td>W4 视频生成</td>
+<td>像素 / 视频 latent</td>
+<td>交互模拟、造数据、评测</td>
+</tr>
+<tr>
+<td>W5 物理 / 3D</td>
+<td>物理量、3D 场景</td>
+<td>仿真、预报</td>
+</tr>
+</tbody>
+</table>
+<p>重建路线 W1、W4；不重建 W3；只学决策需要的 W2；规则写死 W5。</p>
+<p>口诀：画家画像素，气象员报物理，棋手只说好坏。</p>
+</details>
+<h3 id="c12">C12 · 世界模型推理的四种用法是什么？速度各在什么量级？</h3>
+<p>来源：<a href="lessons/11-four-uses.html">第 11 章 · 第四步</a> · 加入 2026-11-20 · 复习记录：</p>
+<details>
+<summary>答案</summary>
+<table>
+<thead>
+<tr>
+<th>用法</th>
+<th>世界模型推理时</th>
+<th>速度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A 离线想象</td>
+<td>不跑</td>
+<td>和 VLA 一样（最高约 50 Hz）</td>
+</tr>
+<tr>
+<td>B 在线规划</td>
+<td>每步展开很多候选</td>
+<td>每个动作几秒到几分钟</td>
+</tr>
+<tr>
+<td>C 直接出动作</td>
+<td>和动作一起去噪</td>
+<td>7–24 Hz</td>
+</tr>
+<tr>
+<td>D 交互模拟</td>
+<td>持续生成帧</td>
+<td>20–24 fps，产出画面</td>
+</tr>
+</tbody>
+</table>
+<p>50 Hz ↔ 20 ms；7 Hz ↔ 约 143 ms。</p>
+<p>口诀：离线想快如 VLA，在线搜慢到几秒，直接出动作居中，交互模拟出画面。</p>
+</details>
+<h3 id="c13-wam">C13 · 成功率的标准误怎么算？读一个 WAM 榜单要看哪三件事？</h3>
+<p>来源：<a href="lessons/12-landscape-2026.html">第 12 章 · 第三、四步</a> · 加入 2026-11-20 · 复习记录：</p>
+<details>
+<summary>答案</summary>
+<p><span class="arithmatex">\(\mathrm{SE}=\sqrt{p(1-p)/n}\)</span>，95% 区间约 <span class="arithmatex">\(\pm1.96\,\mathrm{SE}\)</span>。两个分数之差：<span class="arithmatex">\(\sqrt{\mathrm{SE}_1^2+\mathrm{SE}_2^2}\)</span>。例：46.2%、1200 回合 → SE ≈ 1.4 点，±2.8；两个模型之差的误差约 ±4 点。</p>
+<p>三件事：① 差距和误差比；② 谁维护、谁跑（RoboLab 由 NVIDIA 跑，自家模型在榜上）；③ 换个榜排名还对不对（DreamZero RoboArena 第 2、RoboLab 第 10，二手）。</p>
+<p>口诀：分数先算误差线，再问谁跑的榜。</p>
+</details>
+<h3 id="c14">C14 · 选型的五个问题按什么顺序问？每一问怎么分支？</h3>
+<p>来源：<a href="lessons/13-choose-and-frontier.html">第 13 章 · 第一步</a> · 加入 2026-11-20 · 复习记录：</p>
+<details>
+<summary>答案</summary>
+<ol>
+<li>要动作还是要未来？未来 → 世界模型；动作 → WAM / VLA。</li>
+<li>有奖励和模拟器？有 → W1 / W2。</li>
+<li>推理预算？端侧 20 Hz+ → VLA + P4 / 隐动作；数据中心几 Hz → P3；每步几秒 → W3 / P1。</li>
+<li>泛化要求？新动词新物体 → P3；任务固定 → VLA（+RL）。</li>
+<li>数据？人类视频多 → 独立噪声 / 隐动作；几十小时无标签 → W3。</li>
+</ol>
+<p>结论后面要写"放弃了什么"。</p>
+<p>口诀：先问输出，再按预算、泛化、数据一步步砍。</p>
+</details>
 </main>
 <footer>来自个人学习仓库的对话讲义，含练习作答记录。源码：<a href="https://github.com/wikieden/world-models-wam">github.com/wikieden/world-models-wam</a>。更多讲义书：<a href="https://wikieden.github.io/ai-books/">Physical AI 0-1-♾️（合集）</a></footer>
 </body></html>

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>选型与前沿</title><link rel="stylesheet" href="anim.css"></head>
+<body><main>
+<h1>第 13 章 · 选型与前沿</h1>
+<p class="sub">配套讲义：<a href="../lessons/13-choose-and-frontier.html">第 13 章 · 选型与前沿：场景 → 流派，以及还没解决的问题</a>。上：五个问题的决策顺序，用一个例子走一遍（Orin 级算力的移动机器人做抓取，手里有很多人类视频）；下：几个还在研究预览阶段的方向。</p>
+<div class="panel"><svg id="sv" viewBox="0 0 720 470"></svg></div>
+<p id="cap" style="min-height:3.2em;margin:8px 4px"></p>
+<div class="row"><button id="play">▶ 播放</button><button id="step">→ 单步</button><button id="reset">↺ 重来</button></div>
+<p class="note">看点：选型从“要的输出是动作还是未来”开始，每个问题砍掉一部分流派。</p>
+</main>
+<script src="anim.js"></script>
+<script>
+const Q=[
+ ['1 要的输出？','未来 → 世界模型 W1–W5','动作 → WAM / VLA'],
+ ['2 有奖励和模拟器？','有 → W1 / W2','没有 → 往下'],
+ ['3 推理预算？','数据中心 GPU、几 Hz → P3','端侧、20 Hz 以上 → VLA + P4 / 隐动作'],
+ ['4 泛化要求？','新动词新物体 → P3','任务固定 → VLA (+RL)'],
+ ['5 手里的数据？','人类视频多 → 独立噪声 / 隐动作','只有几十小时无标签 → W3'],
+];
+const PICK=[1,1,1,1,0];
+Q.forEach(([q,a,b],i)=>{const y=12+i*58,g=P(i+1);
+  box(g,16,y,150,44,q,'var(--accent)',{fs:13});
+  box(g,186,y,250,44,a,'var(--line)',{fs:12});box(g,452,y,252,44,b,'var(--line)',{fs:12});
+  const h=P(i+6);const x=PICK[i]===1?452:186,w=PICK[i]===1?252:250;
+  el('rect',{x,y,width:w,height:44,rx:8,fill:'none',stroke:'var(--warm)','stroke-width':3},h);});
+const r=P(10);box(r,16,302,688,40,'例子结论：隐动作桥（或 VLA + P4）。放弃：显式想象、可视化检查，泛化提升不如 P3','var(--warm)',{fill:'var(--card)',fs:13});
+const f=P(11);label(f,'前沿（多为研究预览，摘要）',16,370,{b:1});
+const F=[['AW-0','加一条“代码”流，补长程 System 2'],['CtrlWAM','动作和它的画面后果配对，让 WAM 听动作的话'],['LeapBot-JAC','动作专家里同时去噪稀疏参考和密集目标'],['HWAM · Long-WAM','人形、长上下文（第 5、7 章）']];
+F.forEach(([n,d],i)=>{const g=P(12+i);const x=16+(i%2)*348,y=384+Math.floor(i/2)*40;box(g,x,y,340,34,'','var(--purple)',{fill:'var(--bg)'});label(g,n,x+10,y+22,{b:1,fs:12,c:'var(--purple)'});label(g,d,x+128,y+22,{fs:11})});
+runSteps([
+  '最后一章：拿到一个场景，怎么选流派？按五个问题依次砍。',
+  '问题 1：要的是未来（仿真、数据、评测）还是动作？',
+  '问题 2：有没有奖励和模拟器？有的话 W1 / W2 最省数据。',
+  '问题 3：推理预算多少？',
+  '问题 4：泛化要求多高？',
+  '问题 5：手里是什么数据？',
+  '用例子走一遍：要动作 → 选右边。',
+  '没有奖励和模拟器 → 往下。',
+  'Orin 级算力、要高频 → VLA + P4 或隐动作。',
+  '例子是固定的抓取任务，精度优先 → 不硬上 P3。',
+  '人类视频多 → 用隐动作把它接进来。结论：隐动作桥，也写清楚放弃了什么。',
+  '再看几个前沿方向。',
+  'AW-0：视频、动作之外再生成代码。',
+  'CtrlWAM：让 WAM 真正对动作敏感。',
+  'LeapBot-JAC：不加参数的动作链。',
+  '以及前面几章的人形和长上下文。',
+],1500);
+</script>
+<a href="https://wikieden.github.io/ai-books/" style="position:fixed;right:12px;bottom:12px;z-index:99;padding:4px 10px;border-radius:14px;background:rgba(127,127,127,.18);color:inherit;font:13px/1.6 system-ui,sans-serif;text-decoration:none">← 全部讲义书</a>
+</body></html>

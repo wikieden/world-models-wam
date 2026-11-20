@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>记得更久：长上下文</title><link rel="stylesheet" href="anim.css"></head>
+<body><main>
+<h1>第 7 章 · 记得更久：长上下文</h1>
+<p class="sub">配套讲义：<a href="../lessons/07-long-context.html">第 7 章 · 记得更久：从 6 秒到 19 秒的上下文</a>。一个要靠记忆的任务：第 3 秒把小球扣在左边的杯子下，第 16 秒要把它找出来。上面一行只记得 6 秒，下面一行记得 19.2 秒。</p>
+<div class="panel"><svg id="sv" viewBox="0 0 720 400"></svg></div>
+<p id="cap" style="min-height:3.2em;margin:8px 4px"></p>
+<div class="row"><button id="play">▶ 播放</button><button id="step">→ 单步</button><button id="reset">↺ 重来</button></div>
+<p class="note">看点：关键事件发生时如果已经滑出记忆窗口，模型就只能猜。</p>
+</main>
+<script src="anim.js"></script>
+<script>
+const X=t=>70+t*30;
+const g0=P(0);el('line',{x1:X(0),y1:300,x2:X(20),y2:300,stroke:'var(--line)','stroke-width':2},g0);
+for(let t=0;t<=20;t+=2){label(g0,t+'s',X(t),320,{a:'middle',m:1})}
+function cups(g,y,ball){[0,1].forEach(i=>{const x=X(i?11:9)-5;el('path',{d:`M${x} ${y+30} L${x+8} ${y} L${x+32} ${y} L${x+40} ${y+30} Z`,fill:'var(--muted)',opacity:.8},g)});}
+const e1=P(1);el('circle',{cx:X(3),cy:70,r:10,fill:'var(--warm)'},e1);label(e1,'第 3 秒：球扣进左杯',X(3),48,{a:'middle',fs:12});el('line',{x1:X(3),y1:84,x2:X(3),y2:296,stroke:'var(--warm)','stroke-dasharray':'4 4'},e1);
+const e2=P(2);label(e2,'杯子来回挪，球看不见',X(9.5),60,{a:'middle',fs:12,m:1});cups(e2,72);
+const e3=P(3);label(e3,'第 16 秒：球在哪个杯子下？',X(16),48,{a:'middle',fs:12,b:1});el('line',{x1:X(16),y1:56,x2:X(16),y2:296,stroke:'var(--accent)','stroke-dasharray':'4 4'},e3);
+function win(g,y,len,col,name){el('rect',{x:X(16-len),y,width:len*30,height:40,rx:8,fill:col,opacity:.25,stroke:col},g);label(g,'记忆窗口 '+name,X(16-len)+8,y+25,{fs:12,c:col})}
+const w1=P(4);win(w1,140,6,'var(--bad)','6 s');label(w1,'看不到第 3 秒，只能猜',X(16)+8,165,{fs:12,c:'var(--bad)'});
+const w2=P(5);win(w2,210,16,'var(--good)','19.2 s（截到 0 s）');label(w2,'看得到第 3 秒，选左杯',X(16)+8,235,{fs:12,c:'var(--good)'});
+const g6=P(6);el('rect',{x:16,y:338,width:688,height:54,rx:8,fill:'var(--accent-bg)',stroke:'var(--accent)'},g6);
+label(g6,'Long-WAM（摘要）：上下文 0 → 19.2 s，RoboCasa GR-1 63.3% → 78.7%；',30,360,{fs:13});label(g6,'动态叠杯 95%，π0.5 和 Fast-WAM 都是 0/20；RTX 5090 上每块 107.4 ms',30,382,{fs:13});
+runSteps([
+  '时间轴从 0 到 20 秒。很多真实任务都要记住"刚才发生过什么"。',
+  '第 3 秒：小球被扣进左边的杯子。',
+  '之后杯子被挪来挪去，球一直看不见。',
+  '第 16 秒：机器人要把球找出来。答案只存在于 13 秒前的画面里。',
+  'DreamZero 一类的记忆约 6 秒：窗口是 10–16 秒，看不到第 3 秒，只能瞎猜。',
+  '记忆拉到 19.2 秒（窗口最早能到 0 秒），第 3 秒在窗口里，就能答对。',
+  'Long-WAM 报告的数字：上下文越长，需要记忆的任务越好。',
+],1900);
+</script>
+<a href="https://wikieden.github.io/ai-books/" style="position:fixed;right:12px;bottom:12px;z-index:99;padding:4px 10px;border-radius:14px;background:rgba(127,127,127,.18);color:inherit;font:13px/1.6 system-ui,sans-serif;text-decoration:none">← 全部讲义书</a>
+</body></html>

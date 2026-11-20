@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>第 2 章 · 加噪还是不加噪：一个网络当四种角色 · 世界模型与 WAM 流派</title>
+<style>
+:root{--bg:#fbfbfa;--fg:#1f2328;--mute:#5d6470;--line:#e3e5e8;--card:#fff;--acc:#2f6fdf;--code:#f2f3f5;--quote:#f4f6fa}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15181d;--fg:#e4e7ec;--mute:#9aa3b2;--line:#2c323b;--card:#1c2026;--acc:#7aa7ff;--code:#22272f;--quote:#1b2029}}
+:root[data-theme="dark"]{--bg:#15181d;--fg:#e4e7ec;--mute:#9aa3b2;--line:#2c323b;--card:#1c2026;--acc:#7aa7ff;--code:#22272f;--quote:#1b2029}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.75 -apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Helvetica Neue",sans-serif}
+a{color:var(--acc)}
+header.top{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+header.top .in{max-width:860px;margin:0 auto;padding:10px 16px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;font-size:14px}
+header.top .brand{font-weight:600;color:var(--fg);text-decoration:none;margin-right:auto}
+header.top a{text-decoration:none}
+main{max-width:860px;margin:0 auto;padding:24px 16px 72px;overflow-wrap:anywhere}
+h1{font-size:28px;line-height:1.35;margin:8px 0 16px} h2{font-size:22px;margin:40px 0 12px;padding-top:8px;border-top:1px solid var(--line)} h3{font-size:18px;margin:28px 0 8px}
+img{max-width:100%;height:auto;border-radius:8px;border:1px solid var(--line);background:#fff}
+blockquote{margin:16px 0;padding:10px 16px;background:var(--quote);border-left:3px solid var(--acc);border-radius:4px;color:var(--mute)}
+blockquote p{margin:4px 0}
+code{background:var(--code);padding:1px 5px;border-radius:4px;font-size:.9em}
+pre{background:var(--code);padding:12px 14px;border-radius:8px;overflow-x:auto} pre code{padding:0;background:none}
+table{border-collapse:collapse;display:block;overflow-x:auto;max-width:100%;margin:12px 0;font-size:15px}
+th,td{border:1px solid var(--line);padding:6px 10px;vertical-align:top} th{background:var(--code)}
+details{border:1px solid var(--line);border-radius:8px;padding:6px 12px;margin:8px 0;background:var(--card)}
+details[open]{padding-bottom:10px} summary{cursor:pointer;color:var(--acc);font-weight:500}
+mjx-container{overflow-x:auto;overflow-y:hidden;max-width:100%}
+.btn{display:inline-block;margin:4px 8px 4px 0;padding:6px 14px;border:1px solid var(--acc);border-radius:999px;text-decoration:none;font-size:14px}
+.pager{display:flex;justify-content:space-between;gap:12px;margin-top:48px;padding-top:16px;border-top:1px solid var(--line);font-size:15px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin:16px 0}
+.card{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;color:inherit;text-decoration:none}
+.card:hover{border-color:var(--acc)} .card img{border:0;border-bottom:1px solid var(--line);border-radius:0;aspect-ratio:16/10;object-fit:contain;width:100%}
+.card .no{color:var(--mute);font-size:13px;padding:8px 12px 0} .card .t{padding:0 12px 12px;font-weight:500;line-height:1.5}
+.lead{font-size:17px;color:var(--mute)}
+footer{max-width:860px;margin:0 auto;padding:0 16px 40px;color:var(--mute);font-size:13px}
+</style>
+<script>window.MathJax={tex:{inlineMath:[["\\(","\\)"]],displayMath:[["\\[","\\]"],["$$","$$"]],processEscapes:true,processEnvironments:true}};</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
+</head><body>
+<header class="top"><div class="in">
+<a class="brand" href="../index.html">世界模型与 WAM 流派</a>
+<a href="../lessons/index.html">讲义目录</a>
+<a href="../animations/index.html">动画</a>
+<a href="../review.html">复习卡片</a>
+<a href="../lessons/appendix-glossary.html">缩写表</a>
+<a href="https://wikieden.github.io/ai-books/">← 全部讲义书</a>
+</div></header>
+<main>
+<h1 id="2">第 2 章 · 加噪还是不加噪：一个网络当四种角色</h1><p><a class="btn" href="../animations/02-noise-roles.html">▶ 打开本章可交互动画</a></p>
+<blockquote>
+<p>本章回答：联合生成（P3）的 WAM 里，同一个网络为什么既能当世界模型，又能当逆动力学（IDM）和 policy？这个设计为什么能让它吃没有动作标签的人类视频？<br />
+讲解日期：2026-11-20 · 上一章：<a href="../lessons/01-two-questions.html">第 1 章 两个问题</a> · 下一章：<a href="../lessons/03-joint-training.html">第 3 章 联合生成怎么训练</a><br />
+对应原文：调研报告 §3 P3 联合生成 第 4 条"关键设计"；综述 <code>materials/readings/text/survey-world-models-to-world-action-models.md</code><br />
+本章缩写：P3 = Paradigm 3（范式 3，联合生成，第 8 章会把 P1–P4 放到一条轴上）；IDM = Inverse Dynamics Model（逆 / 动力学 / 模型）；DiT = Diffusion Transformer（扩散 / Transformer）；VAE = Variational AutoEncoder（变分 / 自编码器）；UWM = Unified World Model（统一 / 世界 / 模型）；MLP = Multi-Layer Perceptron（多层 / 感知机）。全部缩写见 <a href="../lessons/appendix-glossary.html">附录 · 缩写与术语表</a></p>
+</blockquote>
+<h2 id="_1">讲解</h2>
+<h3 id="2026-11-20">第一步：完形填空，挖哪里就答哪里（2026-11-20）</h3>
+<p><strong>类比：完形填空。</strong> 同一篇短文，老师挖掉不同的词，你答的就是不同的题：</p>
+<ul>
+<li>挖掉结果（"他推了一下方块，方块＿＿"），你在推演后果；</li>
+<li>挖掉动作（"方块从左边到了右边，因为他＿＿"），你在反推原因；</li>
+<li>原因和结果都挖掉，只留开头（"他想把方块放到右边，于是＿＿，结果＿＿"），你在做决定，顺带想象结果。</li>
+</ul>
+<p>做题的还是同一个人，变的只是<strong>哪里被挖空</strong>。</p>
+<p>联合生成模型就是这个做题的人。"挖空"在扩散 / flow matching 里叫<strong>加噪</strong>：一个 token 加了噪声，就是让模型把它生成出来；没加噪（干净），就是已知条件。</p>
+<p><strong>一句话</strong>：角色由"哪里挖空"决定，不由网络结构决定。</p>
+<h3 id="2026-11-20_1">第二步：噪声等级 τ，一个数说清"挖多少"（2026-11-20）</h3>
+<p>flow matching 把干净数据 <span class="arithmatex">\(x_0\)</span> 和纯噪声 <span class="arithmatex">\(\epsilon\)</span> 按比例混在一起：</p>
+<div class="arithmatex">\[
+x_\tau=(1-\tau)\,x_0+\tau\,\epsilon
+\]</div>
+<ul>
+<li><span class="arithmatex">\(\tau\)</span> 读作 tau，<strong>噪声等级</strong>，在 0 到 1 之间；</li>
+<li><span class="arithmatex">\(\tau=0\)</span>：<span class="arithmatex">\(x_\tau=x_0\)</span>，完全干净，等于"题目直接给你答案"，即<strong>已知条件</strong>；</li>
+<li><span class="arithmatex">\(\tau=1\)</span>：<span class="arithmatex">\(x_\tau=\epsilon\)</span>，纯噪声，等于"整个挖空"，即<strong>要生成的东西</strong>；</li>
+<li>中间值：半遮半露，训练时随机抽，让模型学会从任意遮挡程度往回补。</li>
+</ul>
+<p><strong>例子</strong>（编的一维数字）：真实值 <span class="arithmatex">\(x_0=0.2\)</span>，噪声 <span class="arithmatex">\(\epsilon=1.0\)</span>。</p>
+<table>
+<thead>
+<tr>
+<th><span class="arithmatex">\(\tau\)</span></th>
+<th><span class="arithmatex">\(x_\tau=(1-\tau)\cdot0.2+\tau\cdot1.0\)</span></th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0.20</td>
+<td>干净，就是真值</td>
+</tr>
+<tr>
+<td>0.3</td>
+<td>0.7×0.2 + 0.3×1.0 = 0.44</td>
+<td>大部分还看得出</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1.00</td>
+<td>只剩噪声，真值完全看不见</td>
+</tr>
+</tbody>
+</table>
+<p>联合生成的关键是：<strong>视频和动作各有自己的 <span class="arithmatex">\(\tau\)</span></strong>，记作 <span class="arithmatex">\(\tau_v\)</span>（video，视频）和 <span class="arithmatex">\(\tau_a\)</span>（action，动作）。两个数可以分别设。</p>
+<p><strong>一句话</strong>：<span class="arithmatex">\(\tau=0\)</span> 是条件，<span class="arithmatex">\(\tau=1\)</span> 是题目；视频和动作各拧各的旋钮。</p>
+<h3 id="2026-11-20_2">第三步：四种配置，四种角色（2026-11-20）</h3>
+<p>上下文 <span class="arithmatex">\(c\)</span>（历史帧、指令、本体状态）永远干净。剩下两个旋钮各取"干净"或"加噪"，再加上"动作缺失"，得到四种配置（调研报告 §3 P3 的表）：</p>
+<p>| 配置 | 未来视频 | 动作 | 模型在回答 | 角色 |
+|---|---|---|---|
+| 1 | 加噪 | 干净 | 做了这个动作，未来什么样？ | 世界模型（forward dynamics，正向动力学）<span class="arithmatex">\(p(Y\mid h,a)\)</span> |
+| 2 | 干净 | 加噪 | 画面从这样变成那样，中间做了什么？ | 逆动力学 IDM <span class="arithmatex">\(p(a\mid o_t,o_{t+1})\)</span> |
+| 3 | 加噪 | 加噪 | 该做什么，做了会怎样？ | <strong>policy / WAM</strong> <span class="arithmatex">\(p(Y,A\mid h)\)</span> |
+| 4 | 加噪 | 缺失 | 接下来会发生什么？ | 纯视频预测 <span class="arithmatex">\(p(Y\mid h)\)</span> |</p>
+<p>对照第 1 章的口诀检查一遍：配置 1 的动作在"给定"一侧，所以是世界模型；配置 3 的动作在"生成"一侧，所以是 policy。和第 1 章的判断方法完全一致，只是现在用"加不加噪"来表达"在竖线哪一边"。</p>
+<p>部署时用配置 3。训练时随机抽配置，让同一套参数把四种题都练过。</p>
+<p><strong>一句话</strong>：动作干净 → 世界模型；视频干净 → IDM；都加噪 → policy；没动作 → 纯视频预测。</p>
+<h3 id="2026-11-20_3">第四步：为什么能吃没有动作的视频（2026-11-20）</h3>
+<p>带动作标签的机器人数据只有几千到几万小时；人类视频有几十万到上百万小时，但<strong>没有动作标签</strong>。</p>
+<p>有了配置 4，这些视频就能用了：动作 token 缺失（或者保持全噪声、不算它的 loss），只在视频上算 loss。模型照样在学"世界怎么变"，而这部分参数和配置 3（policy）是<strong>共享</strong>的。</p>
+<ul>
+<li>UWM 的卖点就是这个：视频和动作独立的 timestep，同一个模型能和无动作视频共训；</li>
+<li>DreamZero 报告：只加 20 分钟无动作的新机器人视频或 12 分钟人类视频共训，未见任务的进度从 38.3% 提到约 55%（调研报告 §3 P3"和 VLA 的对比"）。</li>
+</ul>
+<p><strong>一句话</strong>：人类视频只用来练"挖空未来"这道题，练出来的本事 policy 直接用得上。</p>
+<h3 id="gr00t-2-2026-11-20">第五步：一个具体的例子，GR00T 2 的单塔（2026-11-20）</h3>
+<p>GR00T 2（NVIDIA，2026-11）是这个设计的一个干净实现（细节见 gr00t2 讲义第 2 章）：</p>
+<ul>
+<li>一个 2B（20 亿参数）的视频 DiT，视频 latent（VAE 压缩后的表示）、机器人状态、带噪动作块排成<strong>同一条序列</strong>做 self-attention；</li>
+<li>语言指令不进序列，走 cross-attention 当条件；</li>
+<li>每种机器人（本体）只配一对小 MLP，把状态和动作映射进、映射出这条序列，主干全部共享。</li>
+</ul>
+<p>所以"换角色"不用换网络，"换机器人"也只换两个小 MLP。</p>
+<p><strong>一句话</strong>：一个塔、一条序列，角色靠加噪选，本体靠小 MLP 选。</p>
+<h3 id="_2">动画演示：同一个网络，四种挖空方式</h3>
+<p><img alt="四种配置四种角色" src="../animations/02-noise-roles.gif" /></p>
+<p>可交互版：<a href="../animations/02-noise-roles.html">animations/02-noise-roles.html</a>（打开自动循环播放；点任一按钮切成手动）</p>
+<p><strong>怎么看</strong>：</p>
+<ol>
+<li>每一行是一种配置。灰色实心格是上下文，永远干净（第三步）。</li>
+<li>实心格 = 干净 = 已知；带噪点的格 = 加噪 = 要生成（第二步）。</li>
+<li>第 4 行动作格是虚线空格：人类视频没有动作，只算视频的 loss（第四步）。</li>
+<li>最后一帧底部的框：四行是同一套参数。</li>
+</ol>
+<h2 id="_3">练习与作答记录</h2>
+<p><strong>题 1</strong>（第三步）：把配置 2 用在一段人类视频上（前后两帧都给，动作加噪），模型会输出什么？这能拿来做什么？</p>
+<p><strong>作答</strong>：（待作答）</p>
+<p><strong>题 2</strong>（第二步）：如果训练时只用配置 3（视频和动作都加噪），从不出现配置 1，部署时直接拿它当世界模型用（给定动作、只让视频加噪），你觉得会怎样？为什么？</p>
+<p><strong>作答</strong>：（待作答）</p>
+<p><strong>题 3</strong>（第四步，拓展）：人类的手和机器人的夹爪长得不一样。用人类视频练配置 4，学到的"世界怎么变"里，哪些能迁移到机器人身上，哪些不能？</p>
+<p><strong>作答</strong>：（待作答）</p>
+<h2 id="_4">口诀</h2>
+<blockquote>
+<p>完形填空看挖哪：挖结果是世界模型，挖动作是 IDM；<br />
+两样都挖是 policy，动作没有就纯看视频；<br />
+τ 为零是条件，τ 为一是题目。</p>
+</blockquote>
+<h2 id="_5">本章复习卡片</h2>
+<p>C03 四种加噪配置对应四种角色。练习做完后，按答错、卡住的地方补上。</p>
+<h2 id="_6">附录 · 延伸阅读</h2>
+<h3 id="_7">推荐阅读</h3>
+<table>
+<thead>
+<tr>
+<th>读什么</th>
+<th>读哪里</th>
+<th>读它为了什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>★ 调研报告</td>
+<td>§3 P3 联合生成 第 4 条和配置表</td>
+<td>本章的出处</td>
+</tr>
+<tr>
+<td>★ UWM：<em>Unified World Models</em>（arXiv 2504.02792）</td>
+<td>方法部分讲独立 timestep 的一节</td>
+<td>独立噪声、无动作视频共训的原始做法</td>
+</tr>
+<tr>
+<td>UVA：<em>Unified Video Action Model</em>（arXiv 2503.00200）</td>
+<td>方法部分</td>
+<td>联合 latent + 两个轻量 diffusion 头，另一种实现</td>
+</tr>
+<tr>
+<td>gr00t2 讲义第 2 章</td>
+<td>第一、二步</td>
+<td>单塔、一条序列、每本体小 MLP 的具体结构</td>
+</tr>
+<tr>
+<td>Diffusion Forcing（Chen et al. 2024）</td>
+<td>引言</td>
+<td>每个 token 独立噪声等级这一思想的来源之一</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_8">数学原理</h3>
+<ul>
+<li><strong>线性插值</strong>：<span class="arithmatex">\(x_\tau=(1-\tau)x_0+\tau\epsilon\)</span> 是 <span class="arithmatex">\(x_0\)</span> 和 <span class="arithmatex">\(\epsilon\)</span> 连线上的一点，<span class="arithmatex">\(\tau\)</span> 是走了多远。</li>
+<li><strong>条件 = 不加噪</strong>：把某个变量固定成干净值，就是在条件概率的竖线右边放了它。</li>
+</ul>
+<h3 id="_9">公式清单</h3>
+<table>
+<thead>
+<tr>
+<th>公式</th>
+<th>意思</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(x_\tau=(1-\tau)x_0+\tau\epsilon\)</span></td>
+<td>加噪：<span class="arithmatex">\(\tau=0\)</span> 干净，<span class="arithmatex">\(\tau=1\)</span> 纯噪声</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\((\tau_v,\tau_a)=(\text{噪},0)\)</span></td>
+<td>世界模型 <span class="arithmatex">\(p(Y\mid h,a)\)</span></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\((\tau_v,\tau_a)=(0,\text{噪})\)</span></td>
+<td>逆动力学 <span class="arithmatex">\(p(a\mid o_t,o_{t+1})\)</span></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\((\tau_v,\tau_a)=(\text{噪},\text{噪})\)</span></td>
+<td>policy / WAM <span class="arithmatex">\(p(Y,A\mid h)\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>本章无代码对照：概念都能在纸上算完，第 3 章的损失函数一起算。</p><nav class="pager"><a href="01-two-questions.html">← 第 1 章 · 两个问题：做了会怎样 vs 该做什么</a><a href="03-joint-training.html">第 3 章 · 联合生成怎么训练：一个 loss、一个权重、一张时间表 →</a></nav>
+</main>
+<footer>来自个人学习仓库的对话讲义，含练习作答记录。源码：<a href="https://github.com/wikieden/world-models-wam">github.com/wikieden/world-models-wam</a>。更多讲义书：<a href="https://wikieden.github.io/ai-books/">Physical AI 0-1-♾️（合集）</a></footer>
+</body></html>

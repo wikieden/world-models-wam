@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>第 6 章 · 慢想象、快动作：视频低频、动作高频 · 世界模型与 WAM 流派</title>
+<style>
+:root{--bg:#fbfbfa;--fg:#1f2328;--mute:#5d6470;--line:#e3e5e8;--card:#fff;--acc:#2f6fdf;--code:#f2f3f5;--quote:#f4f6fa}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15181d;--fg:#e4e7ec;--mute:#9aa3b2;--line:#2c323b;--card:#1c2026;--acc:#7aa7ff;--code:#22272f;--quote:#1b2029}}
+:root[data-theme="dark"]{--bg:#15181d;--fg:#e4e7ec;--mute:#9aa3b2;--line:#2c323b;--card:#1c2026;--acc:#7aa7ff;--code:#22272f;--quote:#1b2029}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.75 -apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Helvetica Neue",sans-serif}
+a{color:var(--acc)}
+header.top{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+header.top .in{max-width:860px;margin:0 auto;padding:10px 16px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;font-size:14px}
+header.top .brand{font-weight:600;color:var(--fg);text-decoration:none;margin-right:auto}
+header.top a{text-decoration:none}
+main{max-width:860px;margin:0 auto;padding:24px 16px 72px;overflow-wrap:anywhere}
+h1{font-size:28px;line-height:1.35;margin:8px 0 16px} h2{font-size:22px;margin:40px 0 12px;padding-top:8px;border-top:1px solid var(--line)} h3{font-size:18px;margin:28px 0 8px}
+img{max-width:100%;height:auto;border-radius:8px;border:1px solid var(--line);background:#fff}
+blockquote{margin:16px 0;padding:10px 16px;background:var(--quote);border-left:3px solid var(--acc);border-radius:4px;color:var(--mute)}
+blockquote p{margin:4px 0}
+code{background:var(--code);padding:1px 5px;border-radius:4px;font-size:.9em}
+pre{background:var(--code);padding:12px 14px;border-radius:8px;overflow-x:auto} pre code{padding:0;background:none}
+table{border-collapse:collapse;display:block;overflow-x:auto;max-width:100%;margin:12px 0;font-size:15px}
+th,td{border:1px solid var(--line);padding:6px 10px;vertical-align:top} th{background:var(--code)}
+details{border:1px solid var(--line);border-radius:8px;padding:6px 12px;margin:8px 0;background:var(--card)}
+details[open]{padding-bottom:10px} summary{cursor:pointer;color:var(--acc);font-weight:500}
+mjx-container{overflow-x:auto;overflow-y:hidden;max-width:100%}
+.btn{display:inline-block;margin:4px 8px 4px 0;padding:6px 14px;border:1px solid var(--acc);border-radius:999px;text-decoration:none;font-size:14px}
+.pager{display:flex;justify-content:space-between;gap:12px;margin-top:48px;padding-top:16px;border-top:1px solid var(--line);font-size:15px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin:16px 0}
+.card{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;color:inherit;text-decoration:none}
+.card:hover{border-color:var(--acc)} .card img{border:0;border-bottom:1px solid var(--line);border-radius:0;aspect-ratio:16/10;object-fit:contain;width:100%}
+.card .no{color:var(--mute);font-size:13px;padding:8px 12px 0} .card .t{padding:0 12px 12px;font-weight:500;line-height:1.5}
+.lead{font-size:17px;color:var(--mute)}
+footer{max-width:860px;margin:0 auto;padding:0 16px 40px;color:var(--mute);font-size:13px}
+</style>
+<script>window.MathJax={tex:{inlineMath:[["\\(","\\)"]],displayMath:[["\\[","\\]"],["$$","$$"]],processEscapes:true,processEnvironments:true}};</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
+</head><body>
+<header class="top"><div class="in">
+<a class="brand" href="../index.html">世界模型与 WAM 流派</a>
+<a href="../lessons/index.html">讲义目录</a>
+<a href="../animations/index.html">动画</a>
+<a href="../review.html">复习卡片</a>
+<a href="../lessons/appendix-glossary.html">缩写表</a>
+<a href="https://wikieden.github.io/ai-books/">← 全部讲义书</a>
+</div></header>
+<main>
+<h1 id="6">第 6 章 · 慢想象、快动作：视频低频、动作高频</h1><p><a class="btn" href="../animations/06-slow-fast.html">▶ 打开本章可交互动画</a></p>
+<blockquote>
+<p>本章回答：不想放弃推理时的想象，又想把频率拉到 20 Hz 以上，该怎么办？AHA-WAM 的双塔和 GR00T 2 的"2v4a"各是怎么做的？省下的算力大概有多少？<br />
+讲解日期：2026-11-20 · 上一章：<a href="../lessons/05-imagine-or-not.html">第 5 章 推理时还要想象吗</a> · 下一章：<a href="../lessons/07-long-context.html">第 7 章 记得更久</a><br />
+对应原文：调研报告 §10.2；AHA-WAM（arXiv 2606.09811，<strong>只读了摘要</strong>）；GR00T 2 白皮书，见 gr00t2 讲义第 2 章<br />
+本章缩写：DiT = Diffusion Transformer（扩散 / Transformer）；KV / K/V = Key / Value（键 / 值）；Hz = Hertz（赫兹）；2v4a = 2 video + 4 action（2 步视频去噪 + 4 步动作去噪）。全部缩写见 <a href="../lessons/appendix-glossary.html">附录 · 缩写与术语表</a></p>
+</blockquote>
+<h2 id="_1">讲解</h2>
+<h3 id="2026-11-20">第一步：两件事本来就不同频（2026-11-20）</h3>
+<p><strong>类比：开车看导航。</strong> 你每隔几秒瞄一眼导航（"前面 500 米右转"），方向盘却是每时每刻都在微调。瞄导航贵（要分神），微调方向盘便宜而且必须连续。没人会每打一下方向盘就重新规划一次路线。</p>
+<p>WAM 里也是这样：</p>
+<ul>
+<li><strong>想象未来</strong>（视频）：变化慢，算起来贵（几千个 token）；</li>
+<li><strong>出动作</strong>：要高频（几十 Hz），算起来便宜（几十个 token）。</li>
+</ul>
+<p>第 4 章的 DreamZero 每出一块动作都把视频完整去噪一遍，相当于每打一下方向盘都重新看一遍导航，所以只有 7 Hz。</p>
+<p><strong>一句话</strong>：贵的少算，便宜的多算。</p>
+<h3 id="aha-wam2026-11-20">第二步：AHA-WAM，两个塔各管一个频率（2026-11-20）</h3>
+<p>AHA-WAM（2026-06，摘要）用两个 DiT：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>视频 DiT</th>
+<th>动作 DiT</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>角色</td>
+<td>低频的"世界规划器"</td>
+<td>高频的动作生成器</td>
+</tr>
+<tr>
+<td>多久跑一次</td>
+<td>隔一阵更新一次</td>
+<td>每个控制周期都跑</td>
+</tr>
+<tr>
+<td>记忆</td>
+<td>滚动的 KV 记忆</td>
+<td>不单独存</td>
+</tr>
+<tr>
+<td>怎么交流</td>
+<td>被读</td>
+<td>通过联合注意力读视频 DiT 的<strong>逐层特征</strong></td>
+</tr>
+</tbody>
+</table>
+<p>结果（摘要）：24.17 Hz 闭环，比 Fast-WAM 快 4.59 倍；RoboTwin 平均 92.80%。</p>
+<p><strong>核对一下数字</strong>：24.17 Hz 意味着每个动作块约 <span class="arithmatex">\(1000/24.17\approx41.4\)</span> ms。乘 4.59 得约 190 ms，正好是第 5 章 Fast-WAM 报告的真机延迟。两篇的数字对得上。</p>
+<p>按"未来怎么变成动作"来分，动作塔读的是视频塔的中间特征，不是读生成好的画面，这更接近 P2（借视频特征，第 8 章）。</p>
+<p><strong>一句话</strong>：一个塔慢慢想，一个塔快快做，快的那个随时去读慢的那个的笔记。</p>
+<h3 id="gr00t-2-2v4a2026-11-20">第三步：GR00T 2，一个塔里的 2v4a（2026-11-20）</h3>
+<p>GR00T 2 只有一个塔（第 2 章第五步），它在<strong>一次决策的去噪步骤内部</strong>分频率：</p>
+<table>
+<thead>
+<tr>
+<th>第几次去噪</th>
+<th>类型</th>
+<th>算什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>joint</td>
+<td>视频、状态、动作一起算</td>
+</tr>
+<tr>
+<td>1</td>
+<td>cached</td>
+<td>只更新动作，复用第 0 次视频的 K/V</td>
+</tr>
+<tr>
+<td>2</td>
+<td>joint</td>
+<td>再一起算一次</td>
+</tr>
+<tr>
+<td>3</td>
+<td>cached</td>
+<td>只更新动作，复用第 2 次的 K/V</td>
+</tr>
+</tbody>
+</table>
+<p>视频真正去噪 2 次，动作去噪 4 次，记作 <strong>2v4a</strong>（gr00t2 讲义第 2 章）。不同本体用不同配置：Dexter 2v2a，YAM 2v4a，G1 的 Turbo 模式降到 1v2a。</p>
+<p><strong>为什么 cached 便宜</strong>：attention 里，视频 token 是被看的一方（Key、Value）。视频不变时，它的 K、V 不用重算，只需要让几十个动作 token 当查询方（Query）去看它们。</p>
+<p><strong>一句话</strong>：一个塔内部也能分快慢，靠的是复用视频的 K/V。</p>
+<h3 id="2026-11-20_1">第四步：粗算省了多少（2026-11-20）</h3>
+<p><strong>例子</strong>（编的数，只看量级）：视频 4000 个 token，动作 32 个。粗略假设一次 joint 的代价正比于要重算的 token 数（4032），一次 cached 只重算动作（32）。</p>
+<table>
+<thead>
+<tr>
+<th>配置</th>
+<th>代价</th>
+<th>相对 4v4a</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4v4a（每次都 joint）</td>
+<td>4 × 4032 = 16128</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>2v4a</td>
+<td>2 × 4032 + 2 × 32 = 8128</td>
+<td>约 50%</td>
+</tr>
+<tr>
+<td>1v2a</td>
+<td>1 × 4032 + 1 × 32 = 4064</td>
+<td>约 25%</td>
+</tr>
+</tbody>
+</table>
+<p>这是很粗的估计：cached 时动作 token 仍要去 attend 几千个视频的 K/V，不是完全免费。但量级说明了要点：<strong>省下的几乎全是视频的计算</strong>。</p>
+<p><strong>一句话</strong>：视频算的次数减半，代价差不多减半。</p>
+<h3 id="2026-11-20_2">第五步：两种做法对比（2026-11-20）</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>AHA-WAM</th>
+<th>GR00T 2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>塔的数量</td>
+<td>两个 DiT</td>
+<td>一个 DiT</td>
+</tr>
+<tr>
+<td>分频率的地方</td>
+<td>跨控制周期（视频隔几块更新一次）</td>
+<td>一次决策内部（去噪步之间）</td>
+</tr>
+<tr>
+<td>动作读什么</td>
+<td>视频塔的逐层特征</td>
+<td>视频的 K/V 缓存</td>
+</tr>
+<tr>
+<td>更像哪一派</td>
+<td>P2（借特征）</td>
+<td>P3（联合生成）</td>
+</tr>
+</tbody>
+</table>
+<p>共同点：都承认"想象"是贵的、慢的，于是让它少做几次，而不是像第 5 章那样完全不做。</p>
+<p><strong>一句话</strong>：第 5 章是"不想"，第 6 章是"少想"。</p>
+<h3 id="_2">动画演示：两个频率</h3>
+<p><img alt="慢想象快动作" src="../animations/06-slow-fast.gif" /></p>
+<p>可交互版：<a href="../animations/06-slow-fast.html">animations/06-slow-fast.html</a>（打开自动循环播放；点任一按钮切成手动）</p>
+<p><strong>怎么看</strong>：</p>
+<ol>
+<li>上半部分：绿色长条是视频 DiT 每隔 4 格更新一次，橙色小块是动作 DiT 每格都出动作，虚线箭头是动作读视频特征（第二步）。</li>
+<li>中间的数字：24.17 Hz ≈ 41 ms，× 4.59 ≈ 190 ms（第二步的核对）。</li>
+<li>下半部分四行：joint 是实心长条，cached 是虚线"复用 K/V"（第三步）。</li>
+</ol>
+<h2 id="_3">练习与作答记录</h2>
+<p><strong>题 1</strong>（第一步）：举一个"视频低频更新"会出问题的场景：什么情况下世界变得很快，动作塔读到的视频特征已经过时了？</p>
+<p><strong>作答</strong>：（待作答）</p>
+<p><strong>题 2</strong>（第四步）：沿用第四步的数字，算 2v2a 和 1v4a 的代价，和 2v4a 比哪个更省？哪个动作更精细？</p>
+<p><strong>作答</strong>：（待作答）</p>
+<p><strong>题 3</strong>（第五步）：GR00T 2 为什么不直接用 0v4a（完全不算视频）？这和第 5 章 Fast-WAM 的做法有什么关系？</p>
+<p><strong>作答</strong>：（待作答）</p>
+<h2 id="_4">口诀</h2>
+<blockquote>
+<p>看导航要稀，打方向要密；<br />
+双塔一慢一快，快的读慢的笔记；<br />
+单塔 2v4a，视频算二动作算四；<br />
+第五章不想，第六章少想。</p>
+</blockquote>
+<h2 id="_5">本章复习卡片</h2>
+<p>C07 GR00T 2 的 2v4a 是什么，cached 那几次为什么便宜。练习做完后，按答错、卡住的地方补上。</p>
+<h2 id="_6">附录 · 延伸阅读</h2>
+<h3 id="_7">推荐阅读</h3>
+<table>
+<thead>
+<tr>
+<th>读什么</th>
+<th>读哪里</th>
+<th>读它为了什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>★ gr00t2 讲义第 2 章</td>
+<td>第三、四步和动画</td>
+<td>2v4a 的逐步拆解和各本体配置</td>
+</tr>
+<tr>
+<td>★ AHA-WAM（arXiv 2606.09811）</td>
+<td>方法和延迟对比表</td>
+<td>双塔、滚动 KV 记忆（本章只读了摘要）</td>
+</tr>
+<tr>
+<td>调研报告</td>
+<td>§10.2</td>
+<td>本章出处</td>
+</tr>
+<tr>
+<td>Hi Robot / 双系统 VLA（如 GR00T N1 的 System 1/2）</td>
+<td>vla-deep-dive 讲义</td>
+<td>VLA 里"慢思考 + 快执行"的同类设计</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_8">数学原理</h3>
+<ul>
+<li><strong>频率和周期</strong>：周期（ms）= 1000 / 频率（Hz）。24.17 Hz ↔ 41.4 ms。</li>
+<li><strong>K/V 缓存</strong>：attention 输出 = softmax<span class="arithmatex">\((QK^\top/\sqrt{d})V\)</span>；<span class="arithmatex">\(K,V\)</span> 只依赖被看的 token，它们不变就能复用，只重算 <span class="arithmatex">\(Q\)</span> 所在的 token。</li>
+</ul>
+<h3 id="_9">公式清单</h3>
+<table>
+<thead>
+<tr>
+<th>公式</th>
+<th>意思</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>周期 = 1000 / Hz</td>
+<td>频率换成毫秒</td>
+</tr>
+<tr>
+<td>代价 ≈ <span class="arithmatex">\(n_v(N_v+N_a)+(n_a-n_v)N_a\)</span></td>
+<td><span class="arithmatex">\(n_v\)</span>v<span class="arithmatex">\(n_a\)</span>a 配置的粗略代价，<span class="arithmatex">\(N\)</span> 是 token 数</td>
+</tr>
+</tbody>
+</table>
+<p>本章无代码对照。</p><nav class="pager"><a href="05-imagine-or-not.html">← 第 5 章 · 推理时还要想象吗：训练时想象，推理时不想象</a><a href="07-long-context.html">第 7 章 · 记得更久：从 6 秒到 19 秒的上下文 →</a></nav>
+</main>
+<footer>来自个人学习仓库的对话讲义，含练习作答记录。源码：<a href="https://github.com/wikieden/world-models-wam">github.com/wikieden/world-models-wam</a>。更多讲义书：<a href="https://wikieden.github.io/ai-books/">Physical AI 0-1-♾️（合集）</a></footer>
+</body></html>

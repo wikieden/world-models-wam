@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>推理的四种用法</title><link rel="stylesheet" href="anim.css"></head>
+<body><main>
+<h1>第 11 章 · 推理的四种用法</h1>
+<p class="sub">配套讲义：<a href="../lessons/11-four-uses.html">第 11 章 · 推理的四种用法：离线想象、在线规划、直接出动作、交互模拟</a>。同一段 1 秒的时间里，四种用法各做了几次决策（或生成了几帧）。每个小竖条是一次决策 / 一帧。</p>
+<div class="panel"><svg id="sv" viewBox="0 0 720 440"></svg></div>
+<p id="cap" style="min-height:3.2em;margin:8px 4px"></p>
+<div class="row"><button id="play">▶ 播放</button><button id="step">→ 单步</button><button id="reset">↺ 重来</button></div>
+<p class="note">看点：世界模型推理时“跑不跑、跑几次”，比它怎么训练的更能区分流派。</p>
+</main>
+<script src="anim.js"></script>
+<script>
+const X=t=>160+t*530;
+const g0=P(0);el('line',{x1:X(0),y1:330,x2:X(1),y2:330,stroke:'var(--line)','stroke-width':2},g0);
+[0,0.25,0.5,0.75,1].forEach(t=>label(g0,(t*1000)+' ms',X(t),350,{a:'middle',m:1,fs:11}));
+function lane(g,y,name,sub,hz,col,w){label(g,name,16,y+14,{b:1,c:col});label(g,sub,16,y+32,{fs:11,m:1});
+  if(hz)for(let t=0;t<1-1e-9;t+=1/hz)el('rect',{x:X(t),y:y,width:w||Math.max(2,530/hz-3),height:30,rx:2,fill:col,opacity:.75},g)}
+const L=[
+ ['VLA 对照（π0）','最高 50 Hz',50,'var(--muted)'],
+ ['A 离线想象','部署只跑策略',50,'var(--teal)'],
+ ['B 在线规划','每步展开很多未来',0,'var(--amber)'],
+ ['C 直接出动作','DreamZero 7 Hz',7,'var(--purple)'],
+ ['D 交互模拟','Genie 3 24 fps',24,'var(--accent)'],
+];
+L.forEach(([n,s,hz,c],i)=>{const g=P(i+1);lane(g,20+i*60,n,s,hz,c);
+  if(i===2){el('rect',{x:X(0),y:20+i*60,width:530,height:30,rx:2,fill:c,opacity:.25,stroke:c,'stroke-dasharray':'5 4'},g);label(g,'一次决策约 16 s（V-JEPA 2-AC，二手），1 秒内还没算完',X(0)+10,20+i*60+20,{fs:12})}
+  if(i===1)label(g,'训练时在模型里想象，部署时世界模型不跑',X(0)+4,20+i*60-4,{fs:10,m:1});});
+const g6=P(6);el('rect',{x:16,y:366,width:688,height:64,rx:8,fill:'var(--accent-bg)',stroke:'var(--accent)'},g6);
+label(g6,'1 秒内的决策次数：A ≈ VLA 50 次 · C 7 次 · B 不到 1 次；D 是 24 帧画面（给人或 agent 看）',30,390,{fs:13});
+label(g6,'7 Hz ↔ 约 143 ms 一次；50 Hz ↔ 20 ms 一次',30,414,{fs:13,m:1});
+runSteps([
+  '时间轴是 1 秒。先放一条对照：纯 VLA。',
+  'π0 一类 VLA 最高 50 Hz：1 秒 50 次决策。',
+  'A 离线想象（Dreamer、DreamGen）：世界模型只在训练时用，部署时只跑策略，和 VLA 一样快。',
+  'B 在线规划（MuZero、V-JEPA 2-AC）：每一步都在模型里展开很多候选未来，再打分挑动作，最慢。',
+  'C 直接出动作（P3 的 WAM）：和动作一起去噪未来。DreamZero 7 Hz。',
+  'D 交互模拟（Genie 3、GameNGen）：持续生成画面响应输入，24 fps；产出的是画面不是动作。',
+  '四种用法的速度差两到三个数量级。选型时先问：推理时世界模型跑不跑、跑几次。',
+],1900);
+</script>
+<a href="https://wikieden.github.io/ai-books/" style="position:fixed;right:12px;bottom:12px;z-index:99;padding:4px 10px;border-radius:14px;background:rgba(127,127,127,.18);color:inherit;font:13px/1.6 system-ui,sans-serif;text-decoration:none">← 全部讲义书</a>
+</body></html>

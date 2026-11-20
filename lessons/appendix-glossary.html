@@ -49,10 +49,51 @@ footer{max-width:860px;margin:0 auto;padding:0 16px 40px;color:var(--mute);font-
 <p>讲义里缩写第一次出现时给全称；这里集中列出，按字母排序。中文拆词说明每个词的意思。</p>
 <p>| 缩写 | 英文全称 | 中文拆词 | 一句话 | 首次出现 |
 |---|---|---|---|
-| DiT | Diffusion Transformer | 扩散 / Transformer | 用 Transformer 做去噪网络的扩散模型 | 第 2 章（待讲） |
+| 2v4a | 2 video + 4 action | 2 步视频 / 4 步动作 | GR00T 2 一次决策里视频去噪 2 次、动作 4 次 | <a href="../lessons/06-slow-fast.html">第 6 章</a> |
+| 3DGS | 3D Gaussian Splatting | 三维 / 高斯 / 泼溅 | 用一堆三维高斯点重建场景、渲染新视角 | <a href="../lessons/10-five-schools.html">第 10 章</a> |
+| AR | AutoRegressive | 自 / 回归 | 一块接一块往后生成，每块只看前面的 | <a href="../lessons/07-long-context.html">第 7 章</a> |
+| BFL | Black Forest Labs | — | 做图像 / 视频生成的公司，出了 FLUX 3 Action | <a href="../lessons/12-landscape-2026.html">第 12 章</a> |
+| CEM | Cross-Entropy Method | 交叉熵 / 方法 | 采样一批动作、留最好的、重新拟合分布，反复几轮 | <a href="../lessons/10-five-schools.html">第 10 章</a> |
+| CFG | Classifier-Free Guidance | 无分类器 / 引导 | 有条件和无条件预测外推，加强条件的作用 | <a href="../lessons/04-joint-inference.html">第 4 章</a> |
+| DiT | Diffusion Transformer | 扩散 / Transformer | 用 Transformer 做去噪网络的扩散模型 | <a href="../lessons/02-noise-roles.html">第 2 章</a> |
+| ELBO | Evidence Lower BOund | 证据 / 下界 | 对数似然的下界：重建项 − KL 项 | <a href="../lessons/10-five-schools.html">第 10 章</a> |
+| EMA | Exponential Moving Average | 指数 / 滑动 / 平均 | 参数的平滑副本，JEPA 用它当 target encoder | <a href="../lessons/10-five-schools.html">第 10 章</a> |
+| FDM | Forward Dynamics Model | 正向 / 动力学 / 模型 | 给动作，预测未来画面 | <a href="../lessons/05-imagine-or-not.html">第 5 章</a> |
+| FLARE | Future LAtent Representation Alignment | 未来 / 隐 / 表示 / 对齐 | VLA 里加 future token 对齐未来观测的 embedding（P4） | <a href="../lessons/08-coupling-axis.html">第 8 章</a> |
+| FM | Flow Matching | 流 / 匹配 | 让网络学"从数据到噪声的速度"，推理时反着走 | <a href="../lessons/03-joint-training.html">第 3 章</a> |
+| fps | frames per second | 每秒 / 帧数 | 视频每秒多少帧 | <a href="../lessons/11-four-uses.html">第 11 章</a> |
 | FVD | Fréchet Video Distance | Fréchet / 视频 / 距离 | 衡量生成视频和真实视频分布有多接近，越小越像 | <a href="../lessons/01-two-questions.html">第 1 章</a> |
-| IDM | Inverse Dynamics Model | 逆 / 动力学 / 模型 | 看前后两帧，反推中间做了什么动作 | 第 2 章（待讲） |
+| GNN | Graph Neural Network | 图 / 神经 / 网络 | 在节点和边上传消息的网络，可模拟粒子、刚体 | <a href="../lessons/10-five-schools.html">第 10 章</a> |
+| GPU | Graphics Processing Unit | 图形 / 处理 / 单元 | 显卡 | <a href="../lessons/04-joint-inference.html">第 4 章</a> |
+| Hz | Hertz | 赫兹 | 每秒多少次 | <a href="../lessons/03-joint-training.html">第 3 章</a> |
+| IDM | Inverse Dynamics Model | 逆 / 动力学 / 模型 | 看前后两帧，反推中间做了什么动作 | <a href="../lessons/02-noise-roles.html">第 2 章</a> |
+| JEPA | Joint-Embedding Predictive Architecture | 联合 / 嵌入 / 预测 / 架构 | 在特征空间预测，不重建像素 | <a href="../lessons/08-coupling-axis.html">第 8 章</a> |
+| KL | Kullback–Leibler divergence | KL / 散度 | 衡量两个分布差多少 | <a href="../lessons/10-five-schools.html">第 10 章</a> |
+| KV、K/V | Key / Value | 键 / 值 | attention 里被查询的一方；不变时可缓存复用 | <a href="../lessons/04-joint-inference.html">第 4 章</a> |
+| LAM | Latent Action Model | 隐 / 动作 / 模型 | 从前后两帧里挤出一个很窄的隐动作 | <a href="../lessons/09-latent-action.html">第 9 章</a> |
+| LAPA | Latent Action Pretraining from Videos | 隐动作 / 预训练 / 从视频 | 用隐动作做 VLA 预训练 | <a href="../lessons/09-latent-action.html">第 9 章</a> |
+| LaWAM | Latent-action World Action Model | 隐动作 / 世界动作模型 | 隐动作桥的一个实现 | <a href="../lessons/09-latent-action.html">第 9 章</a> |
+| LaWM | Latent World Model | 隐 / 世界模型 | LAM 的 decoder 本身：靠隐动作预测下一帧 | <a href="../lessons/09-latent-action.html">第 9 章</a> |
+| LIBERO | Lifelong roBot lEarning benchmaRk | 终身 / 机器人学习 / 基准 | 一个仿真操作基准 | <a href="../lessons/13-choose-and-frontier.html">第 13 章</a> |
+| LoRA | Low-Rank Adaptation | 低秩 / 适配 | 只训一对小矩阵的微调方法 | <a href="../lessons/03-joint-training.html">第 3 章</a> |
+| MCTS | Monte Carlo Tree Search | 蒙特卡洛 / 树 / 搜索 | 在模型里展开搜索树挑动作（MuZero） | <a href="../lessons/10-five-schools.html">第 10 章</a> |
+| MLP | Multi-Layer Perceptron | 多层 / 感知机 | 几层全连接网络 | <a href="../lessons/02-noise-roles.html">第 2 章</a> |
+| MoE | Mixture of Experts | 混合 / 专家 | 每个 token 只激活少数几组参数 | <a href="../lessons/12-landscape-2026.html">第 12 章</a> |
+| MoT | Mixture-of-Transformers | 混合 / Transformer | 每个模态一组参数，在 attention 里互相看 | <a href="../lessons/05-imagine-or-not.html">第 5 章</a> |
+| MPC | Model Predictive Control | 模型 / 预测 / 控制 | 每步规划一段、只执行第一步、下一步重来 | <a href="../lessons/10-five-schools.html">第 10 章</a> |
+| NeRF | Neural Radiance Field | 神经 / 辐射 / 场 | 用网络表示三维场景，渲染新视角 | <a href="../lessons/10-five-schools.html">第 10 章</a> |
+| NVFP4 | NVIDIA 4-bit Floating Point | NVIDIA / 4 位 / 浮点 | 一种 4 位量化格式 | <a href="../lessons/04-joint-inference.html">第 4 章</a> |
+| P1–P4 | Paradigm 1–4 | 范式 1–4 | 先想后做 / 借特征 / 联合生成 / 辅助 loss | <a href="../lessons/02-noise-roles.html">第 2 章</a>、<a href="../lessons/08-coupling-axis.html">第 8 章</a> |
+| RL | Reinforcement Learning | 强化 / 学习 | 靠奖励试错学策略 | <a href="../lessons/13-choose-and-frontier.html">第 13 章</a> |
+| RSSM | Recurrent State-Space Model | 循环 / 状态空间 / 模型 | Dreamer 的世界模型：确定性状态 + 随机隐状态 | <a href="../lessons/10-five-schools.html">第 10 章</a> |
+| RTC | Real-Time Chunking | 实时 / 分块 | π0 的异步分块执行 | <a href="../lessons/11-four-uses.html">第 11 章</a> |
+| SE | Standard Error | 标准 / 误差 | 估计值的标准差，<span class="arithmatex">\(\sqrt{p(1-p)/n}\)</span> | <a href="../lessons/12-landscape-2026.html">第 12 章</a> |
+| UWM | Unified World Model | 统一 / 世界 / 模型 | 视频和动作独立 timestep 的联合生成模型 | <a href="../lessons/02-noise-roles.html">第 2 章</a> |
+| VAE | Variational AutoEncoder | 变分 / 自编码器 | 把图像压成 latent、也能解码回去 | <a href="../lessons/02-noise-roles.html">第 2 章</a> |
 | VLA | Vision-Language-Action | 视觉 / 语言 / 动作 | 看图、听指令、出动作的 policy | <a href="../lessons/01-two-questions.html">第 1 章</a> |
+| VLM | Vision-Language Model | 视觉 / 语言 / 模型 | 看图和文字、输出文字的模型 | <a href="../lessons/09-latent-action.html">第 9 章</a> |
+| VPP | Video Prediction Policy | 视频 / 预测 / 策略 | 读视频模型第一个去噪步的特征出动作（P2） | <a href="../lessons/08-coupling-axis.html">第 8 章</a> |
+| VQ | Vector Quantization | 向量 / 量化 | 把连续向量换成码本里最近的一个 | <a href="../lessons/09-latent-action.html">第 9 章</a> |
 | WAM | World Action Model | 世界 / 动作 / 模型 | 出动作时同时建模未来的 policy | <a href="../lessons/01-two-questions.html">第 1 章</a> |
 | WM | World Model | 世界 / 模型 | 给定动作，预测世界会怎么变 | <a href="../lessons/01-two-questions.html">第 1 章</a> |</p>
 <table>
@@ -73,6 +114,36 @@ footer{max-width:860px;margin:0 auto;padding:0 16px 40px;color:var(--mute);font-
 <td>联合分布</td>
 <td><span class="arithmatex">\(p(Y,A\mid h)\)</span>：未来世界和未来动作一起出现的概率</td>
 <td><a href="../lessons/01-two-questions.html">第 1 章</a></td>
+</tr>
+<tr>
+<td>噪声等级 τ</td>
+<td>0 = 干净（条件），1 = 纯噪声（要生成的）</td>
+<td><a href="../lessons/02-noise-roles.html">第 2 章</a></td>
+</tr>
+<tr>
+<td>teacher forcing</td>
+<td>训练时用真实的历史当条件</td>
+<td><a href="../lessons/03-joint-training.html">第 3 章</a></td>
+</tr>
+<tr>
+<td>compounding error / exposure bias</td>
+<td>用自己的预测当输入，误差一步步累积</td>
+<td><a href="../lessons/04-joint-inference.html">第 4 章</a></td>
+</tr>
+<tr>
+<td>隐动作 <span class="arithmatex">\(\tilde a\)</span></td>
+<td>从前后两帧挤出的"发生了什么变化"</td>
+<td><a href="../lessons/09-latent-action.html">第 9 章</a></td>
+</tr>
+<tr>
+<td>耦合强度</td>
+<td>想象未来和出动作绑得多紧</td>
+<td><a href="../lessons/08-coupling-axis.html">第 8 章</a></td>
+</tr>
+<tr>
+<td>System 1 / System 2</td>
+<td>快反应、短记忆 / 慢思考、长记忆</td>
+<td><a href="../lessons/07-long-context.html">第 7 章</a></td>
 </tr>
 </tbody>
 </table>

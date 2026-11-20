@@ -48,7 +48,7 @@ footer{max-width:860px;margin:0 auto;padding:0 16px 40px;color:var(--mute);font-
 <h1 id="1-vs">第 1 章 · 两个问题：做了会怎样 vs 该做什么</h1><p><a class="btn" href="../animations/01-two-questions.html">▶ 打开本章可交互动画</a></p>
 <blockquote>
 <p>本章回答：世界模型和世界动作模型（WAM）各自在回答什么问题？两者是什么关系？为什么说 WAM 首先是 policy？<br />
-讲解日期：2026-11-04 · 下一章：第 2 章 加噪还是不加噪（待讲）<br />
+讲解日期：2026-11-04 · 下一章：<a href="../lessons/02-noise-roles.html">第 2 章 加噪还是不加噪</a><br />
 来源：调研报告 §0 记号<br />
 本章缩写：WAM = World Action Model（世界 / 动作 / 模型）；VLA = Vision-Language-Action（视觉 / 语言 / 动作）；FVD = Fréchet Video Distance（Fréchet / 视频 / 距离）。全表见 <a href="../lessons/appendix-glossary.html">appendix-glossary.md</a>。</p>
 </blockquote>
@@ -116,7 +116,7 @@ p(Y, A \mid h) \;=\; \underbrace{p(A \mid h)}_{\text{policy：该做什么}} \;\
 <blockquote>
 <p><em>"A world action model is a policy whose action generation is coupled, during training or inference, with a model or representation of future world evolution."</em>（Zhang et al. 2026，<code>materials/readings/text/survey-world-models-to-world-action-models.md</code> 第 106–110 行）</p>
 </blockquote>
-<p>后面紧跟一句：这种耦合可以是 explicit、latent、joint 或 auxiliary。这四种耦合方式就是第 5 章要讲的那条"耦合强度轴"，现在先认识名字。</p>
+<p>后面紧跟一句：这种耦合可以是 explicit、latent、joint 或 auxiliary。这四种耦合方式就是第 8 章要讲的那条"耦合强度轴"，现在先认识名字。</p>
 <h3 id="_2">动画演示</h3>
 <p><img alt="同一个场景，问不同的问题" src="../animations/01-two-questions.gif" /></p>
 <p>可交互版：<a href="../animations/01-two-questions.html">animations/01-two-questions.html</a>（用浏览器打开就自动循环播放；点任一按钮切成手动，可暂停、单步、重来）。</p>
@@ -186,7 +186,7 @@ p(Y, A \mid h) \;=\; \underbrace{p(A \mid h)}_{\text{policy：该做什么}} \;\
 <td>联合分布 = policy × 世界模型</td>
 </tr>
 </tbody>
-</table><nav class="pager"><span></span><span></span></nav>
+</table><nav class="pager"><span></span><a href="02-noise-roles.html">第 2 章 · 加噪还是不加噪：一个网络当四种角色 →</a></nav>
 </main>
 <footer>来自个人学习仓库的对话讲义，含练习作答记录。源码：<a href="https://github.com/wikieden/world-models-wam">github.com/wikieden/world-models-wam</a>。更多讲义书：<a href="https://wikieden.github.io/ai-books/">Physical AI 0-1-♾️（合集）</a></footer>
 </body></html>

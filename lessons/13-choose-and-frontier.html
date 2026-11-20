@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>第 13 章 · 选型与前沿：场景 → 流派，以及还没解决的问题 · 世界模型与 WAM 流派</title>
+<style>
+:root{--bg:#fbfbfa;--fg:#1f2328;--mute:#5d6470;--line:#e3e5e8;--card:#fff;--acc:#2f6fdf;--code:#f2f3f5;--quote:#f4f6fa}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15181d;--fg:#e4e7ec;--mute:#9aa3b2;--line:#2c323b;--card:#1c2026;--acc:#7aa7ff;--code:#22272f;--quote:#1b2029}}
+:root[data-theme="dark"]{--bg:#15181d;--fg:#e4e7ec;--mute:#9aa3b2;--line:#2c323b;--card:#1c2026;--acc:#7aa7ff;--code:#22272f;--quote:#1b2029}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.75 -apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Helvetica Neue",sans-serif}
+a{color:var(--acc)}
+header.top{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+header.top .in{max-width:860px;margin:0 auto;padding:10px 16px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;font-size:14px}
+header.top .brand{font-weight:600;color:var(--fg);text-decoration:none;margin-right:auto}
+header.top a{text-decoration:none}
+main{max-width:860px;margin:0 auto;padding:24px 16px 72px;overflow-wrap:anywhere}
+h1{font-size:28px;line-height:1.35;margin:8px 0 16px} h2{font-size:22px;margin:40px 0 12px;padding-top:8px;border-top:1px solid var(--line)} h3{font-size:18px;margin:28px 0 8px}
+img{max-width:100%;height:auto;border-radius:8px;border:1px solid var(--line);background:#fff}
+blockquote{margin:16px 0;padding:10px 16px;background:var(--quote);border-left:3px solid var(--acc);border-radius:4px;color:var(--mute)}
+blockquote p{margin:4px 0}
+code{background:var(--code);padding:1px 5px;border-radius:4px;font-size:.9em}
+pre{background:var(--code);padding:12px 14px;border-radius:8px;overflow-x:auto} pre code{padding:0;background:none}
+table{border-collapse:collapse;display:block;overflow-x:auto;max-width:100%;margin:12px 0;font-size:15px}
+th,td{border:1px solid var(--line);padding:6px 10px;vertical-align:top} th{background:var(--code)}
+details{border:1px solid var(--line);border-radius:8px;padding:6px 12px;margin:8px 0;background:var(--card)}
+details[open]{padding-bottom:10px} summary{cursor:pointer;color:var(--acc);font-weight:500}
+mjx-container{overflow-x:auto;overflow-y:hidden;max-width:100%}
+.btn{display:inline-block;margin:4px 8px 4px 0;padding:6px 14px;border:1px solid var(--acc);border-radius:999px;text-decoration:none;font-size:14px}
+.pager{display:flex;justify-content:space-between;gap:12px;margin-top:48px;padding-top:16px;border-top:1px solid var(--line);font-size:15px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin:16px 0}
+.card{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;color:inherit;text-decoration:none}
+.card:hover{border-color:var(--acc)} .card img{border:0;border-bottom:1px solid var(--line);border-radius:0;aspect-ratio:16/10;object-fit:contain;width:100%}
+.card .no{color:var(--mute);font-size:13px;padding:8px 12px 0} .card .t{padding:0 12px 12px;font-weight:500;line-height:1.5}
+.lead{font-size:17px;color:var(--mute)}
+footer{max-width:860px;margin:0 auto;padding:0 16px 40px;color:var(--mute);font-size:13px}
+</style>
+<script>window.MathJax={tex:{inlineMath:[["\\(","\\)"]],displayMath:[["\\[","\\]"],["$$","$$"]],processEscapes:true,processEnvironments:true}};</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
+</head><body>
+<header class="top"><div class="in">
+<a class="brand" href="../index.html">世界模型与 WAM 流派</a>
+<a href="../lessons/index.html">讲义目录</a>
+<a href="../animations/index.html">动画</a>
+<a href="../review.html">复习卡片</a>
+<a href="../lessons/appendix-glossary.html">缩写表</a>
+<a href="https://wikieden.github.io/ai-books/">← 全部讲义书</a>
+</div></header>
+<main>
+<h1 id="13">第 13 章 · 选型与前沿：场景 → 流派，以及还没解决的问题</h1><p><a class="btn" href="../animations/13-choose-and-frontier.html">▶ 打开本章可交互动画</a></p>
+<blockquote>
+<p>本章回答：拿到一个具体场景，怎么在世界模型五派、WAM 四个范式和隐动作桥之间选？选了以后放弃了什么？2026 年下半年还有哪些方向在研究预览阶段，哪些问题还没有答案？<br />
+讲解日期：2026-11-20 · 上一章：<a href="../lessons/12-landscape-2026.html">第 12 章 2026 年的 WAM 版图</a> · 下一章：无（全书完）<br />
+对应原文：调研报告 §8.1–8.2、§9 开放问题、§10.5；AW-0（arXiv 2610.30136）、CtrlWAM（arXiv 2610.00859）、LeapBot-JAC（arXiv 2610.12886）<strong>只读了摘要</strong><br />
+本章缩写：RL = Reinforcement Learning（强化 / 学习）；MoT = Mixture-of-Transformers（混合 / Transformer）；FVD = Fréchet Video Distance（Fréchet / 视频 / 距离）；LIBERO = Lifelong roBot lEarning benchmaRk（终身 / 机器人学习 / 基准，一个仿真操作基准）。全部缩写见 <a href="../lessons/appendix-glossary.html">附录 · 缩写与术语表</a></p>
+</blockquote>
+<h2 id="_1">讲解</h2>
+<h3 id="2026-11-20">第一步：五个问题依次砍（2026-11-20）</h3>
+<p><strong>类比：买车。</strong> 先问"拉货还是代步"（一下砍掉一半车型），再问预算、再问路况、再问家里几口人。每个问题砍掉一部分，最后剩两三款。</p>
+<p>调研报告 §8.2 的决策顺序：</p>
+<table>
+<thead>
+<tr>
+<th>顺序</th>
+<th>问题</th>
+<th>分支</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>要的输出是动作还是未来？</td>
+<td>要未来（仿真、数据、评测、娱乐）→ 世界模型；要动作 → WAM 或 VLA</td>
+</tr>
+<tr>
+<td>2</td>
+<td>有没有奖励和模拟器？</td>
+<td>有 → W1 / W2，最省数据；没有 → 往下</td>
+</tr>
+<tr>
+<td>3</td>
+<td>推理预算多少？</td>
+<td>20 Hz 以上、端侧 → VLA + P4 / 隐动作；数据中心 GPU、几 Hz → P3；每步几秒也行 → W3 规划或 P1</td>
+</tr>
+<tr>
+<td>4</td>
+<td>泛化要求多高？</td>
+<td>新动词、新物体、新本体 → P3；任务固定、精度优先 → VLA，必要时加 RL 后训练</td>
+</tr>
+<tr>
+<td>5</td>
+<td>手里是什么数据？</td>
+<td>动作少、人类视频多 → P3（独立噪声）或隐动作桥；只有几十小时无标签机器人视频 → W3</td>
+</tr>
+</tbody>
+</table>
+<p>问题 1 就是第 1 章的判断：动作在输出一侧还是输入一侧。问题 3 用第 11 章的速度表。</p>
+<p><strong>一句话</strong>：先问要什么输出，再按预算、泛化、数据一步步砍。</p>
+<h3 id="2026-11-20_1">第二步：用一个例子走一遍（2026-11-20）</h3>
+<p><strong>场景</strong>：一台只有 Orin 级算力的移动机器人，做固定的抓取任务，手里有大量人类视频，想借它提升泛化。</p>
+<ol>
+<li>要动作 → WAM 或 VLA；</li>
+<li>没有奖励和模拟器 → 往下；</li>
+<li>Orin 跑不动 10B 级视频去噪（DreamZero 要两块 GB200 才 7 Hz），要高频 → VLA + P4 或隐动作；</li>
+<li>任务固定 → 不硬上 P3；</li>
+<li>人类视频多 → 用隐动作桥把它接进来（第 9 章）。</li>
+</ol>
+<p><strong>结论</strong>：隐动作桥（或 VLA + P4）。</p>
+<p><strong>放弃了什么</strong>（选型一定要写这一栏）：</p>
+<ul>
+<li>推理时没有显式的未来预测，不能可视化检查，也不能拿来规划；</li>
+<li>泛化提升通常不如 P3；</li>
+<li>隐动作和真实动作之间有对齐误差。</li>
+</ul>
+<p><strong>一句话</strong>：结论后面要跟一句"放弃了什么"。</p>
+<h3 id="2026-11-20_2">第三步：常见场景速查表（2026-11-20）</h3>
+<p>调研报告 §8.1：</p>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>首选</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>游戏、互动娱乐</td>
+<td>W4</td>
+<td>要的就是人能玩、看着对（Genie 3、GameNGen）</td>
+</tr>
+<tr>
+<td>自动驾驶仿真与评测</td>
+<td>W4（+ W5）</td>
+<td>生成反事实传感器数据、长尾场景（GAIA、Cosmos Predict）</td>
+</tr>
+<tr>
+<td>机器人策略离线评测</td>
+<td>W4 / P3 的 forward 模式</td>
+<td>真机评测贵，先在模型里排序（Ctrl-World 一类）</td>
+</tr>
+<tr>
+<td>机器人合成训练数据</td>
+<td>W4 + IDM</td>
+<td>视频生成的慢挪到离线（DreamGen → GR00T）</td>
+</tr>
+<tr>
+<td>通用操作 policy，追求泛化</td>
+<td>P3</td>
+<td>新物体、新动词、跨本体（DreamZero、GR00T 2、Praxis-1）</td>
+</tr>
+<tr>
+<td>操作，追求高频低成本</td>
+<td>VLA + P4 或隐动作</td>
+<td>推理和 VLA 一样快（GR00T N1.5 的 FLARE、LaWAM）</td>
+</tr>
+<tr>
+<td>目标用图像给、数据很少、不在乎慢</td>
+<td>W3</td>
+<td>几十小时视频零样本抓放（V-JEPA 2-AC）</td>
+</tr>
+<tr>
+<td>有模拟器、有明确奖励</td>
+<td>W1 / W2</td>
+<td>样本效率最高（DreamerV3、MuZero、TD-MPC2）</td>
+</tr>
+<tr>
+<td>只有离线数据、长时序决策</td>
+<td>W1（Dreamer 4 式）</td>
+<td>先学视频世界模型，再在想象里做 RL</td>
+</tr>
+<tr>
+<td>科学预测（天气、细胞）</td>
+<td>W5</td>
+<td>世界是物理变量，不是像素（GraphCast）</td>
+</tr>
+</tbody>
+</table>
+<p>2026 年下半年的新选项（第 5–7 章）让表里"P3"那一行变宽了：要快一点选 Fast-WAM 式或 2v4a 式，要记得久选 Long-WAM 式。</p>
+<p><strong>一句话</strong>：十种场景，十个首选；P3 那一行在 2026 年分化成了好几种。</p>
+<h3 id="2026-11-20_3">第四步：还在研究预览阶段的方向（2026-11-20）</h3>
+<p>都是摘要级别的了解（调研报告 §10.5）：</p>
+<ul>
+<li><strong>加一条"代码"流（AW-0，2026-10）</strong>：用三流 MoT 联合生成代码（参数化技能和控制逻辑）、未来视频和动作。代码给多步预测提供结构，也把技能存成可复用的程序。这是给 P3 补 System 2（第 7 章第五步）；</li>
+<li><strong>可控 WAM（CtrlWAM，2026-10）</strong>：在仿真里执行<strong>扰动后</strong>的动作，把动作和它对应的画面后果配对训练，让 WAM 真正"听动作的话"。问题来源：模型可能只学会"任务通常长什么样"，对输入的动作不敏感；</li>
+<li><strong>动作链（LeapBot-JAC，2026-10）</strong>：在宿主 WAM 的动作专家里同时去噪"稀疏的未来控制参考"和"密集的执行目标"，不加参数；LIBERO 97.0% → 98.3%，LIBERO-Plus 零样本 53.5% → 70.4%；</li>
+<li><strong>人形</strong>：HWAM（第 5 章）、Long-WAM 的 Unitree G1 实验（第 7 章）、GR00T 2 的 G1 Turbo 模式（第 6 章）。</li>
+</ul>
+<p><strong>一句话</strong>：代码补长程、可控补"听话"、动作链补精度、人形补本体。</p>
+<h3 id="2026-11-20_4">第五步：还没有答案的问题（2026-11-20）</h3>
+<p>调研报告 §9，括号里是 CIS 6280 后面会讲到的那一讲：</p>
+<ol>
+<li><strong>WAM 的 scaling law</strong>：Dyna-2 报告了人类视频 → 机器人的迁移 scaling law（公司自报），DreamZero 说还没确立。数据、模型、视频 / 动作配比怎么一起放大，还没有共识（L19、L23）；</li>
+<li><strong>物理正确性怎么评测</strong>：FVD 衡量"看着像不像"，不衡量"物理对不对"；任务成功率的榜单本身也有争议（第 12 章）（L23）；</li>
+<li><strong>长程记忆</strong>：视频世界模型几分钟，WAM 从 6 s 到 19 s，长任务需要 System 2（L14、L21）；</li>
+<li><strong>模型被钻空子</strong>：在世界模型里训练或评测的策略，会找到模型以为成功、现实失败的动作（L12）；</li>
+<li><strong>像素 vs 特征之争</strong>：W3 省、P3 泛化强；Cosmos 3 和 DreamZero 选了生成式，V-JEPA 2 和 VLA-JEPA 选了特征式，两边都有正面结果（L6、L13）；</li>
+<li><strong>推理时到底要想多少</strong>（2026 年新问题）：Fast-WAM 说可以不想，AHA-WAM 和 GR00T 2 说少想，Long-WAM 说要记得更久再想。三条路会不会合到一起，还看不出来。</li>
+</ol>
+<p><strong>一句话</strong>：怎么放大、怎么评、记多久、会不会被骗、画不画像素、想多少，都还没定论。</p>
+<h3 id="_2">动画演示：五个问题走一遍</h3>
+<p><img alt="选型与前沿" src="../animations/13-choose-and-frontier.gif" /></p>
+<p>可交互版：<a href="../animations/13-choose-and-frontier.html">animations/13-choose-and-frontier.html</a>（打开自动循环播放；点任一按钮切成手动）</p>
+<p><strong>怎么看</strong>：</p>
+<ol>
+<li>五行是五个问题，每行左右两个分支（第一步）。</li>
+<li>橙色框依次标出例子走的路（第二步）。</li>
+<li>例子结论和"放弃了什么"（第二步）。</li>
+<li>底部四个前沿方向（第四步）。</li>
+</ol>
+<h2 id="_3">练习与作答记录</h2>
+<p><strong>题 1</strong>（第一、二步）：一家仓库物流公司想在<strong>上线新策略前</strong>先在模型里跑几千次评测，机器人型号固定，有大量带动作的历史日志。用五个问题走一遍，给出首选和"放弃了什么"。</p>
+<p><strong>作答</strong>：（待作答）</p>
+<p><strong>题 2</strong>（第四步）：CtrlWAM 想解决"WAM 对输入动作不敏感"。设计一个简单的检查方法：怎么判断一个 P3 模型在 forward 模式（配置 1）下是不是真的在"听动作"？</p>
+<p><strong>作答</strong>：（待作答）</p>
+<p><strong>题 3</strong>（第五步，综合）：从六个开放问题里挑一个你最关心的，说说你会用什么实验去回答它（数据、对照组、指标）。</p>
+<p><strong>作答</strong>：（待作答）</p>
+<h2 id="_4">口诀</h2>
+<blockquote>
+<p>先问要动作还是要未来，再问奖励模拟器；<br />
+预算定快慢，泛化定 P3，数据定桥；<br />
+结论之后写放弃，前沿补码补听话；<br />
+放大、评测、记忆、被骗、像素、想多少，都还在路上。</p>
+</blockquote>
+<h2 id="_5">本章复习卡片</h2>
+<p>C14 选型的五个问题的顺序和每一问的分支。练习做完后，按答错、卡住的地方补上。</p>
+<h2 id="_6">附录 · 延伸阅读</h2>
+<h3 id="_7">推荐阅读</h3>
+<table>
+<thead>
+<tr>
+<th>读什么</th>
+<th>读哪里</th>
+<th>读它为了什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>★ 调研报告</td>
+<td>§8、§9、§10.5</td>
+<td>本章出处</td>
+</tr>
+<tr>
+<td>★ CIS 6280 课程日历</td>
+<td><code>materials/cis6280-fall-2026.ics</code></td>
+<td>第五步里 L6–L23 各讲的主题</td>
+</tr>
+<tr>
+<td>AW-0（arXiv 2610.30136）</td>
+<td>引言和方法</td>
+<td>代码流（只读了摘要）</td>
+</tr>
+<tr>
+<td>CtrlWAM（arXiv 2610.00859）</td>
+<td>方法</td>
+<td>动作可控性（只读了摘要）</td>
+</tr>
+<tr>
+<td>LeapBot-JAC（arXiv 2610.12886）</td>
+<td>方法</td>
+<td>动作链（只读了摘要）</td>
+</tr>
+<tr>
+<td>gr00t2 讲义第 11 章</td>
+<td>全章</td>
+<td>从一个具体模型看开放问题</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_8">数学原理</h3>
+<ul>
+<li>本章没有新数学。选型时用到的数字都来自前面几章：第 11 章的频率换算、第 12 章的标准误。</li>
+</ul>
+<h3 id="_9">公式清单</h3>
+<p>本章没有新公式。全书的核心公式回顾：</p>
+<table>
+<thead>
+<tr>
+<th>公式</th>
+<th>出处</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(p(Y,A\mid h)=p(A\mid h)\,p(Y\mid h,A)\)</span></td>
+<td>第 1 章</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(x_\tau=(1-\tau)x_0+\tau\epsilon\)</span></td>
+<td>第 2 章</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\mathcal{L}=\sum_m\lambda_m\|u_\theta(\cdot)_m-(\epsilon^m-x^m_0)\|^2\)</span></td>
+<td>第 3 章</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\tilde a=\mathrm{Enc}(o_t,o_{t+\Delta})\)</span>，<span class="arithmatex">\(\hat o_{t+\Delta}=\mathrm{Dec}(o_t,\tilde a)\)</span></td>
+<td>第 9 章</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\mathrm{SE}=\sqrt{p(1-p)/n}\)</span></td>
+<td>第 12 章</td>
+</tr>
+</tbody>
+</table>
+<p>本章无代码对照。</p><nav class="pager"><a href="12-landscape-2026.html">← 第 12 章 · 2026 年的 WAM 版图：开源模型和榜单</a><span></span></nav>
+</main>
+<footer>来自个人学习仓库的对话讲义，含练习作答记录。源码：<a href="https://github.com/wikieden/world-models-wam">github.com/wikieden/world-models-wam</a>。更多讲义书：<a href="https://wikieden.github.io/ai-books/">Physical AI 0-1-♾️（合集）</a></footer>
+</body></html>

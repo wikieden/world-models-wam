@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>第 4 章 · 联合生成怎么推理：少走几步、丢掉视频、用现实重新锚定 · 世界模型与 WAM 流派</title>
+<style>
+:root{--bg:#fbfbfa;--fg:#1f2328;--mute:#5d6470;--line:#e3e5e8;--card:#fff;--acc:#2f6fdf;--code:#f2f3f5;--quote:#f4f6fa}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15181d;--fg:#e4e7ec;--mute:#9aa3b2;--line:#2c323b;--card:#1c2026;--acc:#7aa7ff;--code:#22272f;--quote:#1b2029}}
+:root[data-theme="dark"]{--bg:#15181d;--fg:#e4e7ec;--mute:#9aa3b2;--line:#2c323b;--card:#1c2026;--acc:#7aa7ff;--code:#22272f;--quote:#1b2029}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.75 -apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Helvetica Neue",sans-serif}
+a{color:var(--acc)}
+header.top{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+header.top .in{max-width:860px;margin:0 auto;padding:10px 16px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;font-size:14px}
+header.top .brand{font-weight:600;color:var(--fg);text-decoration:none;margin-right:auto}
+header.top a{text-decoration:none}
+main{max-width:860px;margin:0 auto;padding:24px 16px 72px;overflow-wrap:anywhere}
+h1{font-size:28px;line-height:1.35;margin:8px 0 16px} h2{font-size:22px;margin:40px 0 12px;padding-top:8px;border-top:1px solid var(--line)} h3{font-size:18px;margin:28px 0 8px}
+img{max-width:100%;height:auto;border-radius:8px;border:1px solid var(--line);background:#fff}
+blockquote{margin:16px 0;padding:10px 16px;background:var(--quote);border-left:3px solid var(--acc);border-radius:4px;color:var(--mute)}
+blockquote p{margin:4px 0}
+code{background:var(--code);padding:1px 5px;border-radius:4px;font-size:.9em}
+pre{background:var(--code);padding:12px 14px;border-radius:8px;overflow-x:auto} pre code{padding:0;background:none}
+table{border-collapse:collapse;display:block;overflow-x:auto;max-width:100%;margin:12px 0;font-size:15px}
+th,td{border:1px solid var(--line);padding:6px 10px;vertical-align:top} th{background:var(--code)}
+details{border:1px solid var(--line);border-radius:8px;padding:6px 12px;margin:8px 0;background:var(--card)}
+details[open]{padding-bottom:10px} summary{cursor:pointer;color:var(--acc);font-weight:500}
+mjx-container{overflow-x:auto;overflow-y:hidden;max-width:100%}
+.btn{display:inline-block;margin:4px 8px 4px 0;padding:6px 14px;border:1px solid var(--acc);border-radius:999px;text-decoration:none;font-size:14px}
+.pager{display:flex;justify-content:space-between;gap:12px;margin-top:48px;padding-top:16px;border-top:1px solid var(--line);font-size:15px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin:16px 0}
+.card{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;color:inherit;text-decoration:none}
+.card:hover{border-color:var(--acc)} .card img{border:0;border-bottom:1px solid var(--line);border-radius:0;aspect-ratio:16/10;object-fit:contain;width:100%}
+.card .no{color:var(--mute);font-size:13px;padding:8px 12px 0} .card .t{padding:0 12px 12px;font-weight:500;line-height:1.5}
+.lead{font-size:17px;color:var(--mute)}
+footer{max-width:860px;margin:0 auto;padding:0 16px 40px;color:var(--mute);font-size:13px}
+</style>
+<script>window.MathJax={tex:{inlineMath:[["\\(","\\)"]],displayMath:[["\\[","\\]"],["$$","$$"]],processEscapes:true,processEnvironments:true}};</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
+</head><body>
+<header class="top"><div class="in">
+<a class="brand" href="../index.html">世界模型与 WAM 流派</a>
+<a href="../lessons/index.html">讲义目录</a>
+<a href="../animations/index.html">动画</a>
+<a href="../review.html">复习卡片</a>
+<a href="../lessons/appendix-glossary.html">缩写表</a>
+<a href="https://wikieden.github.io/ai-books/">← 全部讲义书</a>
+</div></header>
+<main>
+<h1 id="4">第 4 章 · 联合生成怎么推理：少走几步、丢掉视频、用现实重新锚定</h1><p><a class="btn" href="../animations/04-joint-inference.html">▶ 打开本章可交互动画</a></p>
+<blockquote>
+<p>本章回答：联合生成的 WAM 部署时一次决策要做哪些事？为什么能把视频丢掉？为什么要用真实观测替换预测的画面？它到底比 VLA 慢多少？<br />
+讲解日期：2026-11-20 · 上一章：<a href="../lessons/03-joint-training.html">第 3 章 联合生成怎么训练</a> · 下一章：<a href="../lessons/05-imagine-or-not.html">第 5 章 推理时还要想象吗</a><br />
+对应原文：调研报告 §3 P3"推理（以 DreamZero 为例，Algorithm 2）"、§6 推理细节<br />
+本章缩写：KV = Key / Value（键 / 值，attention 里被查询的那一方）；DiT = Diffusion Transformer（扩散 / Transformer）；CFG = Classifier-Free Guidance（无分类器 / 引导）；VAE = Variational AutoEncoder（变分 / 自编码器）；GPU = Graphics Processing Unit（图形 / 处理 / 单元）；NVFP4 = NVIDIA 4-bit Floating Point（NVIDIA 的 4 位浮点格式）。全部缩写见 <a href="../lessons/appendix-glossary.html">附录 · 缩写与术语表</a></p>
+</blockquote>
+<h2 id="_1">讲解</h2>
+<h3 id="2026-11-20">第一步：推理就是把训练反过来走（2026-11-20）</h3>
+<p><strong>类比：擦雾。</strong> 训练时学会了"雾是从哪个方向盖上来的"（第 3 章）；推理时拿一块全是雾的玻璃（纯噪声），按学到的方向一点点擦，擦几下就看清了。</p>
+<p>DreamZero 一次决策（调研报告 §3 P3，Algorithm 2）：</p>
+<ol>
+<li>当前观测 + 指令编码成条件 <span class="arithmatex">\(c\)</span>；视频 latent 和动作都初始化成纯噪声（<span class="arithmatex">\(\tau=1\)</span>）；</li>
+<li>联合去噪：每一步网络预测速度，<span class="arithmatex">\(x\leftarrow x-\Delta\tau\cdot u_\theta\)</span>，<span class="arithmatex">\(\tau\)</span> 从 1 走到 0；</li>
+<li>得到干净的动作块和视频 latent；</li>
+<li><strong>只执行动作</strong>，视频 latent 丢掉。</li>
+</ol>
+<p><strong>一句话</strong>：从纯噪声出发，按预测的速度往回走，走到底就是动作。</p>
+<h3 id="2026-11-20_1">第二步：步数决定速度（2026-11-20）</h3>
+<p>每走一步，就是 14B 网络的一次完整前向，所以步数直接决定延迟：</p>
+<table>
+<thead>
+<tr>
+<th>做法</th>
+<th>步数</th>
+<th>怎么省的</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>朴素版</td>
+<td>16</td>
+<td>—</td>
+</tr>
+<tr>
+<td>DiT caching</td>
+<td>约 4</td>
+<td>相邻两步预测的速度很像，就复用上一步的</td>
+</tr>
+<tr>
+<td>Flash 版</td>
+<td>1</td>
+<td>训练时让视频的 <span class="arithmatex">\(\tau\)</span> 偏向低噪声，推理一步到位</td>
+</tr>
+</tbody>
+</table>
+<p>再叠上工程手段（CFG 并行、torch.compile + CUDA Graphs、NVFP4 量化），DreamZero 的延迟从 <strong>5.7 s</strong> 降到约 <strong>150 ms</strong>，<span class="arithmatex">\(5.7/0.15=38\)</span> 倍，在 2 块 GB200 上做到 7 Hz 闭环控制。</p>
+<p><strong>一句话</strong>：步数 × 一次前向的代价 = 延迟，两头都要压。</p>
+<h3 id="2026-11-20_2">第三步：为什么视频可以丢（2026-11-20）</h3>
+<p>机器人只需要动作。视频 latent 已经在去噪过程中和动作互相"商量"过了（attention 里互相看），它的作用已经发挥完。</p>
+<p>丢掉省的是：<strong>不跑 VAE 解码器</strong>，不把 latent 还原成像素。UVA、DreamZero、Cosmos 3 Policy-DROID 都这么做。</p>
+<p>但要注意：视频 latent 还是<strong>要去噪</strong>的，几千个 token 每步都要算，所以 P3 仍然比 VLA 慢。第 5、6 章讲的就是怎么把这一块也省掉。</p>
+<p>想调试的时候，可以选择性地把 latent 解码出来看"它以为会发生什么"，这是 WAM 相对 VLA 的调试优势（调研报告 §6）。</p>
+<p><strong>一句话</strong>：视频陪动作商量完就退场，不解码，但去噪的钱省不掉。</p>
+<h3 id="2026-11-20_3">第四步：用真实观测重新锚定（2026-11-20）</h3>
+<p><strong>类比：闭着眼走路 vs 每走几步睁一次眼。</strong> 闭眼一直走，每一步的小偏差会累积，几十步后就撞墙；每走几步睁眼看一下，偏差就被清零。</p>
+<p>第 3 章说过，训练时前面的块用<strong>真实的</strong>干净帧当条件（teacher forcing）。推理时如果拿模型自己<strong>预测的</strong>帧当后面的条件，就和训练不一致，误差一块块累积，这叫 <strong>compounding error</strong>（复合误差），也叫 exposure bias（暴露偏差）。</p>
+<p>DreamZero 的做法：执行完一块动作，相机拍到真实画面，用它的 VAE 编码<strong>替换</strong> KV cache 里对应的预测帧。下一块以真实画面为条件，等于每块都睁一次眼。</p>
+<p>其他流派对付同一个问题的办法（调研报告 §4 第 5 条）：V-JEPA 2-AC 训练时加 rollout loss、GameNGen 给条件帧加噪、MPC 每步重规划。</p>
+<p><strong>一句话</strong>：预测的画面只活一块，执行完就换成真的。</p>
+<h3 id="vla-2026-11-20">第五步：异步执行和平滑，以及和 VLA 比（2026-11-20）</h3>
+<ul>
+<li><strong>异步</strong>：机器人执行当前动作块的同时，GPU 已经在算下一块，两者重叠；</li>
+<li><strong>平滑</strong>：相邻两块的接缝处可能跳一下，用 Savitzky-Golay 滤波（一种保形的滑动多项式平滑）把动作块磨平。</li>
+</ul>
+<p>和纯 VLA 比（调研报告 §6）：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>一次决策</th>
+<th>频率</th>
+<th>硬件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>π0（VLA）</td>
+<td>一次前向出 50 步动作</td>
+<td>最高 50 Hz</td>
+<td>消费级 GPU 20 Hz 以上</td>
+</tr>
+<tr>
+<td>DreamZero（P3）</td>
+<td>多步联合去噪</td>
+<td>7 Hz（约 150 ms）</td>
+<td>2 块 GB200</td>
+</tr>
+</tbody>
+</table>
+<p>7 Hz 意味着每次决策约 <span class="arithmatex">\(1/7\approx143\)</span> ms；50 Hz 是 20 ms。这就是 WAM 在速度上要追的基线。</p>
+<p><strong>一句话</strong>：边执行边算下一块，接缝要磨平；离 VLA 的速度还差一个数量级。</p>
+<h3 id="_2">动画演示：少走几步，每块换成真的</h3>
+<p><img alt="联合生成的推理" src="../animations/04-joint-inference.gif" /></p>
+<p>可交互版：<a href="../animations/04-joint-inference.html">animations/04-joint-inference.html</a>（打开自动循环播放；点任一按钮切成手动）</p>
+<p><strong>怎么看</strong>：</p>
+<ol>
+<li>上半部分三行：16 步 → 4 步 → 1 步，以及 5.7 s → 150 ms（第二步）。</li>
+<li>下半部分：紫色虚线是预测帧，执行完变成绿色实线的真实帧（第四步）。</li>
+<li>底部说明：视频不解码，执行和计算重叠（第三、五步）。</li>
+</ol>
+<h2 id="_3">练习与作答记录</h2>
+<p><strong>题 1</strong>（第四步）：如果不做"用真实观测替换"，一直用自己预测的帧往后想 20 块，你预计会出什么问题？举一个叠衣服时可能的具体失败。</p>
+<p><strong>作答</strong>：（待作答）</p>
+<p><strong>题 2</strong>（第二步）：某模型一次前向 40 ms，朴素去噪 16 步。用 DiT caching 降到 4 步后，一次决策大约多少毫秒？对应多少 Hz？（只算去噪，不算其他开销。）</p>
+<p><strong>作答</strong>：（待作答）</p>
+<p><strong>题 3</strong>（第三步，拓展）：既然视频最后要丢掉，为什么不干脆训练时也不要视频？（提示：第 5 章会用实验回答这个问题，先凭直觉猜。）</p>
+<p><strong>作答</strong>：（待作答）</p>
+<h2 id="_4">口诀</h2>
+<blockquote>
+<p>纯噪出发往回擦，步数乘前向就是延迟；<br />
+视频陪聊不解码，动作才交给机器人；<br />
+执行一块睁次眼，预测换成真画面。</p>
+</blockquote>
+<h2 id="_5">本章复习卡片</h2>
+<p>C05 DreamZero 推理时为什么用真实观测替换 KV cache 里的预测帧。练习做完后，按答错、卡住的地方补上。</p>
+<h2 id="_6">附录 · 延伸阅读</h2>
+<h3 id="_7">推荐阅读</h3>
+<table>
+<thead>
+<tr>
+<th>读什么</th>
+<th>读哪里</th>
+<th>读它为了什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>★ DreamZero（arXiv 2602.15922）</td>
+<td>Algorithm 2 和推理加速一节</td>
+<td>本章每一步的出处</td>
+</tr>
+<tr>
+<td>★ 调研报告</td>
+<td>§6 推理过程的四种模式</td>
+<td>和其他流派的推理放在一起比</td>
+</tr>
+<tr>
+<td>π0 的实时分块执行（RTC）</td>
+<td>vla-deep-dive 讲义</td>
+<td>异步执行在 VLA 里的做法</td>
+</tr>
+<tr>
+<td>Self Forcing / Diffusion Forcing</td>
+<td>引言</td>
+<td>从训练端解决 exposure bias 的另一条路</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_8">数学原理</h3>
+<ul>
+<li><strong>欧拉法</strong>：<span class="arithmatex">\(x\leftarrow x-\Delta\tau\cdot u_\theta\)</span> 是解常微分方程最简单的一步法，步数越少，每步越大，越依赖网络把速度预测准。</li>
+<li><strong>复合误差</strong>：每步有小误差 <span class="arithmatex">\(\delta\)</span>，用自己的输出当下一步输入，<span class="arithmatex">\(k\)</span> 步后的偏差大致随 <span class="arithmatex">\(k\)</span> 增长甚至放大。</li>
+</ul>
+<h3 id="_9">公式清单</h3>
+<table>
+<thead>
+<tr>
+<th>公式</th>
+<th>意思</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(x\leftarrow x-\Delta\tau\,u_\theta(x,c)\)</span></td>
+<td>去噪一步</td>
+</tr>
+<tr>
+<td>延迟 ≈ 步数 × 一次前向</td>
+<td>去噪部分的延迟估算</td>
+</tr>
+<tr>
+<td>频率 = 1 / 每次决策的时间</td>
+<td>7 Hz ↔ 约 143 ms</td>
+</tr>
+</tbody>
+</table>
+<p>本章无代码对照。</p><nav class="pager"><a href="03-joint-training.html">← 第 3 章 · 联合生成怎么训练：一个 loss、一个权重、一张时间表</a><a href="05-imagine-or-not.html">第 5 章 · 推理时还要想象吗：训练时想象，推理时不想象 →</a></nav>
+</main>
+<footer>来自个人学习仓库的对话讲义，含练习作答记录。源码：<a href="https://github.com/wikieden/world-models-wam">github.com/wikieden/world-models-wam</a>。更多讲义书：<a href="https://wikieden.github.io/ai-books/">Physical AI 0-1-♾️（合集）</a></footer>
+</body></html>

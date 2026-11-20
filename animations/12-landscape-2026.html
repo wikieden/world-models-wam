@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2026 年的 WAM 版图：开源模型和榜单</title><link rel="stylesheet" href="anim.css"></head>
+<body><main>
+<h1>第 12 章 · 2026 年的 WAM 版图：开源模型和榜单</h1>
+<p class="sub">配套讲义：<a href="../lessons/12-landscape-2026.html">第 12 章 · 2026 年的 WAM 版图：开源模型和榜单</a>。RoboLab-120 上三个模型的成功率，以及该怎么读这些数字。误差线按 1200 回合算 95% 区间；FLUX 3 和 Cosmos 的回合数没公开，按同样 1200 回合假设。</p>
+<div class="panel"><svg id="sv" viewBox="0 0 720 440"></svg></div>
+<p id="cap" style="min-height:3.2em;margin:8px 4px"></p>
+<div class="row"><button id="play">▶ 播放</button><button id="step">→ 单步</button><button id="reset">↺ 重来</button></div>
+<p class="note">看点：差 3–4 个百分点时，先算一下误差线；再看是谁跑的榜。</p>
+</main>
+<script src="anim.js"></script>
+<script>
+const Y=v=>300-v*5;
+const g0=P(0);el('line',{x1:150,y1:300,x2:690,y2:300,stroke:'var(--line)','stroke-width':2},g0);
+[0,10,20,30,40,50].forEach(v=>{label(g0,v+'%',140,Y(v)+4,{a:'end',m:1,fs:11});el('line',{x1:150,y1:Y(v),x2:690,y2:Y(v),stroke:'var(--line)',opacity:.4},g0)});
+label(g0,'RoboLab-120 成功率',16,24,{b:1});
+const D=[['Praxis-1','Runway · 27B MoE',46.2,2.8,'var(--purple)'],['FLUX 3 Action','BFL · 7B',42.5,2.8,'var(--accent)'],['Cosmos3-Nano-Policy','NVIDIA · 16B',36.8,2.7,'var(--teal)']];
+D.forEach(([n,s,v,e,c],i)=>{const x=200+i*170,g=P(i+1);
+  el('rect',{x,y:Y(v),width:90,height:v*5,rx:4,fill:c,opacity:.75},g);
+  label(g,v+(i===1?'（42–43）':'')+'%',x+45,Y(v)-38,{a:'middle',b:1,c});
+  label(g,n,x+45,322,{a:'middle',fs:12,b:1});label(g,s,x+45,340,{a:'middle',fs:11,m:1});
+  const eb=P(4);el('line',{x1:x+45,y1:Y(v+e),x2:x+45,y2:Y(v-e),stroke:'var(--text)','stroke-width':2},eb);
+  [v+e,v-e].forEach(w=>el('line',{x1:x+35,y1:Y(w),x2:x+55,y2:Y(w),stroke:'var(--text)','stroke-width':2},eb));});
+const g5=P(5);el('rect',{x:16,y:358,width:688,height:76,rx:8,fill:'var(--accent-bg)',stroke:'var(--accent)'},g5);
+label(g5,'怎么读：每根误差线约 ±2.8 点；两者之差的误差约 ±4 点，前两名差 3.7 点，还在误差内',30,380,{fs:13});
+label(g5,'榜单由 NVIDIA 维护、NVIDIA 员工跑，自家模型也在榜上（有报道指出利益冲突）',30,402,{fs:13});
+label(g5,'换个榜排名能差很多：DreamZero 在 RoboArena 第 2、在 RoboLab 第 10（二手）',30,424,{fs:13});
+runSteps([
+  '2026 年下半年出现了公共榜单 RoboLab-120（120 个仿真任务）。先看三个模型的分数。',
+  'Runway 的 Praxis-1：27B MoE，Apache 2.0 开源，1200 回合 46.2%。',
+  'Black Forest Labs 的 FLUX 3 Action：7B 开放权重，约 42–43%（官方页面里的数字不一致）。',
+  'NVIDIA 的 Cosmos3-Nano-Policy：36.8%（二手）。',
+  '加上误差线：1200 回合、成功率 46% 时，标准误约 1.4 个点，95% 区间约 ±2.8。',
+  '读榜三件事：差距和误差比；谁跑的榜；换个榜还是不是这个排名。',
+],2000);
+</script>
+<a href="https://wikieden.github.io/ai-books/" style="position:fixed;right:12px;bottom:12px;z-index:99;padding:4px 10px;border-radius:14px;background:rgba(127,127,127,.18);color:inherit;font:13px/1.6 system-ui,sans-serif;text-decoration:none">← 全部讲义书</a>
+</body></html>

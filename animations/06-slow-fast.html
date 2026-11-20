@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>慢想象、快动作</title><link rel="stylesheet" href="anim.css"></head>
+<body><main>
+<h1>第 6 章 · 慢想象、快动作</h1>
+<p class="sub">配套讲义：<a href="../lessons/06-slow-fast.html">第 6 章 · 慢想象、快动作：视频低频、动作高频</a>。上：AHA-WAM 的两个频率，视频 DiT 隔一阵更新一次，动作 DiT 每一格都出动作；下：GR00T 2 的 2v4a，视频只算 2 次、动作算 4 次。</p>
+<div class="panel"><svg id="sv" viewBox="0 0 720 460"></svg></div>
+<p id="cap" style="min-height:3.2em;margin:8px 4px"></p>
+<div class="row"><button id="play">▶ 播放</button><button id="step">→ 单步</button><button id="reset">↺ 重来</button></div>
+<p class="note">看点：贵的（视频）少算几次，便宜的（动作）多算几次；动作每次都读最近一次视频算出的特征或 K/V。</p>
+</main>
+<script src="anim.js"></script>
+<script>
+const g0=P(0);label(g0,'① AHA-WAM：两个 DiT，两个频率',16,26,{b:1});
+label(g0,'视频 DiT',16,76,{c:'var(--teal)'});label(g0,'动作 DiT',16,140,{c:'var(--warm)'});
+el('line',{x1:110,y1:170,x2:700,y2:170,stroke:'var(--line)'},g0);label(g0,'时间 →',700,190,{a:'end',m:1});
+const N=16,W=36;
+for(let i=0;i<N;i++){
+  const x=110+i*W;
+  if(i%4===0){const v=P(1+i/4*2);box(v,x,52,W*4-6,36,'想象 / 更新记忆','var(--teal)',{fs:12});}
+  const a=P(1+Math.floor(i/4)*2+(i%4?1:0));el('rect',{x:x+4,y:122,width:W-10,height:30,rx:5,fill:'var(--warm)',opacity:.8},a);
+  if(i%4===0)arrow(a,x+20,92,x+20,118,'var(--teal)',{w:1.5,dash:'3 3'});
+}
+const g9=P(9);label(g9,'24.17 Hz → 每个动作块约 41 ms；比 Fast-WAM 快 4.59 倍（≈190 ms ÷ 41 ms）（摘要）',110,212,{fs:12,c:'var(--warm)'});
+const gb=P(10);label(gb,'② GR00T 2 的 2v4a：一次决策 4 次去噪',16,256,{b:1});
+const PS=[['第 0 次','joint',1],['第 1 次','cached',0],['第 2 次','joint',1],['第 3 次','cached',0]];
+PS.forEach(([n,k,j],i)=>{const g=P(11+i);const y=272+i*40;label(g,n,16,y+22);
+  if(j)el('rect',{x:110,y:y+6,width:400,height:24,rx:4,fill:'var(--teal)',opacity:.7},g);else box(g,110,y+6,400,24,'复用视频的 K/V','var(--teal)',{dash:'4 4',fs:11,op:.8});
+  el('rect',{x:514,y:y+6,width:30,height:24,rx:4,fill:'var(--warm)'},g);
+  label(g,j?'视频+动作都算':'只算动作',556,y+22,{fs:12,m:1})});
+const ge=P(15);label(ge,'视频去噪 2 次 + 动作去噪 4 次 = "2v4a"',110,452,{c:'var(--accent)',b:1});
+runSteps([
+  'P3 慢在视频。但视频（想象未来）不必每个控制周期都更新，动作才需要高频。',
+  '视频 DiT 第 1 次更新：想象一段未来，更新滚动的 KV 记忆。',
+  '动作 DiT 连续出 3 个短动作块，每次都通过联合注意力读视频 DiT 的逐层特征，不重跑视频。',
+  '视频 DiT 第 2 次更新。',
+  '动作继续高频出块。',
+  '……',
+  '……',
+  '……',
+  '……',
+  '结果：24.17 Hz 闭环。按耦合方式，这更像 P2（借视频特征），第 8 章再细说。',
+  'GR00T 2 用一个塔做同样的事：在一次决策的 4 次去噪里，视频只真正算 2 次。',
+  '第 0 次：视频和动作一起去噪（joint），几千个视频 token 都要算。',
+  '第 1 次：视频不动，复用第 0 次算好的 K/V，只更新几十个动作 token（cached），很便宜。',
+  '第 2 次：再 joint 一次。',
+  '第 3 次：再 cached 一次。',
+  '视频 2 次、动作 4 次：2v4a。G1 的 Turbo 模式进一步降到 1v2a。',
+],1500);
+</script>
+<a href="https://wikieden.github.io/ai-books/" style="position:fixed;right:12px;bottom:12px;z-index:99;padding:4px 10px;border-radius:14px;background:rgba(127,127,127,.18);color:inherit;font:13px/1.6 system-ui,sans-serif;text-decoration:none">← 全部讲义书</a>
+</body></html>

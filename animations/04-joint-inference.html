@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>联合生成怎么推理</title><link rel="stylesheet" href="anim.css"></head>
+<body><main>
+<h1>第 4 章 · 联合生成怎么推理</h1>
+<p class="sub">配套讲义：<a href="../lessons/04-joint-inference.html">第 4 章 · 联合生成怎么推理：少走几步、丢掉视频、用现实重新锚定</a>。上：去噪步数怎么从 16 步降到 1 步；下：一块一块执行，每块执行完用真实画面替换预测的画面。</p>
+<div class="panel"><svg id="sv" viewBox="0 0 720 470"></svg></div>
+<p id="cap" style="min-height:3.2em;margin:8px 4px"></p>
+<div class="row"><button id="play">▶ 播放</button><button id="step">→ 单步</button><button id="reset">↺ 重来</button></div>
+<p class="note">看点：预测的画面（虚线）只活一块的时间，执行完就被真实观测（实线）换掉，误差没机会越滚越大。</p>
+</main>
+<script src="anim.js"></script>
+<script>
+const g0=P(0);label(g0,'① 每次决策要去噪几步',16,26,{b:1});
+const S=[['朴素版',16,'var(--muted)'],['DiT caching',4,'var(--accent)'],['Flash 版',1,'var(--purple)']];
+S.forEach(([n,k,c],i)=>{const g=P(i+1);label(g,n,16,64+i*34);for(let j=0;j<k;j++)el('rect',{x:130+j*30,y:48+i*34,width:24,height:22,rx:4,fill:c,opacity:.8},g);label(g,k+' 步',130+k*30+8,64+i*34,{m:1})});
+const g4=P(4);label(g4,'延迟 5.7 s → 约 150 ms（≈38 倍，2×GB200，7 Hz）',130,166,{c:'var(--warm)'});
+const g5=P(5);label(g5,'② 一块一块执行：KV cache 里放什么',16,206,{b:1});
+label(g5,'KV cache',16,262,{m:1});label(g5,'机器人',16,330,{m:1});
+const BX=[130,270,410,550];
+BX.forEach((x,i)=>{
+  const a=P(6+i*2,7+i*2);box(a,x,240,120,36,'预测帧 '+(i+1),'var(--purple)',{dash:'5 4',fs:12});
+  const e=P(6+i*2);arrow(e,x+10,330,x+110,330,'var(--warm)',{w:3});label(e,'执行动作块 '+(i+1),x+60,356,{a:'middle',fs:12,c:'var(--warm)'});
+  const r=P(7+i*2);box(r,x,240,120,36,'真实帧 '+(i+1),'var(--teal)',{fill:'var(--accent-bg)',fs:12});
+});
+const g14=P(14);el('rect',{x:16,y:390,width:688,height:66,rx:8,fill:'var(--card)'},g14);
+label(g14,'视频 latent 去噪完就丢，不跑 VAE 解码器；',30,416);label(g14,'执行时异步算下一块，动作块用 Savitzky-Golay 滤波平滑。',30,440);
+runSteps([
+  '推理和训练反过来：从纯噪声出发，按网络预测的速度一步步走回干净的视频和动作。',
+  '朴素做法要走 16 步，每步都是一次 14B 网络的完整前向。',
+  'DiT caching：相邻两步的速度很像，就直接复用，约 4 步就够。',
+  'Flash 版训练时让视频偏向低噪声，推理只走 1 步。',
+  '再加上量化、编译等工程手段，DreamZero 的延迟从 5.7 s 降到约 150 ms。',
+  '第二个问题：模型一块一块往前想。前一块"想象"的画面要不要留着当后面的条件？',
+  '第 1 块：去噪得到动作块 1 和预测帧 1（虚线），机器人执行动作块 1。',
+  '执行完，相机拍到了真实画面：用它的 VAE 编码<b>替换</b>缓存里的预测帧 1。',
+  '第 2 块以真实帧 1 为条件去噪，执行动作块 2。',
+  '同样用真实帧 2 替换预测帧 2。',
+  '第 3 块……',
+  '……替换。',
+  '第 4 块……',
+  '……替换。每块都重新锚定到现实，误差不会滚雪球。',
+  '两个省时间的细节：视频不解码，执行和计算重叠。',
+],1500);
+</script>
+<a href="https://wikieden.github.io/ai-books/" style="position:fixed;right:12px;bottom:12px;z-index:99;padding:4px 10px;border-radius:14px;background:rgba(127,127,127,.18);color:inherit;font:13px/1.6 system-ui,sans-serif;text-decoration:none">← 全部讲义书</a>
+</body></html>

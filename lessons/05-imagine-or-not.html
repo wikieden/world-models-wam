@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>第 5 章 · 推理时还要想象吗：训练时想象，推理时不想象 · 世界模型与 WAM 流派</title>
+<style>
+:root{--bg:#fbfbfa;--fg:#1f2328;--mute:#5d6470;--line:#e3e5e8;--card:#fff;--acc:#2f6fdf;--code:#f2f3f5;--quote:#f4f6fa}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15181d;--fg:#e4e7ec;--mute:#9aa3b2;--line:#2c323b;--card:#1c2026;--acc:#7aa7ff;--code:#22272f;--quote:#1b2029}}
+:root[data-theme="dark"]{--bg:#15181d;--fg:#e4e7ec;--mute:#9aa3b2;--line:#2c323b;--card:#1c2026;--acc:#7aa7ff;--code:#22272f;--quote:#1b2029}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.75 -apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Helvetica Neue",sans-serif}
+a{color:var(--acc)}
+header.top{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+header.top .in{max-width:860px;margin:0 auto;padding:10px 16px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;font-size:14px}
+header.top .brand{font-weight:600;color:var(--fg);text-decoration:none;margin-right:auto}
+header.top a{text-decoration:none}
+main{max-width:860px;margin:0 auto;padding:24px 16px 72px;overflow-wrap:anywhere}
+h1{font-size:28px;line-height:1.35;margin:8px 0 16px} h2{font-size:22px;margin:40px 0 12px;padding-top:8px;border-top:1px solid var(--line)} h3{font-size:18px;margin:28px 0 8px}
+img{max-width:100%;height:auto;border-radius:8px;border:1px solid var(--line);background:#fff}
+blockquote{margin:16px 0;padding:10px 16px;background:var(--quote);border-left:3px solid var(--acc);border-radius:4px;color:var(--mute)}
+blockquote p{margin:4px 0}
+code{background:var(--code);padding:1px 5px;border-radius:4px;font-size:.9em}
+pre{background:var(--code);padding:12px 14px;border-radius:8px;overflow-x:auto} pre code{padding:0;background:none}
+table{border-collapse:collapse;display:block;overflow-x:auto;max-width:100%;margin:12px 0;font-size:15px}
+th,td{border:1px solid var(--line);padding:6px 10px;vertical-align:top} th{background:var(--code)}
+details{border:1px solid var(--line);border-radius:8px;padding:6px 12px;margin:8px 0;background:var(--card)}
+details[open]{padding-bottom:10px} summary{cursor:pointer;color:var(--acc);font-weight:500}
+mjx-container{overflow-x:auto;overflow-y:hidden;max-width:100%}
+.btn{display:inline-block;margin:4px 8px 4px 0;padding:6px 14px;border:1px solid var(--acc);border-radius:999px;text-decoration:none;font-size:14px}
+.pager{display:flex;justify-content:space-between;gap:12px;margin-top:48px;padding-top:16px;border-top:1px solid var(--line);font-size:15px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin:16px 0}
+.card{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;color:inherit;text-decoration:none}
+.card:hover{border-color:var(--acc)} .card img{border:0;border-bottom:1px solid var(--line);border-radius:0;aspect-ratio:16/10;object-fit:contain;width:100%}
+.card .no{color:var(--mute);font-size:13px;padding:8px 12px 0} .card .t{padding:0 12px 12px;font-weight:500;line-height:1.5}
+.lead{font-size:17px;color:var(--mute)}
+footer{max-width:860px;margin:0 auto;padding:0 16px 40px;color:var(--mute);font-size:13px}
+</style>
+<script>window.MathJax={tex:{inlineMath:[["\\(","\\)"]],displayMath:[["\\[","\\]"],["$$","$$"]],processEscapes:true,processEnvironments:true}};</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
+</head><body>
+<header class="top"><div class="in">
+<a class="brand" href="../index.html">世界模型与 WAM 流派</a>
+<a href="../lessons/index.html">讲义目录</a>
+<a href="../animations/index.html">动画</a>
+<a href="../review.html">复习卡片</a>
+<a href="../lessons/appendix-glossary.html">缩写表</a>
+<a href="https://wikieden.github.io/ai-books/">← 全部讲义书</a>
+</div></header>
+<main>
+<h1 id="5">第 5 章 · 推理时还要想象吗：训练时想象，推理时不想象</h1><p><a class="btn" href="../animations/05-imagine-or-not.html">▶ 打开本章可交互动画</a></p>
+<blockquote>
+<p>本章回答：WAM 的好处到底来自"推理时把未来画出来"，还是来自"训练时学过世界怎么变"？Fast-WAM 的对照实验说明了什么？这对 P3 和 P4 的界线意味着什么？<br />
+讲解日期：2026-11-20 · 上一章：<a href="../lessons/04-joint-inference.html">第 4 章 联合生成怎么推理</a> · 下一章：<a href="../lessons/06-slow-fast.html">第 6 章 慢想象、快动作</a><br />
+对应原文：调研报告 §10.1；Fast-WAM（arXiv 2603.16666）、HWAM（arXiv 2610.12026）。<strong>本章的论文只读了摘要，数字都是作者自报，标"（摘要）"。</strong><br />
+本章缩写：MoT = Mixture-of-Transformers（混合 / Transformer，几组参数各管一个模态、在 attention 里互相看）；FDM = Forward Dynamics Model（正向 / 动力学 / 模型）；IDM = Inverse Dynamics Model（逆 / 动力学 / 模型）；P4 = Paradigm 4（范式 4，辅助视频预测）。全部缩写见 <a href="../lessons/appendix-glossary.html">附录 · 缩写与术语表</a></p>
+</blockquote>
+<h2 id="_1">讲解</h2>
+<h3 id="2026-11-20">第一步：一个直接的问题（2026-11-20）</h3>
+<p><strong>类比：学开车时的"想象练习"。</strong> 驾校教练让你练的时候在脑子里预演"打方向盘后车会怎么走"。等你会开了，上路时还需要每次都在脑子里放一遍电影吗？多半不用：那份理解已经长进手感里了。</p>
+<p>第 4 章说，P3 推理慢的大头是视频 latent 的去噪。Fast-WAM（清华 + Galaxea，2026-03）的标题直接问：<em>Do World Action Models Need Test-time Future Imagination?</em>（WAM 推理时需要想象未来吗？）</p>
+<p>它的做法：</p>
+<ul>
+<li>训练时：视频和动作一起去噪，和 P3 一样（视频 DiT + MoT）；</li>
+<li>推理时：<strong>跳过未来帧生成</strong>，一次前向直接出动作。</li>
+</ul>
+<p><strong>一句话</strong>：练的时候想象，用的时候不想象。</p>
+<h3 id="2026-11-20_1">第二步：对照实验怎么设计（2026-11-20）</h3>
+<p>要回答"好处从哪来"，就要把"训练时有没有视频"和"推理时有没有视频"拆开比：</p>
+<table>
+<thead>
+<tr>
+<th>组</th>
+<th>训练时学视频</th>
+<th>推理时生成视频</th>
+<th>结果（摘要）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td>有</td>
+<td>有</td>
+<td>成绩好，慢</td>
+</tr>
+<tr>
+<td>B（Fast-WAM）</td>
+<td>有</td>
+<td><strong>无</strong></td>
+<td>和 A 接近；真机延迟约 190 ms</td>
+</tr>
+<tr>
+<td>C</td>
+<td>无</td>
+<td>无</td>
+<td>掉得多</td>
+</tr>
+</tbody>
+</table>
+<p>读这张表：</p>
+<ul>
+<li>A 和 B 只差"推理时画不画"，成绩接近 → 推理时画出来<strong>不是</strong>主要贡献；</li>
+<li>B 和 C 只差"训练时学不学视频"，成绩差得多 → 训练时学视频<strong>是</strong>主要贡献。</li>
+</ul>
+<p>这就是控制变量：每次只改一个因素。</p>
+<p><strong>一句话</strong>：比 A 和 B 看推理时想象的作用，比 B 和 C 看训练时想象的作用。</p>
+<h3 id="p3-p4-2026-11-20">第三步：这模糊了 P3 和 P4 的界线（2026-11-20）</h3>
+<p>回忆调研报告 §1.2 的两个范式（第 8 章会完整讲）：</p>
+<ul>
+<li><strong>P3 联合生成</strong>：推理时视频和动作一起去噪；</li>
+<li><strong>P4 辅助 loss</strong>：训练时多一个预测未来的分支，部署时拆掉，就是普通 VLA。</li>
+</ul>
+<p>Fast-WAM 训练像 P3（整个生成器都在学视频），推理像 P4（视频分支不跑）。所以 P3 和 P4 之间不是一刀切，而是一个连续的过渡。新综述（arXiv 2606.20781）干脆把这一类单列为 video-generation-free（不生成视频的动作推理）。</p>
+<p>和 P4 的区别还在：P4 只加一个小分支、一项辅助 loss（比如 FLARE 系数 0.2）；Fast-WAM 是整个视频 DiT 都参与训练。对视频的利用程度不同。</p>
+<p><strong>一句话</strong>：训练像 P3、推理像 P4，两派之间是一条连续的轴。</p>
+<h3 id="hwam2026-11-20">第四步：后续工作和人形版本 HWAM（2026-11-20）</h3>
+<p>Fast-WAM 之后，"推理更快"成了一条线（都是摘要）：</p>
+<ul>
+<li>Efficient-WAM：1B 参数（arXiv 2606.10040）；</li>
+<li>Flash-WAM：模态感知蒸馏（arXiv 2606.05254）；</li>
+<li>Faster-WAM：自称比 Fast-WAM 延迟再降 3.2 倍（arXiv 2608.02365）。</li>
+</ul>
+<p><strong>HWAM</strong>（人形，2026-10）把同一个思路用到人形机器人上。训练时三条路一起练：</p>
+<ol>
+<li>policy 路：联合去噪状态和动作；</li>
+<li>FDM 路（正向动力学）：给动作，预测未来画面；</li>
+<li>IDM 路（逆动力学）：给画面，反推轨迹。</li>
+</ol>
+<p>部署时只走 policy 路。LimX OLI 人形抓糖任务 70.6%，Fast-WAM 43.3%（摘要）。三条路正好是第 2 章四种配置里的三种，只是这里分成了三个训练目标。</p>
+<p><strong>一句话</strong>：训练时多条路一起练，部署只留出动作的那条。</p>
+<h3 id="2026-11-20_2">第五步：代价是什么（2026-11-20）</h3>
+<p>推理时不画未来，也失去了一些东西：</p>
+<ul>
+<li><strong>不能检查</strong>：没有可以解码出来看的"它以为会发生什么"（第 4 章第三步说的调试优势没了）；</li>
+<li><strong>不能规划</strong>：不能拿想象的未来去打分、挑动作（第 11 章的在线规划用法）；</li>
+<li><strong>证据还少</strong>：对照实验是作者自己做的，结论只覆盖他们测过的任务。</li>
+</ul>
+<p><strong>一句话</strong>：省了时间，丢了"看得见的想象"。</p>
+<h3 id="_2">动画演示：四种组合比一比</h3>
+<p><img alt="推理时还要想象吗" src="../animations/05-imagine-or-not.gif" /></p>
+<p>可交互版：<a href="../animations/05-imagine-or-not.html">animations/05-imagine-or-not.html</a>（打开自动循环播放；点任一按钮切成手动）</p>
+<p><strong>怎么看</strong>：</p>
+<ol>
+<li>三行分别是 A、B、C 三组（第二步的表）。</li>
+<li>虚线框是"有但不跑"或"根本没有"的视频分支。</li>
+<li>右侧结论：A ≈ B，C 掉得多（摘要报告的定性关系，没画具体数字）。</li>
+<li>底部蓝框：HWAM 的三条路（第四步）。</li>
+</ol>
+<h2 id="_3">练习与作答记录</h2>
+<p><strong>题 1</strong>（第二步）：如果实验结果反过来，B 比 A 差很多、和 C 差不多，你会得出什么结论？</p>
+<p><strong>作答</strong>：（待作答）</p>
+<p><strong>题 2</strong>（第三步）：Fast-WAM 和 FLARE（P4）部署时都不生成视频。说出两者训练时的一个关键区别。</p>
+<p><strong>作答</strong>：（待作答）</p>
+<p><strong>题 3</strong>（第五步，拓展）：你在调一台叠衣服的机器人，它老是把袖子折错。用 A 组的模型和用 B 组的模型，排查方式会有什么不同？</p>
+<p><strong>作答</strong>：（待作答）</p>
+<h2 id="_4">口诀</h2>
+<blockquote>
+<p>练时想象，用时不想；<br />
+A 比 B 看推理，B 比 C 看训练；<br />
+训练像 P3，推理像 P4；<br />
+快了，但看不见它想了什么。</p>
+</blockquote>
+<h2 id="_5">本章复习卡片</h2>
+<p>C06 Fast-WAM 的对照实验说明 WAM 的收益主要来自哪里。练习做完后，按答错、卡住的地方补上。</p>
+<h2 id="_6">附录 · 延伸阅读</h2>
+<h3 id="_7">推荐阅读</h3>
+<table>
+<thead>
+<tr>
+<th>读什么</th>
+<th>读哪里</th>
+<th>读它为了什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>★ Fast-WAM（arXiv 2603.16666）</td>
+<td>摘要和消融实验表</td>
+<td>第二步对照实验的原始数字（本章只读了摘要）</td>
+</tr>
+<tr>
+<td>★ 调研报告</td>
+<td>§10.1</td>
+<td>本章出处和链接</td>
+</tr>
+<tr>
+<td>HWAM（arXiv 2610.12026）</td>
+<td>方法部分的三条路</td>
+<td>人形版本</td>
+</tr>
+<tr>
+<td><em>World Action Models: A Survey</em>（arXiv 2606.20781）</td>
+<td>分类一节</td>
+<td>video-generation-free 这一类的定义</td>
+</tr>
+<tr>
+<td>FLARE 项目页</td>
+<td>方法</td>
+<td>P4 的代表，和 Fast-WAM 对照</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_8">数学原理</h3>
+<ul>
+<li><strong>控制变量 / 消融实验</strong>：每次只改一个因素，两组之间的差就归因到这个因素上。2 个因素各 2 个取值，共 4 组；"推理有视频、训练无视频"做不出来，所以实际是 3 组。</li>
+</ul>
+<h3 id="_9">公式清单</h3>
+<p>本章没有新公式，沿用第 2 章的四种配置：HWAM 的三条路 = policy <span class="arithmatex">\(p(Y,A\mid h)\)</span>、FDM <span class="arithmatex">\(p(Y\mid h,a)\)</span>、IDM <span class="arithmatex">\(p(a\mid o_t,o_{t+1})\)</span>。</p>
+<p>本章无代码对照。</p><nav class="pager"><a href="04-joint-inference.html">← 第 4 章 · 联合生成怎么推理：少走几步、丢掉视频、用现实重新锚定</a><a href="06-slow-fast.html">第 6 章 · 慢想象、快动作：视频低频、动作高频 →</a></nav>
+</main>
+<footer>来自个人学习仓库的对话讲义，含练习作答记录。源码：<a href="https://github.com/wikieden/world-models-wam">github.com/wikieden/world-models-wam</a>。更多讲义书：<a href="https://wikieden.github.io/ai-books/">Physical AI 0-1-♾️（合集）</a></footer>
+</body></html>

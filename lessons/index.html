@@ -47,7 +47,7 @@ footer{max-width:860px;margin:0 auto;padding:0 16px 40px;color:var(--mute);font-
 <main>
 <h1 id="wam">世界模型与 WAM 流派 · 讲义目录</h1>
 <blockquote>
-<p>13 章（连载中，已写第 1 章）· 每章一个动画（GIF + 可交互页面）· 复习卡片编号 C · 覆盖 2026 年 11 月以前的世界模型与世界动作模型（WAM）主要流派</p>
+<p>13 章 · 13 个动画（GIF + 可交互页面）· 14 张复习卡片（编号 C） · 覆盖 2026 年 11 月以前的世界模型与世界动作模型（WAM）主要流派</p>
 </blockquote>
 <h2 id="_1">这本书讲什么</h2>
 <p>从"世界模型和 WAM 各回答什么问题"讲起：联合生成怎么用一个网络当世界模型、逆动力学和 policy 三种角色，怎么训练、怎么推理；再看 2026 年下半年的新进展（推理时不想象的 Fast-WAM、慢想象快动作的双频设计、长上下文、开源模型和公共榜单），最后把先想后做、借视频特征、辅助 loss、隐动作、世界模型五派放到同一张地图上，落到"什么场景选哪派"。</p>
@@ -69,11 +69,21 @@ footer{max-width:860px;margin:0 auto;padding:0 16px 40px;color:var(--mute);font-
 <thead>
 <tr>
 <th></th>
+<th></th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><img alt="" src="../animations/01-two-questions.gif" /><br><strong>第 1 章</strong> 同一个场景，世界模型、policy、WAM 各问什么 · <a href="../lessons/01-two-questions.html">讲义</a> · <a href="../animations/01-two-questions.html">▶ 交互</a></td>
+<td><img alt="" src="../animations/02-noise-roles.gif" /><br><strong>第 2 章</strong> 同一个网络，挖空哪里就当什么角色 · <a href="../lessons/02-noise-roles.html">讲义</a> · <a href="../animations/02-noise-roles.html">▶ 交互</a></td>
+<td><img alt="" src="../animations/04-joint-inference.gif" /><br><strong>第 4 章</strong> 少走几步、每块换成真实画面 · <a href="../lessons/04-joint-inference.html">讲义</a> · <a href="../animations/04-joint-inference.html">▶ 交互</a></td>
+</tr>
+<tr>
+<td><img alt="" src="../animations/06-slow-fast.gif" /><br><strong>第 6 章</strong> 视频低频、动作高频，2v4a · <a href="../lessons/06-slow-fast.html">讲义</a> · <a href="../animations/06-slow-fast.html">▶ 交互</a></td>
+<td><img alt="" src="../animations/08-coupling-axis.gif" /><br><strong>第 8 章</strong> P1 到纯 VLA 排成一条轴 · <a href="../lessons/08-coupling-axis.html">讲义</a> · <a href="../animations/08-coupling-axis.html">▶ 交互</a></td>
+</tr>
+<tr>
+<td><img alt="" src="../animations/09-latent-action.gif" /><br><strong>第 9 章</strong> 从两帧里挤出隐动作 · <a href="../lessons/09-latent-action.html">讲义</a> · <a href="../animations/09-latent-action.html">▶ 交互</a></td>
+<td><img alt="" src="../animations/12-landscape-2026.gif" /><br><strong>第 12 章</strong> 榜单分数和误差线 · <a href="../lessons/12-landscape-2026.html">讲义</a> · <a href="../animations/12-landscape-2026.html">▶ 交互</a></td>
 </tr>
 </tbody>
 </table>
@@ -180,10 +190,85 @@ footer{max-width:860px;margin:0 auto;padding:0 16px 40px;color:var(--mute);font-
 </table>
 <p>新进展的出处和数字见调研报告 §10。GR00T 2 已有单独一本讲义（gr00t2/notes/lessons），这里第 2、6、12 章只用它做例子，细节去那边读。</p>
 <h2 id="_5">目录</h2>
-<p>| 章 | 主题 | 卡片 | 动画 | 状态 |
-|---|---|---|---|
-| <a href="../lessons/01-two-questions.html">1</a> | 两个问题：做了会怎样 vs 该做什么 | C01 | <a href="../animations/01-two-questions.html">▶</a> | 进行中 |
-| <a href="../lessons/appendix-glossary.html">附录</a> | 缩写与术语表 | — | — | 随讲随补 |</p>
+<p>| 章 | 主题 | 一句话精要 | 动画 | 卡片 | 状态 |
+|---|---|---|---|---|
+| <a href="../lessons/01-two-questions.html">1</a> | 两个问题：做了会怎样 vs 该做什么 | 世界模型预测后果，WAM 首先是 policy | <a href="../animations/01-two-questions.html">▶</a> | C01、C02 | 进行中（题 3 待答） |
+| <a href="../lessons/02-noise-roles.html">2</a> | 加噪还是不加噪：一个网络当四种角色 | 谁加噪谁干净，决定它是世界模型、IDM 还是 policy | <a href="../animations/02-noise-roles.html">▶</a> | C03 | 练习待答 |
+| <a href="../lessons/03-joint-training.html">3</a> | 联合生成怎么训练 | flow matching loss、动作 ×10、无动作视频、时间对齐 | <a href="../animations/03-joint-training.html">▶</a> | C04 | 练习待答 |
+| <a href="../lessons/04-joint-inference.html">4</a> | 联合生成怎么推理 | 16→4→1 步、丢视频、用真实观测重新锚定 | <a href="../animations/04-joint-inference.html">▶</a> | C05 | 练习待答 |
+| <a href="../lessons/05-imagine-or-not.html">5</a> | 推理时还要想象吗 | 收益来自训练时学视频：Fast-WAM、HWAM | <a href="../animations/05-imagine-or-not.html">▶</a> | C06 | 练习待答 |
+| <a href="../lessons/06-slow-fast.html">6</a> | 慢想象、快动作 | AHA-WAM 双塔、GR00T 2 的 2v4a | <a href="../animations/06-slow-fast.html">▶</a> | C07 | 练习待答 |
+| <a href="../lessons/07-long-context.html">7</a> | 记得更久：长上下文 | 记忆就是上下文，Long-WAM 6 s → 19.2 s | <a href="../animations/07-long-context.html">▶</a> | C08 | 练习待答 |
+| <a href="../lessons/08-coupling-axis.html">8</a> | 耦合强度这条轴 | P1 → P2 → P3 → P4 → 纯 VLA，综述三分法 | <a href="../animations/08-coupling-axis.html">▶</a> | C09 | 练习待答 |
+| <a href="../lessons/09-latent-action.html">9</a> | 隐动作：用无标签视频的桥 | 窄瓶颈只装得下"变了什么" | <a href="../animations/09-latent-action.html">▶</a> | C10 | 练习待答 |
+| <a href="../lessons/10-five-schools.html">10</a> | 世界模型五派：在哪个空间预测 | 隐状态、任务信号、特征、像素、物理 | <a href="../animations/10-five-schools.html">▶</a> | C11 | 练习待答 |
+| <a href="../lessons/11-four-uses.html">11</a> | 推理的四种用法 | 离线想象、在线规划、直接出动作、交互模拟 | <a href="../animations/11-four-uses.html">▶</a> | C12 | 练习待答 |
+| <a href="../lessons/12-landscape-2026.html">12</a> | 2026 年的 WAM 版图：开源模型和榜单 | 五个模型、MoE、标准误、读榜三件事 | <a href="../animations/12-landscape-2026.html">▶</a> | C13 | 练习待答 |
+| <a href="../lessons/13-choose-and-frontier.html">13</a> | 选型与前沿 | 五个问题依次砍，前沿方向和开放问题 | <a href="../animations/13-choose-and-frontier.html">▶</a> | C14 | 练习待答 |
+| <a href="../lessons/appendix-glossary.html">附录</a> | 缩写与术语表 | 全书的缩写和术语 | — | — | 已完成 |</p>
+<h2 id="_6">口诀汇总</h2>
+<table>
+<thead>
+<tr>
+<th>章</th>
+<th>口诀</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>给动作、问后果，是世界模型；<br>给目标、要动作，是 policy；<br>要动作时顺便想未来，是 WAM，看的还是成没成功。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>完形填空看挖哪：挖结果是世界模型，挖动作是 IDM；<br>两样都挖是 policy，动作没有就纯看视频；<br>τ 为零是条件，τ 为一是题目。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>糊层雾，猜方向，平方误差打分数；<br>动作 token 少，权重乘十才不被淹；<br>没动作的视频只算视频那一项；<br>块长对齐 latent 帧，换频率就重算。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>纯噪出发往回擦，步数乘前向就是延迟；<br>视频陪聊不解码，动作才交给机器人；<br>执行一块睁次眼，预测换成真画面。</td>
+</tr>
+<tr>
+<td>5</td>
+<td>练时想象，用时不想；<br>A 比 B 看推理，B 比 C 看训练；<br>训练像 P3，推理像 P4；<br>快了，但看不见它想了什么。</td>
+</tr>
+<tr>
+<td>6</td>
+<td>看导航要稀，打方向要密；<br>双塔一慢一快，快的读慢的笔记；<br>单塔 2v4a，视频算二动作算四；<br>第五章不想，第六章少想。</td>
+</tr>
+<tr>
+<td>7</td>
+<td>记忆就是上下文，几秒就记几秒；<br>多记一秒多一秒 token，全注意力按平方涨；<br>因果预训练，历史只算一次；<br>秒级靠帧，分钟靠码。</td>
+</tr>
+<tr>
+<td>8</td>
+<td>先想后做最松最慢，借特征只看一眼；<br>联合生成边想边做，辅助 loss 练完就拆；<br>往左看得见，往右跑得快；<br>四个盒子一条轴，综述切成三段。</td>
+</tr>
+<tr>
+<td>9</td>
+<td>只许发一个表情，只够说变了什么；<br>甲看两帧乙看一帧，窄缝里挤出隐动作；<br>先懂变化再让它变，最后换成自己的手；<br>部署和 VLA 一样快，视频只过一条缝。</td>
+</tr>
+<tr>
+<td>10</td>
+<td>画家画像素，气象员报物理，棋手只说好坏；<br>速记员记隐状态能还原，观察者说特征不画细节；<br>重建贵而看得见，不重建省而画不出；<br>先压缩再预测，五派底座越来越像。</td>
+</tr>
+<tr>
+<td>11</td>
+<td>离线想，部署不想，快如 VLA；<br>在线规划步步搜，慢到几秒几分钟；<br>直接出动作想做一体，几 Hz 到二十几；<br>交互模拟出画面，给人玩来给策略考。</td>
+</tr>
+<tr>
+<td>12</td>
+<td>视频公司改底座，七 B 到二十七 B 开放了；<br>总参数看容量，激活参数看速度；<br>分数先算误差线，差距要比合并误差大；<br>再问谁跑的榜，换个榜还算不算。</td>
+</tr>
+<tr>
+<td>13</td>
+<td>先问要动作还是要未来，再问奖励模拟器；<br>预算定快慢，泛化定 P3，数据定桥；<br>结论之后写放弃，前沿补码补听话；<br>放大、评测、记忆、被骗、像素、想多少，都还在路上。</td>
+</tr>
+</tbody>
+</table>
 </main>
 <footer>来自个人学习仓库的对话讲义，含练习作答记录。源码：<a href="https://github.com/wikieden/world-models-wam">github.com/wikieden/world-models-wam</a>。更多讲义书：<a href="https://wikieden.github.io/ai-books/">Physical AI 0-1-♾️（合集）</a></footer>
 </body></html>

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>联合生成怎么训练</title><link rel="stylesheet" href="anim.css"></head>
+<body><main>
+<h1>第 3 章 · 联合生成怎么训练</h1>
+<p class="sub">配套讲义：<a href="../lessons/03-joint-training.html">第 3 章 · 联合生成怎么训练：一个 loss、一个权重、一张时间表</a>。上半部分：一个数怎么加噪、模型要预测什么；下半部分：视频和动作的 loss 各占多少。数字是讲义里编的例子。</p>
+<div class="panel"><svg id="sv" viewBox="0 0 720 470"></svg></div>
+<p id="cap" style="min-height:3.2em;margin:8px 4px"></p>
+<div class="row"><button id="play">▶ 播放</button><button id="step">→ 单步</button><button id="reset">↺ 重来</button></div>
+<p class="note">看点：动作 token 只有几十个，视频 token 有几千个；不加权的话，loss 几乎全是视频的。</p>
+</main>
+<script src="anim.js"></script>
+<script>
+const X=v=>100+v*450;
+const g0=P(0);label(g0,'① 加噪：x_τ = (1−τ)·x₀ + τ·ε',16,26,{b:1});
+el('line',{x1:X(0),y1:90,x2:X(1.15),y2:90,stroke:'var(--line)','stroke-width':2},g0);
+[0,0.5,1].forEach(v=>{el('line',{x1:X(v),y1:84,x2:X(v),y2:96,stroke:'var(--muted)'},g0);label(g0,String(v),X(v),114,{a:'middle',m:1})});
+const g1=P(1);el('circle',{cx:X(0.2),cy:90,r:7,fill:'var(--teal)'},g1);label(g1,'x₀ = 0.2（真值）',X(0.2),70,{a:'middle',c:'var(--teal)'});
+el('circle',{cx:X(1),cy:90,r:7,fill:'var(--warm)'},g1);label(g1,'ε = 1.0（噪声）',X(1),70,{a:'middle',c:'var(--warm)'});
+const g2=P(2);el('circle',{cx:X(0.44),cy:90,r:7,fill:'var(--purple)'},g2);label(g2,'x_τ = 0.44（τ = 0.3）',X(0.44),140,{a:'middle',c:'var(--purple)'});
+const g3=P(3);arrow(g3,X(0.2),160,X(1),160,'var(--accent)',{w:3});label(g3,'目标速度 ε − x₀ = 0.8：网络 u_θ 要预测这个方向和长度',X(0.6),182,{a:'middle',c:'var(--accent)'});
+const g4=P(4);label(g4,'② 一段样本里的 token 数和 loss 占比',16,226,{b:1});
+function bars(g,y,wv,wa,lab){const tot=wv+wa,W=440;
+  el('rect',{x:150,y,width:W*wv/tot,height:26,fill:'var(--teal)',opacity:.75},g);
+  el('rect',{x:150+W*wv/tot,y,width:Math.max(W*wa/tot,2),height:26,fill:'var(--warm)'},g);
+  label(g,lab,16,y+18);label(g,'动作占 '+(100*wa/tot).toFixed(wa?1:0)+'%',150+W+10,y+18,{c:'var(--warm)',fs:12})}
+label(g4,'视频 3000 个',150,256,{m:1,c:'var(--teal)'});label(g4,'动作 32 个',520,256,{m:1,c:'var(--warm)'});
+bars(g4,266,3000,32,'不加权');
+const g5=P(5);bars(g5,306,3000,320,'动作 ×10');label(g5,'Cosmos 3 的做法：动作 loss 乘 10',150,350,{m:1});
+const g6=P(6);bars(g6,370,3000,0,'人类视频');label(g6,'没有动作：λ_a = 0，只算视频那一项',150,414,{m:1});
+const g7=P(7);el('rect',{x:16,y:428,width:688,height:34,rx:8,fill:'var(--accent-bg)',stroke:'var(--accent)'},g7);
+label(g7,'对齐：48 步动作 @ 30 Hz = 1.6 s = 2 个视频 latent 帧（DreamZero）',360,450,{a:'middle',c:'var(--accent)'});
+runSteps([
+  'flow matching 训练的一个样本：先把真值和噪声混起来，再让网络猜"该往哪走"。',
+  '真值 x₀ = 0.2（比如某个动作维度），噪声 ε 从高斯里抽，这里抽到 1.0。',
+  '随机抽一个噪声等级 τ = 0.3，混出 x_τ = 0.7×0.2 + 0.3×1.0 = 0.44。网络看到的是这个。',
+  '网络的任务：预测从 x₀ 指向 ε 的速度 ε − x₀ = 0.8。loss 是预测和它的差的平方。',
+  '视频和动作的 loss 加在一起。一段样本里视频 token 约几千个，动作只有几十个：动作只占约 1%。',
+  '把动作 loss 乘 10，动作占比升到约 9.6%，模型才不会只顾着学视频。',
+  '人类视频没有动作：动作那一项权重设 0，只学视频。这就是第 2 章的配置 4。',
+  '最后一个细节：动作块的时长要正好对上整数个视频 latent 帧，换控制频率就要重算。',
+],1900);
+</script>
+<a href="https://wikieden.github.io/ai-books/" style="position:fixed;right:12px;bottom:12px;z-index:99;padding:4px 10px;border-radius:14px;background:rgba(127,127,127,.18);color:inherit;font:13px/1.6 system-ui,sans-serif;text-decoration:none">← 全部讲义书</a>
+</body></html>

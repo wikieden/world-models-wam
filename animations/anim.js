@@ -24,3 +24,15 @@ function setupPlayer(A,ms){
     [play,step,reset].forEach(b=>b.addEventListener('click',off,{capture:true}));
   }
 }
+// —— 第 2 章起的通用"逐步出现"写法 ——
+// P(step, until)：返回一个 <g>，第 step 步出现，到第 until 步消失（不填就一直留着）
+// runSteps(CAP, ms)：CAP[k] 是第 k 步的说明；第 0 步只显示 step=0 的部分
+const PARTS=[];
+function P(step,until){const g=el('g',{opacity:0},$('sv'));PARTS.push({g,step,until});return g}
+function box(g,x,y,w,h,label,col,o){o=o||{};el('rect',{x,y,width:w,height:h,rx:o.rx||8,fill:o.fill||'var(--bg)',stroke:col||'var(--line)','stroke-width':o.sw||1.5,'stroke-dasharray':o.dash||'none',opacity:o.op||1},g);
+  if(label!==undefined&&label!==''){String(label).split('\n').forEach((s,i,a)=>txt(s,{x:x+w/2,y:y+h/2+5+(i-(a.length-1)/2)*16,'text-anchor':'middle',style:(o.fs?'font-size:'+o.fs+'px;':'')+(o.tc?'fill:'+o.tc:'')},g))}}
+function arrow(g,x1,y1,x2,y2,col,o){o=o||{};const a=Math.atan2(y2-y1,x2-x1),s=7;
+  el('path',{d:`M${x1} ${y1} L${x2} ${y2} M${x2-s*Math.cos(a-0.5)} ${y2-s*Math.sin(a-0.5)} L${x2} ${y2} L${x2-s*Math.cos(a+0.5)} ${y2-s*Math.sin(a+0.5)}`,stroke:col||'var(--muted)','stroke-width':o.w||2,fill:'none','stroke-dasharray':o.dash||'none'},g)}
+function label(g,s,x,y,o){o=o||{};return txt(s,{x,y,'text-anchor':o.a||'start',class:o.m?'m':'',style:(o.fs?'font-size:'+o.fs+'px;':'')+(o.b?'font-weight:500;':'')+(o.c?'fill:'+o.c:'')},g)}
+function runSteps(CAP,ms){let k;const show=()=>{PARTS.forEach(p=>p.g.setAttribute('opacity',p.step<=k&&(p.until==null||k<p.until)?1:0));$('cap').innerHTML=CAP[k]};
+  setupPlayer({captureSeed:7,reset(){k=0;show()},next(){if(k>=CAP.length-1)return false;k++;show();return true}},ms||1800)}

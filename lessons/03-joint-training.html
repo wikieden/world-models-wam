@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>第 3 章 · 联合生成怎么训练：一个 loss、一个权重、一张时间表 · 世界模型与 WAM 流派</title>
+<style>
+:root{--bg:#fbfbfa;--fg:#1f2328;--mute:#5d6470;--line:#e3e5e8;--card:#fff;--acc:#2f6fdf;--code:#f2f3f5;--quote:#f4f6fa}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15181d;--fg:#e4e7ec;--mute:#9aa3b2;--line:#2c323b;--card:#1c2026;--acc:#7aa7ff;--code:#22272f;--quote:#1b2029}}
+:root[data-theme="dark"]{--bg:#15181d;--fg:#e4e7ec;--mute:#9aa3b2;--line:#2c323b;--card:#1c2026;--acc:#7aa7ff;--code:#22272f;--quote:#1b2029}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.75 -apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Helvetica Neue",sans-serif}
+a{color:var(--acc)}
+header.top{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+header.top .in{max-width:860px;margin:0 auto;padding:10px 16px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;font-size:14px}
+header.top .brand{font-weight:600;color:var(--fg);text-decoration:none;margin-right:auto}
+header.top a{text-decoration:none}
+main{max-width:860px;margin:0 auto;padding:24px 16px 72px;overflow-wrap:anywhere}
+h1{font-size:28px;line-height:1.35;margin:8px 0 16px} h2{font-size:22px;margin:40px 0 12px;padding-top:8px;border-top:1px solid var(--line)} h3{font-size:18px;margin:28px 0 8px}
+img{max-width:100%;height:auto;border-radius:8px;border:1px solid var(--line);background:#fff}
+blockquote{margin:16px 0;padding:10px 16px;background:var(--quote);border-left:3px solid var(--acc);border-radius:4px;color:var(--mute)}
+blockquote p{margin:4px 0}
+code{background:var(--code);padding:1px 5px;border-radius:4px;font-size:.9em}
+pre{background:var(--code);padding:12px 14px;border-radius:8px;overflow-x:auto} pre code{padding:0;background:none}
+table{border-collapse:collapse;display:block;overflow-x:auto;max-width:100%;margin:12px 0;font-size:15px}
+th,td{border:1px solid var(--line);padding:6px 10px;vertical-align:top} th{background:var(--code)}
+details{border:1px solid var(--line);border-radius:8px;padding:6px 12px;margin:8px 0;background:var(--card)}
+details[open]{padding-bottom:10px} summary{cursor:pointer;color:var(--acc);font-weight:500}
+mjx-container{overflow-x:auto;overflow-y:hidden;max-width:100%}
+.btn{display:inline-block;margin:4px 8px 4px 0;padding:6px 14px;border:1px solid var(--acc);border-radius:999px;text-decoration:none;font-size:14px}
+.pager{display:flex;justify-content:space-between;gap:12px;margin-top:48px;padding-top:16px;border-top:1px solid var(--line);font-size:15px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin:16px 0}
+.card{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;color:inherit;text-decoration:none}
+.card:hover{border-color:var(--acc)} .card img{border:0;border-bottom:1px solid var(--line);border-radius:0;aspect-ratio:16/10;object-fit:contain;width:100%}
+.card .no{color:var(--mute);font-size:13px;padding:8px 12px 0} .card .t{padding:0 12px 12px;font-weight:500;line-height:1.5}
+.lead{font-size:17px;color:var(--mute)}
+footer{max-width:860px;margin:0 auto;padding:0 16px 40px;color:var(--mute);font-size:13px}
+</style>
+<script>window.MathJax={tex:{inlineMath:[["\\(","\\)"]],displayMath:[["\\[","\\]"],["$$","$$"]],processEscapes:true,processEnvironments:true}};</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
+</head><body>
+<header class="top"><div class="in">
+<a class="brand" href="../index.html">世界模型与 WAM 流派</a>
+<a href="../lessons/index.html">讲义目录</a>
+<a href="../animations/index.html">动画</a>
+<a href="../review.html">复习卡片</a>
+<a href="../lessons/appendix-glossary.html">缩写表</a>
+<a href="https://wikieden.github.io/ai-books/">← 全部讲义书</a>
+</div></header>
+<main>
+<h1 id="3-loss">第 3 章 · 联合生成怎么训练：一个 loss、一个权重、一张时间表</h1><p><a class="btn" href="../animations/03-joint-training.html">▶ 打开本章可交互动画</a></p>
+<blockquote>
+<p>本章回答：联合生成的 WAM 训练时到底在优化什么？为什么动作 loss 要加大权重？没有动作的视频怎么进 loss？视频和动作的时间怎么对齐？<br />
+讲解日期：2026-11-20 · 上一章：<a href="../lessons/02-noise-roles.html">第 2 章 加噪还是不加噪</a> · 下一章：<a href="../lessons/04-joint-inference.html">第 4 章 联合生成怎么推理</a><br />
+对应原文：调研报告 §3 P3 第 3、5、6 条；§5 训练流水线"最容易踩的坑"<br />
+本章缩写：FM = Flow Matching（流 / 匹配）；VAE = Variational AutoEncoder（变分 / 自编码器）；Hz = Hertz（赫兹，每秒多少次）；LoRA = Low-Rank Adaptation（低秩 / 适配）。全部缩写见 <a href="../lessons/appendix-glossary.html">附录 · 缩写与术语表</a></p>
+</blockquote>
+<h2 id="_1">讲解</h2>
+<h3 id="2026-11-20">第一步：训练一个样本要做的四件事（2026-11-20）</h3>
+<p><strong>类比：教人"从模糊照片还原清晰照片"。</strong> 你拿一张清晰照片，故意糊上一层雾，让学生看糊的那张，猜"雾是从哪个方向、多浓地盖上去的"。学生猜对了方向，反着走就能把雾擦掉。</p>
+<p>flow matching 训练一个样本：</p>
+<ol>
+<li>拿真实数据 <span class="arithmatex">\(x_0\)</span>（视频 latent 或动作）；</li>
+<li>从高斯分布抽噪声 <span class="arithmatex">\(\epsilon\)</span>，再随机抽一个噪声等级 <span class="arithmatex">\(\tau\)</span>；</li>
+<li>混出 <span class="arithmatex">\(x_\tau=(1-\tau)x_0+\tau\epsilon\)</span>（第 2 章第二步）；</li>
+<li>让网络 <span class="arithmatex">\(u_\theta\)</span> 看 <span class="arithmatex">\(x_\tau\)</span>，预测<strong>速度</strong> <span class="arithmatex">\(\epsilon-x_0\)</span>，用平方误差打分。</li>
+</ol>
+<p><strong>例子</strong>（沿用第 2 章的数）：<span class="arithmatex">\(x_0=0.2\)</span>，<span class="arithmatex">\(\epsilon=1.0\)</span>，<span class="arithmatex">\(\tau=0.3\)</span> → <span class="arithmatex">\(x_\tau=0.44\)</span>。目标速度 <span class="arithmatex">\(=1.0-0.2=0.8\)</span>。网络如果猜 0.7，这一维的 loss 就是 <span class="arithmatex">\((0.7-0.8)^2=0.01\)</span>。</p>
+<p>为什么预测"速度"：推理时从纯噪声出发，沿着预测的速度<strong>反方向</strong>一步步走回去，就得到干净样本（第 4 章）。</p>
+<p><strong>一句话</strong>：糊一层雾，让网络猜雾的方向。</p>
+<h3 id="loss2026-11-20">第二步：视频和动作一起进 loss（2026-11-20）</h3>
+<p>联合生成对视频 latent <span class="arithmatex">\(x^v\)</span> 和动作 <span class="arithmatex">\(x^a\)</span> <strong>各自</strong>加噪（各自的 <span class="arithmatex">\(\tau_v\)</span>、<span class="arithmatex">\(\tau_a\)</span>），然后一个网络同时预测两者的速度：</p>
+<div class="arithmatex">\[
+\mathcal{L}=\sum_{m\in\{v,a\}}\lambda_m\,\big\|u_\theta(x^v_{\tau},x^a_{\tau},c)_m-(\epsilon^m-x^m_0)\big\|^2
+\]</div>
+<p>逐个符号读：</p>
+<ul>
+<li><span class="arithmatex">\(m\)</span>：modality（模态），取 <span class="arithmatex">\(v\)</span>（视频）或 <span class="arithmatex">\(a\)</span>（动作）；</li>
+<li><span class="arithmatex">\(u_\theta(\cdot)_m\)</span>：网络输出里属于模态 <span class="arithmatex">\(m\)</span> 的那一部分；</li>
+<li><span class="arithmatex">\(c\)</span>：干净的上下文（历史帧、指令、本体状态）；</li>
+<li><span class="arithmatex">\(\lambda_m\)</span>：读作 lambda，这一模态 loss 的<strong>权重</strong>；</li>
+<li><span class="arithmatex">\(\|\cdot\|^2\)</span>：平方误差，对这一模态的所有 token、所有维度求和。</li>
+</ul>
+<p><strong>一句话</strong>：两个模态各算一份"猜雾"的误差，加权求和。</p>
+<h3 id="2026-11-20_1">第三步：为什么动作要加权（2026-11-20）</h3>
+<p>一段样本里，视频压成 latent 后有几千个 token，动作只有几十个。loss 是对 token 求和的，所以<strong>谁的 token 多，谁就占 loss 的大头</strong>。</p>
+<p><strong>例子</strong>（编的整数，量级和真实接近）：视频 3000 个 token，动作 32 个，假设每个 token 的误差差不多。</p>
+<table>
+<thead>
+<tr>
+<th>设置</th>
+<th>视频份额</th>
+<th>动作份额</th>
+<th>动作占比</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>不加权（<span class="arithmatex">\(\lambda_a=1\)</span>）</td>
+<td>3000</td>
+<td>32</td>
+<td>32 / 3032 ≈ 1.06%</td>
+</tr>
+<tr>
+<td>动作 ×10（<span class="arithmatex">\(\lambda_a=10\)</span>）</td>
+<td>3000</td>
+<td>320</td>
+<td>320 / 3320 ≈ 9.6%</td>
+</tr>
+</tbody>
+</table>
+<p>只占 1% 的话，梯度几乎全来自视频，模型会变成一个"顺便出点动作"的视频生成器。Cosmos 3 把动作 loss 乘 10，就是为了把动作拉回来（调研报告 §3 P3 第 5 条）。</p>
+<p><strong>一句话</strong>：动作 token 少，不加权就被视频淹没。</p>
+<h3 id="loss2026-11-20_1">第四步：没有动作的视频怎么进 loss（2026-11-20）</h3>
+<p>人类视频没有动作标签。做法是：这类样本的 <span class="arithmatex">\(\lambda_a=0\)</span>（或者把动作 token 遮掉），只算视频那一项。这就是第 2 章的配置 4。</p>
+<p>一个 batch 里通常<strong>混着</strong>两种样本：</p>
+<ul>
+<li>机器人样本：视频 + 动作两项都算；</li>
+<li>人类 / 无动作样本：只算视频。</li>
+</ul>
+<p>配比各家不同。Dyna-2 用超过 100 万小时第一人称人类视频预训练；DreamZero 在后训练时只加 20 分钟无动作视频就看到提升。</p>
+<p><strong>一句话</strong>：没有动作就只练视频，参数照样共享给 policy。</p>
+<h3 id="2026-11-20_2">第五步：分块训练和时间对齐（2026-11-20）</h3>
+<p><strong>分块 + teacher forcing（老师带着走）</strong>：DreamZero 把一段视频切成块，每块 2 个 latent 帧，一共 4 块。训练第 <span class="arithmatex">\(k\)</span> 块时，前面几块用<strong>真实的干净帧</strong>当条件，只给第 <span class="arithmatex">\(k\)</span> 块加噪。推理时前面的块是模型自己生成的，所以第 4 章要讲怎么补救这个"训练和推理不一致"。</p>
+<p><strong>时间对齐</strong>：三个频率要对上：</p>
+<ul>
+<li>动作控制频率：DreamZero 在 AgiBot 上是 30 Hz；</li>
+<li>一个动作块的步数：48 步，所以时长 <span class="arithmatex">\(48/30=1.6\)</span> 秒；</li>
+<li>视频 latent 帧率：VAE 在时间上也有压缩，1.6 秒正好对应 2 个 latent 帧。</li>
+</ul>
+<p>换一台 15 Hz 的机器人，48 步就变成 3.2 秒，和 2 个 latent 帧对不上了，块的大小要重新算（调研报告 §5 坑 4）。</p>
+<p><strong>还有两个坑</strong>（调研报告 §5）：</p>
+<ul>
+<li>tokenizer（VAE）决定上限：压得太狠，手指、接触这类小细节会丢，后面怎么训都补不回来；</li>
+<li>后训练常用全量微调：DreamZero 报告 LoRA 效果不好。</li>
+</ul>
+<p><strong>一句话</strong>：前面的块用真值带着训，块长要对上整数个 latent 帧。</p>
+<h3 id="loss">动画演示：一个数怎么加噪，loss 怎么分</h3>
+<p><img alt="联合生成的训练" src="../animations/03-joint-training.gif" /></p>
+<p>可交互版：<a href="../animations/03-joint-training.html">animations/03-joint-training.html</a>（打开自动循环播放；点任一按钮切成手动）</p>
+<p><strong>怎么看</strong>：</p>
+<ol>
+<li>上半部分：数轴上的真值 0.2、噪声 1.0、混合点 0.44，蓝色箭头是要预测的速度 0.8（第一步）。</li>
+<li>下半部分三条：不加权时动作占约 1%，乘 10 后约 9.6%，人类视频动作占 0（第三、四步）。</li>
+<li>最后的蓝框：48 步 @ 30 Hz = 1.6 s = 2 个 latent 帧（第五步）。</li>
+</ol>
+<h2 id="_2">练习与作答记录</h2>
+<p><strong>题 1</strong>（第一步）：<span class="arithmatex">\(x_0=-0.5\)</span>，<span class="arithmatex">\(\epsilon=0.3\)</span>，<span class="arithmatex">\(\tau=0.5\)</span>。算 <span class="arithmatex">\(x_\tau\)</span> 和目标速度。</p>
+<p><strong>作答</strong>：（待作答）</p>
+<p><strong>题 2</strong>（第三步）：一个模型视频 2000 个 token、动作 50 个。想让动作的 loss 占比达到约 20%，<span class="arithmatex">\(\lambda_a\)</span> 大概要设多少？</p>
+<p><strong>作答</strong>：（待作答）</p>
+<p><strong>题 3</strong>（第五步）：一台控制频率 10 Hz 的机器人，想让一个动作块正好对应 2 个 latent 帧（1.6 秒），一个块要多少步动作？</p>
+<p><strong>作答</strong>：（待作答）</p>
+<h2 id="_3">口诀</h2>
+<blockquote>
+<p>糊层雾，猜方向，平方误差打分数；<br />
+动作 token 少，权重乘十才不被淹；<br />
+没动作的视频只算视频那一项；<br />
+块长对齐 latent 帧，换频率就重算。</p>
+</blockquote>
+<h2 id="_4">本章复习卡片</h2>
+<p>C04 联合 flow matching 的 loss 和动作加权。练习做完后，按答错、卡住的地方补上。</p>
+<h2 id="_5">附录 · 延伸阅读</h2>
+<h3 id="_6">推荐阅读</h3>
+<table>
+<thead>
+<tr>
+<th>读什么</th>
+<th>读哪里</th>
+<th>读它为了什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>★ 调研报告</td>
+<td>§3 P3 训练骨架、§5 训练流水线</td>
+<td>本章出处</td>
+</tr>
+<tr>
+<td>★ DreamZero（arXiv 2602.15922）</td>
+<td>方法部分的分块训练与时间对齐</td>
+<td>分块 + teacher forcing、48 步 @30 Hz 的来源</td>
+</tr>
+<tr>
+<td>Lipman et al., <em>Flow Matching for Generative Modeling</em>（2022）</td>
+<td>引言和条件 flow matching 那一节</td>
+<td>flow matching 的原始推导</td>
+</tr>
+<tr>
+<td>vla-deep-dive 讲义 π0 一章</td>
+<td>flow matching 动作头</td>
+<td>只对动作做 flow matching 的对照</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_7">数学原理</h3>
+<ul>
+<li><strong>平方误差对 token 求和</strong>：总 loss 是所有 token 误差之和，token 数多的模态天然权重大。</li>
+<li><strong>速度场</strong>：<span class="arithmatex">\(x_\tau\)</span> 对 <span class="arithmatex">\(\tau\)</span> 求导得 <span class="arithmatex">\(\epsilon-x_0\)</span>，这就是网络要预测的"速度"。</li>
+</ul>
+<h3 id="_8">公式清单</h3>
+<table>
+<thead>
+<tr>
+<th>公式</th>
+<th>意思</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(x_\tau=(1-\tau)x_0+\tau\epsilon\)</span></td>
+<td>加噪</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\frac{d x_\tau}{d\tau}=\epsilon-x_0\)</span></td>
+<td>目标速度</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\mathcal{L}=\sum_m\lambda_m\|u_\theta(\cdot)_m-(\epsilon^m-x^m_0)\|^2\)</span></td>
+<td>联合 flow matching loss</td>
+</tr>
+<tr>
+<td>动作占比 <span class="arithmatex">\(=\dfrac{\lambda_a N_a}{N_v+\lambda_a N_a}\)</span></td>
+<td>每 token 误差相近时的近似</td>
+</tr>
+</tbody>
+</table>
+<p>本章无代码对照：数字都能手算。</p><nav class="pager"><a href="02-noise-roles.html">← 第 2 章 · 加噪还是不加噪：一个网络当四种角色</a><a href="04-joint-inference.html">第 4 章 · 联合生成怎么推理：少走几步、丢掉视频、用现实重新锚定 →</a></nav>
+</main>
+<footer>来自个人学习仓库的对话讲义，含练习作答记录。源码：<a href="https://github.com/wikieden/world-models-wam">github.com/wikieden/world-models-wam</a>。更多讲义书：<a href="https://wikieden.github.io/ai-books/">Physical AI 0-1-♾️（合集）</a></footer>
+</body></html>

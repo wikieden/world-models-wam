@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>第 12 章 · 2026 年的 WAM 版图：开源模型和榜单 · 世界模型与 WAM 流派</title>
+<style>
+:root{--bg:#fbfbfa;--fg:#1f2328;--mute:#5d6470;--line:#e3e5e8;--card:#fff;--acc:#2f6fdf;--code:#f2f3f5;--quote:#f4f6fa}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15181d;--fg:#e4e7ec;--mute:#9aa3b2;--line:#2c323b;--card:#1c2026;--acc:#7aa7ff;--code:#22272f;--quote:#1b2029}}
+:root[data-theme="dark"]{--bg:#15181d;--fg:#e4e7ec;--mute:#9aa3b2;--line:#2c323b;--card:#1c2026;--acc:#7aa7ff;--code:#22272f;--quote:#1b2029}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.75 -apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Helvetica Neue",sans-serif}
+a{color:var(--acc)}
+header.top{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+header.top .in{max-width:860px;margin:0 auto;padding:10px 16px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;font-size:14px}
+header.top .brand{font-weight:600;color:var(--fg);text-decoration:none;margin-right:auto}
+header.top a{text-decoration:none}
+main{max-width:860px;margin:0 auto;padding:24px 16px 72px;overflow-wrap:anywhere}
+h1{font-size:28px;line-height:1.35;margin:8px 0 16px} h2{font-size:22px;margin:40px 0 12px;padding-top:8px;border-top:1px solid var(--line)} h3{font-size:18px;margin:28px 0 8px}
+img{max-width:100%;height:auto;border-radius:8px;border:1px solid var(--line);background:#fff}
+blockquote{margin:16px 0;padding:10px 16px;background:var(--quote);border-left:3px solid var(--acc);border-radius:4px;color:var(--mute)}
+blockquote p{margin:4px 0}
+code{background:var(--code);padding:1px 5px;border-radius:4px;font-size:.9em}
+pre{background:var(--code);padding:12px 14px;border-radius:8px;overflow-x:auto} pre code{padding:0;background:none}
+table{border-collapse:collapse;display:block;overflow-x:auto;max-width:100%;margin:12px 0;font-size:15px}
+th,td{border:1px solid var(--line);padding:6px 10px;vertical-align:top} th{background:var(--code)}
+details{border:1px solid var(--line);border-radius:8px;padding:6px 12px;margin:8px 0;background:var(--card)}
+details[open]{padding-bottom:10px} summary{cursor:pointer;color:var(--acc);font-weight:500}
+mjx-container{overflow-x:auto;overflow-y:hidden;max-width:100%}
+.btn{display:inline-block;margin:4px 8px 4px 0;padding:6px 14px;border:1px solid var(--acc);border-radius:999px;text-decoration:none;font-size:14px}
+.pager{display:flex;justify-content:space-between;gap:12px;margin-top:48px;padding-top:16px;border-top:1px solid var(--line);font-size:15px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin:16px 0}
+.card{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;color:inherit;text-decoration:none}
+.card:hover{border-color:var(--acc)} .card img{border:0;border-bottom:1px solid var(--line);border-radius:0;aspect-ratio:16/10;object-fit:contain;width:100%}
+.card .no{color:var(--mute);font-size:13px;padding:8px 12px 0} .card .t{padding:0 12px 12px;font-weight:500;line-height:1.5}
+.lead{font-size:17px;color:var(--mute)}
+footer{max-width:860px;margin:0 auto;padding:0 16px 40px;color:var(--mute);font-size:13px}
+</style>
+<script>window.MathJax={tex:{inlineMath:[["\\(","\\)"]],displayMath:[["\\[","\\]"],["$$","$$"]],processEscapes:true,processEnvironments:true}};</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
+</head><body>
+<header class="top"><div class="in">
+<a class="brand" href="../index.html">世界模型与 WAM 流派</a>
+<a href="../lessons/index.html">讲义目录</a>
+<a href="../animations/index.html">动画</a>
+<a href="../review.html">复习卡片</a>
+<a href="../lessons/appendix-glossary.html">缩写表</a>
+<a href="https://wikieden.github.io/ai-books/">← 全部讲义书</a>
+</div></header>
+<main>
+<h1 id="12-2026-wam">第 12 章 · 2026 年的 WAM 版图：开源模型和榜单</h1><p><a class="btn" href="../animations/12-landscape-2026.html">▶ 打开本章可交互动画</a></p>
+<blockquote>
+<p>本章回答：2026 年下半年有哪些可以拿来用的大型 WAM？它们的规模、数据和开放程度是什么样？公共榜单 RoboLab-120 上的分数该怎么读，哪些数字不能直接比？<br />
+讲解日期：2026-11-20 · 上一章：<a href="../lessons/11-four-uses.html">第 11 章 推理的四种用法</a> · 下一章：<a href="../lessons/13-choose-and-frontier.html">第 13 章 选型与前沿</a><br />
+对应原文：调研报告 §10.4、§10.6；本章数字<strong>都是公司自报或新闻报道</strong>，标 <em>（二手）</em> 的来自第三方报道<br />
+本章缩写：MoE = Mixture of Experts（混合 / 专家，每个 token 只激活一部分参数）；DiT = Diffusion Transformer（扩散 / Transformer）；MLP = Multi-Layer Perceptron（多层 / 感知机）；BFL = Black Forest Labs（一家图像 / 视频生成公司）；SE = Standard Error（标准 / 误差）。全部缩写见 <a href="../lessons/appendix-glossary.html">附录 · 缩写与术语表</a></p>
+</blockquote>
+<h2 id="_1">讲解</h2>
+<h3 id="2026-11-20">第一步：五个值得认识的模型（2026-11-20）</h3>
+<p>| 模型 | 机构 / 时间 | 规模 | 要点 | 开放 |
+|---|---|---|---|
+| GR00T 2 | NVIDIA，2026-11 | 2B 单塔 | 40 万小时人类视频；每个本体只配一对小 MLP（第 2、6 章） | 白皮书已出，代码和权重说 12 月 |
+| Praxis-1 | Runway，2026-11-11 | 27B MoE DiT | 视频和动作一起预测；RoboLab-120 46.2%（1,200 回合） | Apache 2.0，权重 + 微调代码 |
+| FLUX 3 Action | BFL，2026-09 | 7B | 预训练 95% 以上是视频 token；RoboLab-120 约 42–43%（页面内数字不一致） | 开放权重 |
+| Cosmos3-Nano-Policy | NVIDIA，2026 | 16B | RoboLab-120 36.8% <em>（二手）</em> | — |
+| Liber-0 | LiberAI，2026-11-04 | 未公开 | 2.2M 小时人类经验视频预训练；自建 60 任务零样本 36% | 未说明 |</p>
+<p>几个规律：</p>
+<ul>
+<li><strong>都是 P3 或接近 P3</strong>（第 8 章）：视频和动作一起建模；</li>
+<li><strong>视频公司入场</strong>：Runway、BFL 原本做视频 / 图像生成，把视频底座直接改成 WAM；</li>
+<li><strong>人类视频规模到了几十万到上百万小时</strong>：GR00T 2 40 万、Dyna-2 100 万以上、Liber-0 220 万。</li>
+</ul>
+<p><strong>一句话</strong>：7B–27B 的开放权重 WAM 出现了，大多是视频公司的视频底座改出来的。</p>
+<h3 id="moe-27b-2026-11-20">第二步：MoE 是什么，为什么 27B 跑得动（2026-11-20）</h3>
+<p><strong>类比：医院分诊。</strong> 医院有 20 个科室（专家），每个病人只去其中 2 个。医院整体很大，但每个病人只占用一小部分医生。</p>
+<p>MoE：一层里有很多组前馈网络（专家），每个 token 由一个小的路由器挑出少数几组来算。所以<strong>总参数</strong>很多（27B），每个 token 实际用到的<strong>激活参数</strong>少得多，推理代价按激活参数算。</p>
+<p>Praxis-1 公开的是总规模 27B，激活参数没在本章的资料里找到，所以没法直接和 7B 的稠密模型比速度。</p>
+<p><strong>一句话</strong>：总参数看容量，激活参数看速度，比模型大小前先问是哪一种。</p>
+<h3 id="2026-11-20_1">第三步：读榜第一件事，算误差线（2026-11-20）</h3>
+<p>成功率是"成功回合数 / 总回合数"，回合有限，分数就有随机波动。<strong>标准误</strong>：</p>
+<div class="arithmatex">\[
+\mathrm{SE}=\sqrt{\frac{p(1-p)}{n}}
+\]</div>
+<ul>
+<li><span class="arithmatex">\(p\)</span>：成功率；<span class="arithmatex">\(n\)</span>：回合数；</li>
+<li>95% 区间约为 <span class="arithmatex">\(p\pm1.96\,\mathrm{SE}\)</span>。</li>
+</ul>
+<p><strong>例子</strong>：Praxis-1，<span class="arithmatex">\(p=0.462\)</span>，<span class="arithmatex">\(n=1200\)</span>：</p>
+<div class="arithmatex">\[
+\mathrm{SE}=\sqrt{\frac{0.462\times0.538}{1200}}=\sqrt{0.000207}\approx0.0144
+\]</div>
+<p>即约 1.4 个百分点，95% 区间约 ±2.8 个点。</p>
+<p><strong>两个分数之差</strong>的标准误要合起来算：<span class="arithmatex">\(\sqrt{\mathrm{SE}_1^2+\mathrm{SE}_2^2}\)</span>。假设 FLUX 3 Action 也跑了 1200 回合、42.5%：</p>
+<div class="arithmatex">\[
+\sqrt{0.0144^2+0.0143^2}\approx0.0203
+\]</div>
+<p>95% 区间约 ±4.0 个点。Praxis-1 和 FLUX 3 Action 差约 3.7 个点，<strong>还在误差范围内</strong>，不能说谁明显更强。（FLUX 3 的回合数没公开，这里是假设。）</p>
+<p><strong>一句话</strong>：差距小于两倍左右的合并标准误时，别急着排名次。</p>
+<h3 id="2026-11-20_2">第四步：读榜第二件事，看谁跑的、换个榜还对不对（2026-11-20）</h3>
+<ul>
+<li><strong>谁维护、谁跑</strong>：RoboLab-120 是 NVIDIA 维护的仿真基准（120 个任务，三条能力轴），实验由 NVIDIA 员工跑。NVIDIA 自己的 Cosmos、GR00T 也在榜上，有报道指出这里有利益冲突 <em>（二手）</em>；</li>
+<li><strong>"榜首"说法要核对时间点</strong>：有报道说 FLUX 3 Action 宣称"榜首"时，榜上还没收录后来的模型 <em>（二手）</em>；</li>
+<li><strong>换个榜排名可能差很多</strong>：报道称 DreamZero 在 RoboArena 排第二，在 RoboLab 只排第十 <em>（二手）</em>；</li>
+<li><strong>自建任务只能当方向信号</strong>：Liber-0 的 60 个任务由 GPT-6 提出、公司自评，报道还带"赞助内容"标记。</li>
+</ul>
+<p>为什么换榜会变：仿真榜和真机榜考的不是同一种能力；每个榜的任务分布、相机、控制频率都不同，模型在哪种数据上训得多，就在哪种榜上占便宜。</p>
+<p><strong>一句话</strong>：同一个分数，先问谁跑的、在什么任务上跑的。</p>
+<h3 id="2026-11-20_3">第五步：这半年的五条趋势（2026-11-20）</h3>
+<p>调研报告 §10.6，每条对应本书的一章：</p>
+<ol>
+<li>训练时想象，推理时少想或不想（第 5 章：Fast-WAM、HWAM）；</li>
+<li>视频低频、动作高频，P3 拉到 20 Hz 以上（第 6 章：AHA-WAM、GR00T 2）；</li>
+<li>上下文从几秒拉到十几秒（第 7 章：Long-WAM）；</li>
+<li>人类视频规模上到几十万到上百万小时（本章第一步）；</li>
+<li>7B–27B 的开放权重 WAM 和公共榜单出现，但榜单的公正性和可比性还有争议（本章第三、四步）。</li>
+</ol>
+<p><strong>一句话</strong>：更快、记得更久、数据更多、更开放，但还缺可信的尺子。</p>
+<h3 id="_2">动画演示：三个模型的分数和误差线</h3>
+<p><img alt="2026 WAM 版图" src="../animations/12-landscape-2026.gif" /></p>
+<p>可交互版：<a href="../animations/12-landscape-2026.html">animations/12-landscape-2026.html</a>（打开自动循环播放；点任一按钮切成手动）</p>
+<p><strong>怎么看</strong>：</p>
+<ol>
+<li>三根柱子是 RoboLab-120 上的成功率（第一步）。</li>
+<li>黑色误差线是 95% 区间，按 1200 回合算；FLUX 3 和 Cosmos 的回合数是假设的（第三步）。</li>
+<li>底部三条读榜要点（第三、四步）。</li>
+</ol>
+<h2 id="_3">练习与作答记录</h2>
+<p><strong>题 1</strong>（第三步）：一个模型在 100 回合上测出 60% 成功率。算标准误和 95% 区间。和 1200 回合的情况比，区间宽了多少倍？</p>
+<p><strong>作答</strong>：（待作答）</p>
+<p><strong>题 2</strong>（第四步）：你的团队训了一个 WAM，在 RoboLab-120 上 45%，在自己的真机 20 个任务上只有 20%。可能是什么原因？你会先查什么？</p>
+<p><strong>作答</strong>：（待作答）</p>
+<p><strong>题 3</strong>（第一、二步）：要在一台单张 RTX 5090 的工作站上微调并部署一个开源 WAM，表里的模型你会先试哪个？需要先查清楚哪些信息？</p>
+<p><strong>作答</strong>：（待作答）</p>
+<h2 id="_4">口诀</h2>
+<blockquote>
+<p>视频公司改底座，七 B 到二十七 B 开放了；<br />
+总参数看容量，激活参数看速度；<br />
+分数先算误差线，差距要比合并误差大；<br />
+再问谁跑的榜，换个榜还算不算。</p>
+</blockquote>
+<h2 id="_5">本章复习卡片</h2>
+<p>C13 成功率的标准误怎么算，读榜单要看哪三件事。练习做完后，按答错、卡住的地方补上。</p>
+<h2 id="_6">附录 · 延伸阅读</h2>
+<h3 id="_7">推荐阅读</h3>
+<table>
+<thead>
+<tr>
+<th>读什么</th>
+<th>读哪里</th>
+<th>读它为了什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>★ 调研报告</td>
+<td>§10.4–10.6 和文末来源链接</td>
+<td>本章出处，每个模型的原始报道</td>
+</tr>
+<tr>
+<td>★ RoboLab（NVIDIA 项目页）</td>
+<td>任务定义和评测协议</td>
+<td>榜单到底考什么</td>
+</tr>
+<tr>
+<td>gr00t2 讲义</td>
+<td>第 3、4、9 章</td>
+<td>GR00T 2 的预训练配方、数据配比和评测</td>
+</tr>
+<tr>
+<td>The Batch 关于视频模型控制机器人的报道</td>
+<td>全文</td>
+<td>RoboLab 榜单和利益冲突的讨论 <em>（二手）</em></td>
+</tr>
+</tbody>
+</table>
+<h3 id="_8">数学原理</h3>
+<ul>
+<li><strong>二项分布的标准误</strong>：<span class="arithmatex">\(n\)</span> 次独立成败试验，成功率估计的标准差是 <span class="arithmatex">\(\sqrt{p(1-p)/n}\)</span>；<span class="arithmatex">\(n\)</span> 大 4 倍，误差小一半。</li>
+<li><strong>两独立估计之差</strong>：方差相加，<span class="arithmatex">\(\mathrm{SE}_{\text{差}}=\sqrt{\mathrm{SE}_1^2+\mathrm{SE}_2^2}\)</span>。</li>
+</ul>
+<h3 id="_9">公式清单</h3>
+<table>
+<thead>
+<tr>
+<th>公式</th>
+<th>意思</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(\mathrm{SE}=\sqrt{p(1-p)/n}\)</span></td>
+<td>成功率的标准误</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(p\pm1.96\,\mathrm{SE}\)</span></td>
+<td>95% 区间</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\mathrm{SE}_{\text{差}}=\sqrt{\mathrm{SE}_1^2+\mathrm{SE}_2^2}\)</span></td>
+<td>两个分数之差的标准误</td>
+</tr>
+</tbody>
+</table>
+<p>本章无代码对照。</p><nav class="pager"><a href="11-four-uses.html">← 第 11 章 · 推理的四种用法：离线想象、在线规划、直接出动作、交互模拟</a><a href="13-choose-and-frontier.html">第 13 章 · 选型与前沿：场景 → 流派，以及还没解决的问题 →</a></nav>
+</main>
+<footer>来自个人学习仓库的对话讲义，含练习作答记录。源码：<a href="https://github.com/wikieden/world-models-wam">github.com/wikieden/world-models-wam</a>。更多讲义书：<a href="https://wikieden.github.io/ai-books/">Physical AI 0-1-♾️（合集）</a></footer>
+</body></html>

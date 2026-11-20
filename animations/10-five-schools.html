@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>世界模型五派：在哪个空间预测</title><link rel="stylesheet" href="anim.css"></head>
+<body><main>
+<h1>第 10 章 · 世界模型五派：在哪个空间预测</h1>
+<p class="sub">配套讲义：<a href="../lessons/10-five-schools.html">第 10 章 · 世界模型五派：在哪个空间预测</a>。同一个问题：把方块往右推，会怎样？五派给出的“答案”长得完全不一样。</p>
+<div class="panel"><svg id="sv" viewBox="0 0 720 460"></svg></div>
+<p id="cap" style="min-height:3.2em;margin:8px 4px"></p>
+<div class="row"><button id="play">▶ 播放</button><button id="step">→ 单步</button><button id="reset">↺ 重来</button></div>
+<p class="note">看点：五派的区别不在网络结构，在“预测的未来是什么形状”：隐向量、几个数、特征、像素、物理量。</p>
+</main>
+<script src="anim.js"></script>
+<script>
+seed(3);
+const g0=P(0);box(g0,240,8,240,40,'现在 + 动作“往右推”','var(--line)',{fill:'var(--card)'});
+const S=[
+ {n:'W1 隐状态',d:'Dreamer',c:'var(--teal)',u:'在梦里练 actor',f:g=>{for(let i=0;i<6;i++)el('rect',{x:24+i*16,y:110,width:12,height:12+rnd()*28,fill:'var(--teal)',opacity:.7},g);label(g,'随机隐状态 z',20,172,{fs:11,m:1})}},
+ {n:'W2 任务信号',d:'MuZero',c:'var(--amber)',u:'每步树搜索',f:g=>{label(g,'r = +1',24,126,{fs:15});label(g,'v = 0.82',24,150,{fs:15});label(g,'不画画面',24,172,{fs:11,m:1})}},
+ {n:'W3 特征',d:'V-JEPA 2-AC',c:'var(--purple)',u:'CEM 规划到目标图',f:g=>{for(let i=0;i<4;i++)for(let j=0;j<3;j++)el('rect',{x:24+i*22,y:104+j*20,width:18,height:16,fill:'var(--purple)',opacity:.2+rnd()*.7},g);label(g,'encoder 特征',20,172,{fs:11,m:1})}},
+ {n:'W4 像素',d:'Genie · Cosmos',c:'var(--accent)',u:'交互模拟 · 造数据',f:g=>{el('rect',{x:20,y:100,width:100,height:62,rx:4,fill:'var(--bg)',stroke:'var(--line)'},g);el('line',{x1:24,y1:150,x2:116,y2:150,stroke:'var(--muted)'},g);el('rect',{x:80,y:128,width:22,height:22,rx:3,fill:'var(--accent)'},g);label(g,'未来的画面',20,176,{fs:11,m:1})}},
+ {n:'W5 物理 / 3D',d:'MuJoCo · GraphCast',c:'var(--warm)',u:'仿真 · 预报',f:g=>{label(g,'x = 0.32 m',24,120,{fs:13});label(g,'v = 0.4 m/s',24,142,{fs:13});label(g,'物理量 / 3D 场景',20,172,{fs:11,m:1})}},
+];
+S.forEach((s,i)=>{const x=8+i*142,g=el('g',{transform:`translate(${x},0)`},P(i+1));
+  arrow(g,70,52,70,72,'var(--muted)');
+  el('rect',{x:4,y:76,width:132,height:200,rx:10,fill:'var(--card)',stroke:s.c},g);
+  label(g,s.n,70,96,{a:'middle',b:1,c:s.c});s.f(g);
+  label(g,'代表',14,206,{fs:11,m:1});label(g,s.d,14,224,{fs:12});
+  label(g,'推理时怎么用',14,248,{fs:11,m:1});label(g,s.u,14,266,{fs:12});
+});
+const b=P(6);el('rect',{x:8,y:296,width:704,height:150,rx:10,fill:'var(--accent-bg)',stroke:'var(--accent)'},b);
+label(b,'重建路线（W1、W4）：要能把未来画回像素，贵但看得见',24,324,{fs:13});
+label(b,'不重建路线（W3）：只在特征空间预测，省，但画不出来',24,350,{fs:13});
+label(b,'只学决策需要的（W2）：只预测奖励和价值，最紧凑，换任务就要重训',24,376,{fs:13});
+label(b,'规则写死（W5 物理引擎）：确定性的特例，规则外的完全不会',24,402,{fs:13});
+label(b,'共同的底座：先压缩（tokenizer / encoder），再在压缩空间里预测未来',24,430,{fs:13,b:1,c:'var(--accent)'});
+runSteps([
+  '五派世界模型都回答同一个问题：做了这个动作，会怎样？',
+  'W1 Dreamer：预测一个小小的随机隐状态 z，需要时能解码回画面。在梦里练策略。',
+  'W2 MuZero：根本不预测画面，只预测“这步之后能得多少分、局面多好”。',
+  'W3 JEPA：预测冻结 encoder 的特征，不画像素。给一张目标图，用 CEM 搜动作。',
+  'W4 视频生成：直接画出未来的画面。人能玩，也能拿来造训练数据。',
+  'W5 物理 / 3D：预测位置、速度、天气这类物理量，或者重建 3D 场景。',
+  '按“要不要画回像素”分三条路线，外加规则写死的物理引擎。',
+],2000);
+</script>
+<a href="https://wikieden.github.io/ai-books/" style="position:fixed;right:12px;bottom:12px;z-index:99;padding:4px 10px;border-radius:14px;background:rgba(127,127,127,.18);color:inherit;font:13px/1.6 system-ui,sans-serif;text-decoration:none">← 全部讲义书</a>
+</body></html>

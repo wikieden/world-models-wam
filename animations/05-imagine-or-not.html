@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>推理时还要想象吗</title><link rel="stylesheet" href="anim.css"></head>
+<body><main>
+<h1>第 5 章 · 推理时还要想象吗</h1>
+<p class="sub">配套讲义：<a href="../lessons/05-imagine-or-not.html">第 5 章 · 推理时还要想象吗：训练时想象，推理时不想象</a>。Fast-WAM 的对照实验：训练时有没有视频、推理时有没有视频，四种组合比一比。结论来自论文摘要，只画定性关系。</p>
+<div class="panel"><svg id="sv" viewBox="0 0 720 450"></svg></div>
+<p id="cap" style="min-height:3.2em;margin:8px 4px"></p>
+<div class="row"><button id="play">▶ 播放</button><button id="step">→ 单步</button><button id="reset">↺ 重来</button></div>
+<p class="note">看点：决定成绩的是训练时有没有学“世界怎么变”，不是推理时有没有把未来画出来。</p>
+</main>
+<script src="anim.js"></script>
+<script>
+function net(g,x,y,trainV,inferV,col){
+  box(g,x,y+40,90,40,'观测+指令','var(--line)',{fs:12});arrow(g,x+92,y+60,x+118,y+60);
+  box(g,x+120,y+30,100,60,'共享主干','var(--accent)');
+  arrow(g,x+222,y+48,x+250,y+30,inferV?'var(--muted)':'var(--line)',{dash:inferV?'none':'4 4'});
+  box(g,x+252,y+8,96,36,trainV?(inferV?'生成未来视频':'视频分支（跳过）'):'无视频分支',trainV?'var(--teal)':'var(--line)',{dash:inferV?'none':'5 4',fs:12,op:inferV?1:.6});
+  arrow(g,x+222,y+72,x+250,y+90,'var(--warm)');box(g,x+252,y+74,96,36,'动作','var(--warm)',{fs:12});
+}
+const R=[
+ {y:10,t:'A 训练有视频 · 推理有视频',tv:1,iv:1,res:'成绩好，但慢',c:'var(--teal)'},
+ {y:130,t:'B 训练有视频 · 推理无视频',tv:1,iv:0,res:'Fast-WAM：和 A 接近，约 190 ms',c:'var(--good)'},
+ {y:250,t:'C 训练无视频 · 推理无视频',tv:0,iv:0,res:'成绩明显下降',c:'var(--bad)'},
+];
+R.forEach((r,i)=>{const g=P(i+1);el('rect',{x:4,y:r.y,width:712,height:114,rx:10,fill:'var(--card)'},g);label(g,r.t,16,r.y+22,{b:1});net(g,16,r.y+4,r.tv,r.iv);
+  const o=P(4);label(o,r.res,600,r.y+66,{a:'middle',b:1,c:r.c})});
+const g5=P(5);el('rect',{x:4,y:372,width:712,height:70,rx:10,fill:'var(--accent-bg)',stroke:'var(--accent)'},g5);
+label(g5,'HWAM（人形）同一思路：训练时三条路一起练',16,396,{b:1,c:'var(--accent)'});
+label(g5,'policy（状态+动作）· FDM 预测未来画面 · IDM 从画面反推轨迹 → 部署只走 policy 路',16,424,{fs:13});
+runSteps([
+  'P3 的 WAM 推理时要生成未来视频，很慢。Fast-WAM 问：推理时不画未来，行不行？',
+  'A：训练和推理都生成视频，就是第 4 章的 DreamZero 式做法。',
+  'B：训练时视频和动作一起练，推理时跳过视频分支，一次前向直接出动作。',
+  'C：对照组，训练时就不要视频，只练动作。',
+  '摘要报告的结论：B 和 A 成绩接近；C 掉得多。好处来自<b>训练时</b>学视频，不是推理时画出来。',
+  'HWAM 把这个思路用到人形机器人上：训练三条路，部署只留 policy。',
+],2000);
+</script>
+<a href="https://wikieden.github.io/ai-books/" style="position:fixed;right:12px;bottom:12px;z-index:99;padding:4px 10px;border-radius:14px;background:rgba(127,127,127,.18);color:inherit;font:13px/1.6 system-ui,sans-serif;text-decoration:none">← 全部讲义书</a>
+</body></html>

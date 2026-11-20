@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>第 9 章 · 隐动作：用无标签视频的桥 · 世界模型与 WAM 流派</title>
+<style>
+:root{--bg:#fbfbfa;--fg:#1f2328;--mute:#5d6470;--line:#e3e5e8;--card:#fff;--acc:#2f6fdf;--code:#f2f3f5;--quote:#f4f6fa}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15181d;--fg:#e4e7ec;--mute:#9aa3b2;--line:#2c323b;--card:#1c2026;--acc:#7aa7ff;--code:#22272f;--quote:#1b2029}}
+:root[data-theme="dark"]{--bg:#15181d;--fg:#e4e7ec;--mute:#9aa3b2;--line:#2c323b;--card:#1c2026;--acc:#7aa7ff;--code:#22272f;--quote:#1b2029}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.75 -apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Helvetica Neue",sans-serif}
+a{color:var(--acc)}
+header.top{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+header.top .in{max-width:860px;margin:0 auto;padding:10px 16px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;font-size:14px}
+header.top .brand{font-weight:600;color:var(--fg);text-decoration:none;margin-right:auto}
+header.top a{text-decoration:none}
+main{max-width:860px;margin:0 auto;padding:24px 16px 72px;overflow-wrap:anywhere}
+h1{font-size:28px;line-height:1.35;margin:8px 0 16px} h2{font-size:22px;margin:40px 0 12px;padding-top:8px;border-top:1px solid var(--line)} h3{font-size:18px;margin:28px 0 8px}
+img{max-width:100%;height:auto;border-radius:8px;border:1px solid var(--line);background:#fff}
+blockquote{margin:16px 0;padding:10px 16px;background:var(--quote);border-left:3px solid var(--acc);border-radius:4px;color:var(--mute)}
+blockquote p{margin:4px 0}
+code{background:var(--code);padding:1px 5px;border-radius:4px;font-size:.9em}
+pre{background:var(--code);padding:12px 14px;border-radius:8px;overflow-x:auto} pre code{padding:0;background:none}
+table{border-collapse:collapse;display:block;overflow-x:auto;max-width:100%;margin:12px 0;font-size:15px}
+th,td{border:1px solid var(--line);padding:6px 10px;vertical-align:top} th{background:var(--code)}
+details{border:1px solid var(--line);border-radius:8px;padding:6px 12px;margin:8px 0;background:var(--card)}
+details[open]{padding-bottom:10px} summary{cursor:pointer;color:var(--acc);font-weight:500}
+mjx-container{overflow-x:auto;overflow-y:hidden;max-width:100%}
+.btn{display:inline-block;margin:4px 8px 4px 0;padding:6px 14px;border:1px solid var(--acc);border-radius:999px;text-decoration:none;font-size:14px}
+.pager{display:flex;justify-content:space-between;gap:12px;margin-top:48px;padding-top:16px;border-top:1px solid var(--line);font-size:15px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin:16px 0}
+.card{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;color:inherit;text-decoration:none}
+.card:hover{border-color:var(--acc)} .card img{border:0;border-bottom:1px solid var(--line);border-radius:0;aspect-ratio:16/10;object-fit:contain;width:100%}
+.card .no{color:var(--mute);font-size:13px;padding:8px 12px 0} .card .t{padding:0 12px 12px;font-weight:500;line-height:1.5}
+.lead{font-size:17px;color:var(--mute)}
+footer{max-width:860px;margin:0 auto;padding:0 16px 40px;color:var(--mute);font-size:13px}
+</style>
+<script>window.MathJax={tex:{inlineMath:[["\\(","\\)"]],displayMath:[["\\[","\\]"],["$$","$$"]],processEscapes:true,processEnvironments:true}};</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
+</head><body>
+<header class="top"><div class="in">
+<a class="brand" href="../index.html">世界模型与 WAM 流派</a>
+<a href="../lessons/index.html">讲义目录</a>
+<a href="../animations/index.html">动画</a>
+<a href="../review.html">复习卡片</a>
+<a href="../lessons/appendix-glossary.html">缩写表</a>
+<a href="https://wikieden.github.io/ai-books/">← 全部讲义书</a>
+</div></header>
+<main>
+<h1 id="9">第 9 章 · 隐动作：用无标签视频的桥</h1><p><a class="btn" href="../animations/09-latent-action.html">▶ 打开本章可交互动画</a></p>
+<blockquote>
+<p>本章回答：没有动作标签的视频，怎么帮 policy 学动作？隐动作模型（LAM）是怎么从前后两帧里"挤"出动作的？它和第 2 章"配置 4 只算视频 loss"的用法有什么区别？<br />
+讲解日期：2026-11-20 · 上一章：<a href="../lessons/08-coupling-axis.html">第 8 章 耦合强度这条轴</a> · 下一章：<a href="../lessons/10-five-schools.html">第 10 章 世界模型五派</a><br />
+对应原文：调研报告 §3"桥：隐动作预训练"、§2 W4 第 3 条（Genie 1 的 LAM）；细节接 nvidia-cosmos3 讲义 路线第 7–8 步<br />
+本章缩写：LAM = Latent Action Model（隐 / 动作 / 模型）；LAPA = Latent Action Pretraining from Videos（从视频做隐动作预训练）；LaWAM = Latent-action World Action Model（隐动作 / 世界动作模型）；LaWM = Latent World Model（隐 / 世界模型）；VQ = Vector Quantization（向量 / 量化，把连续向量换成码本里最近的一个）；VLM = Vision-Language Model（视觉 / 语言 / 模型）；IDM = Inverse Dynamics Model（逆 / 动力学 / 模型）。全部缩写见 <a href="../lessons/appendix-glossary.html">附录 · 缩写与术语表</a></p>
+</blockquote>
+<h2 id="_1">讲解</h2>
+<h3 id="2026-11-20">第一步：问题是什么（2026-11-20）</h3>
+<p>带动作标签的机器人数据只有几千到几万小时；人类视频有上百万小时，但<strong>没有动作标签</strong>：视频里看得到人把杯子拿起来，却没有"每个关节转了多少度"。</p>
+<p>第 2 章给过一种用法：把无动作视频当"纯视频预测"来练（配置 4）。本章是另一种：<strong>从视频里反推出一个"动作"</strong>，然后让 policy 去学预测它。</p>
+<p><strong>一句话</strong>：视频里有动作的影子，没有动作的数字；隐动作就是那个影子。</p>
+<h3 id="2026-11-20_1">第二步：用"传话游戏"挤出隐动作（2026-11-20）</h3>
+<p><strong>类比：只许发一个表情的传话游戏。</strong> 甲看到两张照片：前一张方块在左，后一张方块在右。乙只看得到前一张。甲只能给乙发<strong>一个表情</strong>（从 8 个里选），乙要据此画出后一张。</p>
+<p>甲没法用一个表情描述整张照片（颜色、桌子、光线），乙那边已经有前一张了。甲最好的策略是用表情说<strong>"变了什么"</strong>："→"（往右推了）。</p>
+<p>隐动作模型（LAM）就是这个游戏：</p>
+<ul>
+<li><strong>encoder</strong>（甲）：看前后两帧 <span class="arithmatex">\((o_t,o_{t+\Delta})\)</span>，输出隐动作 <span class="arithmatex">\(\tilde a\)</span>（读作 a-tilde，a 上面一条波浪线）；</li>
+<li><strong>瓶颈</strong>：<span class="arithmatex">\(\tilde a\)</span> 很窄，比如 VQ 成 8 个离散码中的一个，只有 <span class="arithmatex">\(\log_2 8=3\)</span> bit；</li>
+<li><strong>decoder</strong>（乙）：只拿 <span class="arithmatex">\((o_t,\tilde a)\)</span>，要重建 <span class="arithmatex">\(o_{t+\Delta}\)</span>；</li>
+<li><strong>loss</strong>：重建的画面和真实的 <span class="arithmatex">\(o_{t+\Delta}\)</span> 差多少。</li>
+</ul>
+<p>瓶颈窄，<span class="arithmatex">\(\tilde a\)</span> 就被迫只编码"发生了什么变化"。LAM 本质上是一个 VQ 化的逆动力学（IDM），只是不需要真实动作当标签。</p>
+<p><strong>一句话</strong>：一个表情装不下整张图，只装得下"变了什么"。</p>
+<h3 id="genie-1-lawam-2026-11-20">第三步：Genie 1 和 LaWAM 的具体配置（2026-11-20）</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Genie 1（W4，世界模型）</th>
+<th>LaWAM（WAM 的桥）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>数据</td>
+<td>约 3 万小时无标签 2D 平台游戏视频</td>
+<td>机器人片段 + 人类片段</td>
+</tr>
+<tr>
+<td>隐动作</td>
+<td>8 个离散隐动作</td>
+<td>连续或离散</td>
+</tr>
+<tr>
+<td>间隔 Δ</td>
+<td>相邻帧</td>
+<td>机器人 1.6 s，人类 0.4 s</td>
+</tr>
+<tr>
+<td>网络</td>
+<td>—</td>
+<td>encoder 24 层、decoder 12 层</td>
+</tr>
+<tr>
+<td>用来干嘛</td>
+<td>让人用 8 个"键"玩生成的游戏</td>
+<td>给 policy 当预训练目标</td>
+</tr>
+</tbody>
+</table>
+<p>Genie 1 学出的 8 个隐动作，人一看就大致对应"左、右、跳"之类的操作，所以可以拿来玩。</p>
+<p>LaWAM 里还有一个副产品：LAM 的 decoder 只靠 <span class="arithmatex">\((o_t,\tilde a)\)</span> 就能预测 <span class="arithmatex">\(o_{t+\Delta}\)</span>，<strong>它本身就是一个世界模型</strong>（LaWM，隐世界模型），只是动作是隐动作。</p>
+<p><strong>一句话</strong>：同一个 LAM，Genie 用它当游戏手柄，LaWAM 用它当 policy 的老师。</p>
+<h3 id="2026-11-20_2">第四步：三个阶段接到真实动作（2026-11-20）</h3>
+<p>调研报告 §3"桥"的共同骨架（LAPA、UniVLA、LaWAM）：</p>
+<ol>
+<li><strong>学隐动作</strong>：在海量无标签视频上训 LAM，之后给每段视频都打上 <span class="arithmatex">\(\tilde a\)</span>；</li>
+<li><strong>policy 预训练</strong>：一个 VLM（LaWAM 用 Qwen3-VL）看观测和指令，预测 <span class="arithmatex">\(\tilde a\)</span>。这一步能吃<strong>全部</strong>人类视频；</li>
+<li><strong>后训练</strong>：用少量真实动作数据，学从 <span class="arithmatex">\(\tilde a\)</span> 到真实关节动作的映射，或直接微调动作头。</li>
+</ol>
+<p><strong>推理</strong>：policy 出 <span class="arithmatex">\(\tilde a\)</span> → 动作头解码成真实动作。<strong>不生成视频</strong>，速度和 VLA 一样。</p>
+<p><strong>为什么算 WAM 的桥</strong>：<span class="arithmatex">\(\tilde a\)</span> 就是"世界将怎么变"的压缩描述。policy 学的是"预测世界变化"，不是"预测关节角"。在第 8 章的轴上，它推理时完全不想象，靠的是训练目标里的"世界变化"。</p>
+<p><strong>一句话</strong>：先学看懂变化，再学让变化发生，最后学用自己的手。</p>
+<h3 id="2-2026-11-20">第五步：和第 2 章的用法比，以及难点（2026-11-20）</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>第 2 章配置 4（P3）</th>
+<th>隐动作桥</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>无标签视频怎么用</td>
+<td>当纯视频预测题，练生成器</td>
+<td>先抽隐动作，再当 policy 的预测目标</td>
+</tr>
+<tr>
+<td>推理时生成视频吗</td>
+<td>是（P3 本身要去噪视频）</td>
+<td>否</td>
+</tr>
+<tr>
+<td>推理速度</td>
+<td>慢（GB200 级）</td>
+<td>和 VLA 一样</td>
+</tr>
+<tr>
+<td>对视频的利用</td>
+<td>整个生成器都在学，最充分</td>
+<td>只通过 <span class="arithmatex">\(\tilde a\)</span> 这条窄缝</td>
+</tr>
+</tbody>
+</table>
+<p>难点（调研报告 §7）：</p>
+<ul>
+<li><strong>对齐难</strong>：人手的"往右推"和机械臂的"往右推"是同一个 <span class="arithmatex">\(\tilde a\)</span> 吗？不一定；</li>
+<li><strong>有歧义</strong>：画面变了可能是因为动作，也可能是相机动了、别人碰了一下，<span class="arithmatex">\(\tilde a\)</span> 会把这些混进去；</li>
+<li><strong>间隔 Δ 怎么选</strong>：太短看不出变化，太长一个 <span class="arithmatex">\(\tilde a\)</span> 要装好几步动作。LaWAM 对人和机器人用不同的 Δ（0.4 s vs 1.6 s），就是在对齐两者的"动作速度"。</li>
+</ul>
+<p><strong>一句话</strong>：便宜好部署，代价是视频只能挤过一条窄缝，还可能挤进杂质。</p>
+<h3 id="_2">动画演示：一个表情装下"变了什么"</h3>
+<p><img alt="隐动作" src="../animations/09-latent-action.gif" /></p>
+<p>可交互版：<a href="../animations/09-latent-action.html">animations/09-latent-action.html</a>（打开自动循环播放；点任一按钮切成手动）</p>
+<p><strong>怎么看</strong>：</p>
+<ol>
+<li>上半部分：两帧 → encoder → 紫色窄瓶颈 ã → decoder（虚线表示它只拿到 o_t）→ 重建（第二步）。</li>
+<li>下半部分：三个阶段（第四步）。</li>
+<li>底部：推理不生成视频；LaWAM 和 Genie 1 的配置（第三、四步）。</li>
+</ol>
+<h2 id="_3">练习与作答记录</h2>
+<p><strong>题 1</strong>（第二步）：如果把瓶颈放得很宽（比如 <span class="arithmatex">\(\tilde a\)</span> 是一个 1024 维的连续向量，不做 VQ），decoder 可能学会什么"偷懒"的办法？隐动作还有用吗？</p>
+<p><strong>作答</strong>：（待作答）</p>
+<p><strong>题 2</strong>（第五步）：一段人类视频里，人往右推杯子的同时，相机也在往左转。LAM 学出的 <span class="arithmatex">\(\tilde a\)</span> 会出什么问题？</p>
+<p><strong>作答</strong>：（待作答）</p>
+<p><strong>题 3</strong>（第四步）：一台只有 Orin 级算力的移动机器人，想借人类视频提升泛化。隐动作桥和 P3 选哪个？各放弃了什么？</p>
+<p><strong>作答</strong>：（待作答）</p>
+<h2 id="_4">口诀</h2>
+<blockquote>
+<p>只许发一个表情，只够说变了什么；<br />
+甲看两帧乙看一帧，窄缝里挤出隐动作；<br />
+先懂变化再让它变，最后换成自己的手；<br />
+部署和 VLA 一样快，视频只过一条缝。</p>
+</blockquote>
+<h2 id="_5">本章复习卡片</h2>
+<p>C10 隐动作模型（LAM）怎么从无标签视频里学出动作，三个阶段是什么。练习做完后，按答错、卡住的地方补上。</p>
+<h2 id="_6">附录 · 延伸阅读</h2>
+<h3 id="_7">推荐阅读</h3>
+<table>
+<thead>
+<tr>
+<th>读什么</th>
+<th>读哪里</th>
+<th>读它为了什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>★ 调研报告</td>
+<td>§3"桥"、§2 W4 第 3 条</td>
+<td>本章出处</td>
+</tr>
+<tr>
+<td>★ nvidia-cosmos3 讲义</td>
+<td>路线第 7–8 步</td>
+<td>LaWAM 的复现细节</td>
+</tr>
+<tr>
+<td>Genie（Bruce et al. 2024）</td>
+<td><code>vla-deep-dive/materials/papers/</code> 里的 LAM 一节</td>
+<td>8 个离散隐动作的原始做法</td>
+</tr>
+<tr>
+<td>LAPA、UniVLA</td>
+<td><code>vla-deep-dive/materials/papers/</code></td>
+<td>隐动作做 VLA 预训练</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_8">数学原理</h3>
+<ul>
+<li><strong>信息瓶颈</strong>：<span class="arithmatex">\(K\)</span> 个离散码最多携带 <span class="arithmatex">\(\log_2K\)</span> bit 信息。8 个码 = 3 bit，装不下一张图，只能装"变化"。</li>
+<li><strong>VQ</strong>：encoder 输出一个连续向量，替换成码本里离它最近的那个码；训练时用 straight-through 估计让梯度穿过这一步。</li>
+</ul>
+<h3 id="_9">公式清单</h3>
+<table>
+<thead>
+<tr>
+<th>公式</th>
+<th>意思</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(\tilde a=\mathrm{Enc}(o_t,o_{t+\Delta})\)</span></td>
+<td>隐动作</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\hat o_{t+\Delta}=\mathrm{Dec}(o_t,\tilde a)\)</span></td>
+<td>只靠第一帧和隐动作重建</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\mathcal{L}=\|\hat o_{t+\Delta}-o_{t+\Delta}\|^2\)</span>（+ VQ 项）</td>
+<td>重建 loss</td>
+</tr>
+<tr>
+<td>信息量 <span class="arithmatex">\(\le\log_2K\)</span> bit</td>
+<td>离散瓶颈的上限</td>
+</tr>
+</tbody>
+</table>
+<p>本章无代码对照。</p><nav class="pager"><a href="08-coupling-axis.html">← 第 8 章 · 耦合强度这条轴：P1 → P2 → P3 → P4 → 纯 VLA</a><a href="10-five-schools.html">第 10 章 · 世界模型五派：在哪个空间预测 →</a></nav>
+</main>
+<footer>来自个人学习仓库的对话讲义，含练习作答记录。源码：<a href="https://github.com/wikieden/world-models-wam">github.com/wikieden/world-models-wam</a>。更多讲义书：<a href="https://wikieden.github.io/ai-books/">Physical AI 0-1-♾️（合集）</a></footer>
+</body></html>

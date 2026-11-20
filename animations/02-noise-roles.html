@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>加噪还是不加噪：一个网络四种角色</title><link rel="stylesheet" href="anim.css"></head>
+<body><main>
+<h1>第 2 章 · 加噪还是不加噪：一个网络四种角色</h1>
+<p class="sub">配套讲义：<a href="../lessons/02-noise-roles.html">第 2 章 · 加噪还是不加噪：一个网络当四种角色</a>。每一行是同一个网络的一种用法：实心格是干净的（已知），带噪点的格是加了噪声的（要它生成）。</p>
+<div class="panel"><svg id="sv" viewBox="0 0 720 430"></svg></div>
+<p id="cap" style="min-height:3.2em;margin:8px 4px"></p>
+<div class="row"><button id="play">▶ 播放</button><button id="step">→ 单步</button><button id="reset">↺ 重来</button></div>
+<p class="note">看点：角色不是由网络结构决定的，而是由“哪些格子加噪”决定的。加噪的格子就是题目里的空，干净的格子就是题目给的条件。</p>
+</main>
+<script src="anim.js"></script>
+<script>
+seed(7);
+const COLS=[{x:150,n:3,t:'上下文 c',s:'历史帧 · 指令 · 本体状态'},{x:270,n:6,t:'未来视频 x^v',s:''},{x:470,n:4,t:'动作 x^a',s:''}];
+const ROWS=[
+  {k:[0,1,0],role:'世界模型（forward）',f:'p(Y | h, a)',col:'var(--teal)'},
+  {k:[0,0,1],role:'逆动力学 IDM',f:'p(a | o_t, o_t+1)',col:'var(--amber)'},
+  {k:[0,1,1],role:'policy / WAM',f:'p(Y, A | h)',col:'var(--purple)'},
+  {k:[0,1,2],role:'纯视频预测',f:'p(Y | h)',col:'var(--accent)'},
+];
+const head=P(0);
+COLS.forEach(c=>{label(head,c.t,c.x,30,{b:1});});
+label(head,'得到的角色',590,30,{b:1});
+label(head,'实心 = 干净（给定）   带噪点 = 加噪（要生成）   空 = 缺失',150,52,{m:1});
+function tok(g,x,y,kind,col){
+  if(kind===0){el('rect',{x,y,width:22,height:22,rx:4,fill:col,opacity:.85},g);return}
+  if(kind===2){el('rect',{x,y,width:22,height:22,rx:4,fill:'none',stroke:'var(--line)','stroke-dasharray':'3 3'},g);return}
+  el('rect',{x,y,width:22,height:22,rx:4,fill:'var(--bg)',stroke:col,'stroke-width':1.2},g);
+  for(let i=0;i<7;i++)el('circle',{cx:x+3+rnd()*16,cy:y+3+rnd()*16,r:1.6,fill:col},g);
+}
+ROWS.forEach((r,i)=>{
+  const y=76+i*78,g=P(i+1);
+  el('rect',{x:4,y:y-8,width:712,height:64,rx:10,fill:'var(--card)'},g);
+  label(g,'配置 '+(i+1),16,y+20,{b:1,c:r.col});
+  COLS.forEach((c,j)=>{for(let t=0;t<c.n;t++)tok(g,c.x+t*28,y+6,j===0?0:r.k[j],j===0?'var(--muted)':r.col)});
+  label(g,r.role,590,y+16,{b:1,c:r.col});label(g,r.f,590,y+36,{m:1});
+});
+const net=P(5);
+el('rect',{x:140,y:392,width:430,height:30,rx:8,fill:'var(--accent-bg)',stroke:'var(--accent)'},net);
+label(net,'四行用的是同一套参数 θ：只换"谁加噪"',355,412,{a:'middle',c:'var(--accent)'});
+runSteps([
+  '联合生成（P3）的网络一次吃进三类 token：上下文、未来视频、动作。每一类都可以单独决定加不加噪。',
+  '配置 1：视频加噪、动作干净。动作是给定的，要它画出未来 → 它在当<b>世界模型</b>。',
+  '配置 2：视频干净、动作加噪。前后画面都给了，要它补出中间的动作 → 它在当<b>逆动力学（IDM）</b>。',
+  '配置 3：两者都加噪。只给上下文，要它同时生成未来和动作 → 它在当 <b>policy</b>，也就是 WAM。',
+  '配置 4：没有动作（人类视频就是这样），只在视频上算 loss → <b>纯视频预测</b>。这让模型能吃没有动作标签的视频。',
+  '四种角色是同一个网络、同一套参数。训练时随机抽配置，部署时选配置 3 当 policy 用。',
+],1900);
+</script>
+<a href="https://wikieden.github.io/ai-books/" style="position:fixed;right:12px;bottom:12px;z-index:99;padding:4px 10px;border-radius:14px;background:rgba(127,127,127,.18);color:inherit;font:13px/1.6 system-ui,sans-serif;text-decoration:none">← 全部讲义书</a>
+</body></html>

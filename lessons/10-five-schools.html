@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>第 10 章 · 世界模型五派：在哪个空间预测 · 世界模型与 WAM 流派</title>
+<style>
+:root{--bg:#fbfbfa;--fg:#1f2328;--mute:#5d6470;--line:#e3e5e8;--card:#fff;--acc:#2f6fdf;--code:#f2f3f5;--quote:#f4f6fa}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15181d;--fg:#e4e7ec;--mute:#9aa3b2;--line:#2c323b;--card:#1c2026;--acc:#7aa7ff;--code:#22272f;--quote:#1b2029}}
+:root[data-theme="dark"]{--bg:#15181d;--fg:#e4e7ec;--mute:#9aa3b2;--line:#2c323b;--card:#1c2026;--acc:#7aa7ff;--code:#22272f;--quote:#1b2029}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.75 -apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Helvetica Neue",sans-serif}
+a{color:var(--acc)}
+header.top{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+header.top .in{max-width:860px;margin:0 auto;padding:10px 16px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;font-size:14px}
+header.top .brand{font-weight:600;color:var(--fg);text-decoration:none;margin-right:auto}
+header.top a{text-decoration:none}
+main{max-width:860px;margin:0 auto;padding:24px 16px 72px;overflow-wrap:anywhere}
+h1{font-size:28px;line-height:1.35;margin:8px 0 16px} h2{font-size:22px;margin:40px 0 12px;padding-top:8px;border-top:1px solid var(--line)} h3{font-size:18px;margin:28px 0 8px}
+img{max-width:100%;height:auto;border-radius:8px;border:1px solid var(--line);background:#fff}
+blockquote{margin:16px 0;padding:10px 16px;background:var(--quote);border-left:3px solid var(--acc);border-radius:4px;color:var(--mute)}
+blockquote p{margin:4px 0}
+code{background:var(--code);padding:1px 5px;border-radius:4px;font-size:.9em}
+pre{background:var(--code);padding:12px 14px;border-radius:8px;overflow-x:auto} pre code{padding:0;background:none}
+table{border-collapse:collapse;display:block;overflow-x:auto;max-width:100%;margin:12px 0;font-size:15px}
+th,td{border:1px solid var(--line);padding:6px 10px;vertical-align:top} th{background:var(--code)}
+details{border:1px solid var(--line);border-radius:8px;padding:6px 12px;margin:8px 0;background:var(--card)}
+details[open]{padding-bottom:10px} summary{cursor:pointer;color:var(--acc);font-weight:500}
+mjx-container{overflow-x:auto;overflow-y:hidden;max-width:100%}
+.btn{display:inline-block;margin:4px 8px 4px 0;padding:6px 14px;border:1px solid var(--acc);border-radius:999px;text-decoration:none;font-size:14px}
+.pager{display:flex;justify-content:space-between;gap:12px;margin-top:48px;padding-top:16px;border-top:1px solid var(--line);font-size:15px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin:16px 0}
+.card{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;color:inherit;text-decoration:none}
+.card:hover{border-color:var(--acc)} .card img{border:0;border-bottom:1px solid var(--line);border-radius:0;aspect-ratio:16/10;object-fit:contain;width:100%}
+.card .no{color:var(--mute);font-size:13px;padding:8px 12px 0} .card .t{padding:0 12px 12px;font-weight:500;line-height:1.5}
+.lead{font-size:17px;color:var(--mute)}
+footer{max-width:860px;margin:0 auto;padding:0 16px 40px;color:var(--mute);font-size:13px}
+</style>
+<script>window.MathJax={tex:{inlineMath:[["\\(","\\)"]],displayMath:[["\\[","\\]"],["$$","$$"]],processEscapes:true,processEnvironments:true}};</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
+</head><body>
+<header class="top"><div class="in">
+<a class="brand" href="../index.html">世界模型与 WAM 流派</a>
+<a href="../lessons/index.html">讲义目录</a>
+<a href="../animations/index.html">动画</a>
+<a href="../review.html">复习卡片</a>
+<a href="../lessons/appendix-glossary.html">缩写表</a>
+<a href="https://wikieden.github.io/ai-books/">← 全部讲义书</a>
+</div></header>
+<main>
+<h1 id="10">第 10 章 · 世界模型五派：在哪个空间预测</h1><p><a class="btn" href="../animations/10-five-schools.html">▶ 打开本章可交互动画</a></p>
+<blockquote>
+<p>本章回答：同样是"做了会怎样"，世界模型可以预测成什么样子？五派各自怎么训练、推理时怎么用、强在哪弱在哪？它们为什么越来越像？<br />
+讲解日期：2026-11-20 · 上一章：<a href="../lessons/09-latent-action.html">第 9 章 隐动作</a> · 下一章：<a href="../lessons/11-four-uses.html">第 11 章 推理的四种用法</a><br />
+对应原文：调研报告 §1.1、§2 W1–W5、§4 共性；CIS 6280 第 2 讲 我的笔记<br />
+本章缩写：RSSM = Recurrent State-Space Model（循环 / 状态空间 / 模型）；ELBO = Evidence Lower BOund（证据 / 下界）；KL = Kullback–Leibler divergence（KL 散度，衡量两个分布差多少）；MCTS = Monte Carlo Tree Search（蒙特卡洛 / 树 / 搜索）；MPC = Model Predictive Control（模型 / 预测 / 控制）；CEM = Cross-Entropy Method（交叉熵 / 方法，一种采样优化）；JEPA = Joint-Embedding Predictive Architecture（联合 / 嵌入 / 预测 / 架构）；EMA = Exponential Moving Average（指数 / 滑动 / 平均）；VAE = Variational AutoEncoder（变分 / 自编码器）；NeRF = Neural Radiance Field（神经 / 辐射 / 场）；3DGS = 3D Gaussian Splatting（三维 / 高斯 / 泼溅）；GNN = Graph Neural Network（图 / 神经 / 网络）。全部缩写见 <a href="../lessons/appendix-glossary.html">附录 · 缩写与术语表</a></p>
+</blockquote>
+<h2 id="_1">讲解</h2>
+<h3 id="2026-11-20">第一步：同一个问题，五种答案的形状（2026-11-20）</h3>
+<p><strong>类比：问五个人"明天会怎样"。</strong></p>
+<ul>
+<li>画家给你画一幅明天街景的画（像素，W4）；</li>
+<li>气象员给你几个数：气温 18 度、降水 30%（物理量，W5）；</li>
+<li>棋手只告诉你"明天对你有利还是不利"（价值，W2）；</li>
+<li>速记员在小本上记几个只有他自己看得懂的符号，需要时能还原成画（隐状态，W1）；</li>
+<li>老练的观察者说"会下雨、街上人少"，不画细节（特征，W3）。</li>
+</ul>
+<p>都在预测明天，只是<strong>答案的形状</strong>不一样。世界模型也一样：<span class="arithmatex">\(p(\text{未来}\mid\text{历史},\text{动作})\)</span> 里的"未来"可以是像素、隐状态、特征、任务信号或物理量（调研报告 §1.1）。</p>
+<p><strong>一句话</strong>：五派的区别在"未来"长什么样。</p>
+<h3 id="w1-w2-2026-11-20">第二步：W1 隐状态和 W2 任务信号（2026-11-20）</h3>
+<p><strong>W1 隐状态生成式（Dreamer 一系）</strong>：</p>
+<ul>
+<li>训练：RSSM 有确定性状态 <span class="arithmatex">\(d_t\)</span> 和随机隐状态 <span class="arithmatex">\(z_t\)</span>；loss 是序列 ELBO = 重建观测 + 预测奖励 + KL 项；</li>
+<li>用法：从真实状态出发，在模型里想象约 15 步，用 actor-critic 训练策略，<strong>梯度不碰真实环境</strong>；部署时只跑 actor，便宜；</li>
+<li>Dreamer 4（2025）：放大到视频规模，<strong>只靠离线数据</strong>在 Minecraft 里拿到钻石；</li>
+<li>短板：需要奖励；策略会钻模型错误的空子。</li>
+</ul>
+<p><strong>W2 任务信号 / 价值等价（MuZero 一系）</strong>：</p>
+<ul>
+<li>训练：三个函数，表示 <span class="arithmatex">\(h_\theta\)</span>、动力学 <span class="arithmatex">\(g_\theta\)</span>、预测 <span class="arithmatex">\(f_\theta\)</span>；从真实轨迹展开 <span class="arithmatex">\(K=5\)</span> 步，loss 只有奖励、价值、策略三项，<strong>没有重建项</strong>；</li>
+<li>用法：每一步都在隐空间里做 MCTS（MuZero）或 MPPI 规划（TD-MPC2），<strong>推理时一定要跑世界模型</strong>；</li>
+<li>短板：只服务一个奖励函数，换任务就要重训。</li>
+</ul>
+<p><strong>一句话</strong>：W1 能画回去、在梦里练；W2 只记分数、每步都搜。</p>
+<h3 id="w3-w4-2026-11-20">第三步：W3 特征和 W4 像素（2026-11-20）</h3>
+<p><strong>W3 表征预测（JEPA 一系，V-JEPA 2-AC）</strong>：</p>
+<ul>
+<li>训练两阶段：先在互联网视频上自监督预训练 encoder（在特征空间预测被遮的部分，target encoder 用 EMA 防坍缩）；再<strong>冻结 encoder</strong>，用不到 62 小时的 DROID 机器人视频训约 300M 的动作条件 predictor；loss 是特征空间的 L1，含 teacher forcing 和 rollout 两项；</li>
+<li>用法：给一张目标图像编码成 <span class="arithmatex">\(z_g\)</span>，用 CEM 搜动作序列让预测特征接近 <span class="arithmatex">\(z_g\)</span>，执行第一步后重规划（MPC）；</li>
+<li>结果：两个实验室的 Franka 上零样本抓取放置；每个动作规划约 16 s <em>（二手）</em>；</li>
+<li>短板：目标只能用图像给；规划慢；画不出来，难调试。</li>
+</ul>
+<p><strong>W4 像素 / 视频生成（Genie、GameNGen、Cosmos 一系）</strong>：</p>
+<ul>
+<li>训练：先训 tokenizer（VAE 或 VQ）并冻结；再在 latent 上训动力学模型，条件是历史帧 + 动作；动作可以来自日志，也可以用隐动作（第 9 章）；长 rollout 稳定性是核心难点（条件帧加噪、Diffusion Forcing、Self Forcing）；</li>
+<li>用法：自回归生成帧，少步蒸馏到每帧 1–4 步；Genie 3 做到 720p、24 fps 实时交互；</li>
+<li>短板：最贵；"看着对"不等于"物理对"；不能直接出动作。</li>
+</ul>
+<p><strong>一句话</strong>：W3 只预测"会发生什么"不画出来；W4 把每个像素都画出来。</p>
+<h3 id="w5-2026-11-20">第四步：W5 空间与物理（2026-11-20）</h3>
+<ul>
+<li><strong>静态 3D</strong>：NeRF、3DGS 重建场景，渲染新视角，本身不预测动作后果；</li>
+<li><strong>生成式 3D 世界</strong>：Marble（World Labs），比视频多了"转身回来还在"的保证；</li>
+<li><strong>物理变量</strong>：GraphCast 预测全球天气，GNN 模拟器预测粒子和刚体；</li>
+<li><strong>物理引擎</strong>：MuJoCo、Genesis，规则写死、状态完全可读，是"确定性特例"（CIS 6280 第 3 讲）。</li>
+</ul>
+<p>和学习式模型的关系：物理引擎提供骨架，学习模型补规则外的残差。</p>
+<p><strong>一句话</strong>："世界"不必是像素；规则写死的物理引擎也是世界模型。</p>
+<h3 id="2026-11-20_1">第五步：三条路线和越来越像的底座（2026-11-20）</h3>
+<p>按"要不要画回像素"可以分成三条路线（调研报告 §1.1 末尾，对应第 1、2 讲的线索）：</p>
+<table>
+<thead>
+<tr>
+<th>路线</th>
+<th>流派</th>
+<th>代价</th>
+<th>换来什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>重建</td>
+<td>W1、W4</td>
+<td>贵（要能还原像素）</td>
+<td>看得见、能当数据生成器</td>
+</tr>
+<tr>
+<td>不重建</td>
+<td>W3</td>
+<td>省</td>
+<td>容量全花在"会发生什么"上</td>
+</tr>
+<tr>
+<td>只学决策需要的</td>
+<td>W2</td>
+<td>最省</td>
+<td>最紧凑，但只服务一个目标</td>
+</tr>
+</tbody>
+</table>
+<p>另外 W5 物理引擎是"规则写死"的特例。</p>
+<p><strong>越来越像</strong>（调研报告 §4）：</p>
+<ol>
+<li>都是"先压缩（tokenizer / encoder），再在压缩空间里预测"；</li>
+<li>生成器收敛到"latent 上的 flow matching / diffusion transformer"：Dreamer 4、GameNGen、Cosmos、DreamZero 都是这一类；</li>
+<li>共同的敌人是复合误差（第 4 章第四步）；</li>
+<li>共同的风险是策略钻模型的空子：模型以为成功、现实失败。</li>
+</ol>
+<p>Dreamer 4 本质上是一个可交互的视频生成模型，同时又是用来训策略的世界模型，W1 和 W4 的边界在消失。</p>
+<p><strong>一句话</strong>：画不画回像素分出三条路，底座却越来越统一。</p>
+<h3 id="_2">动画演示：同一个问题，五种答案</h3>
+<p><img alt="世界模型五派" src="../animations/10-five-schools.gif" /></p>
+<p>可交互版：<a href="../animations/10-five-schools.html">animations/10-five-schools.html</a>（打开自动循环播放；点任一按钮切成手动）</p>
+<p><strong>怎么看</strong>：</p>
+<ol>
+<li>顶部是同一个问题："往右推，会怎样？"</li>
+<li>五张卡片依次出现，每张的小图是那一派"预测出来的东西"的样子（第一到第四步）。</li>
+<li>底部蓝框：三条路线 + 共同底座（第五步）。</li>
+</ol>
+<h2 id="_3">练习与作答记录</h2>
+<p><strong>题 1</strong>（第二、三步）：W1 Dreamer 部署时不跑世界模型，W2 MuZero 和 W3 V-JEPA 2-AC 部署时每一步都要跑。这对推理速度意味着什么？哪类更适合 50 Hz 的灵巧操作？</p>
+<p><strong>作答</strong>：（待作答）</p>
+<p><strong>题 2</strong>（第三步）：你想用世界模型给机器人策略<strong>造合成训练数据</strong>。五派里选哪派？为什么 W3 不行？</p>
+<p><strong>作答</strong>：（待作答）</p>
+<p><strong>题 3</strong>（第五步，拓展）：第 1 章题 3 问过"只有一个很准的世界模型、没有 policy，机器人能干活吗"。学完五派，说说 W2 和 W3 各自是怎么补上"缺的那一块"的。</p>
+<p><strong>作答</strong>：（待作答）</p>
+<h2 id="_4">口诀</h2>
+<blockquote>
+<p>画家画像素，气象员报物理，棋手只说好坏；<br />
+速记员记隐状态能还原，观察者说特征不画细节；<br />
+重建贵而看得见，不重建省而画不出；<br />
+先压缩再预测，五派底座越来越像。</p>
+</blockquote>
+<h2 id="_5">本章复习卡片</h2>
+<p>C11 世界模型五派各预测什么、推理时怎么用。练习做完后，按答错、卡住的地方补上。</p>
+<h2 id="_6">附录 · 延伸阅读</h2>
+<h3 id="_7">推荐阅读</h3>
+<table>
+<thead>
+<tr>
+<th>读什么</th>
+<th>读哪里</th>
+<th>读它为了什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>★ 调研报告</td>
+<td>§2 W1–W5、§4</td>
+<td>本章出处，每派的训练细节</td>
+</tr>
+<tr>
+<td>★ CIS 6280 第 2 讲</td>
+<td>我的笔记 §5 ELBO 推导</td>
+<td>W1 的 loss</td>
+</tr>
+<tr>
+<td>Ha &amp; Schmidhuber, <em>World Models</em>（2018）</td>
+<td><code>materials/readings/text/essay-ha-schmidhuber-world-models.md</code></td>
+<td>W1 的起点</td>
+</tr>
+<tr>
+<td>JEPA 讲读</td>
+<td><code>materials/readings/text/lec06-jepa-deep-dive.md</code></td>
+<td>W3 的原理</td>
+</tr>
+<tr>
+<td>World Labs 的分类</td>
+<td><code>materials/readings/text/essay-worldlabs-taxonomy.md</code></td>
+<td>W5 生成式 3D</td>
+</tr>
+<tr>
+<td>Dreamer 4（arXiv 2509.24527）、V-JEPA 2（arXiv 2506.09985）</td>
+<td>摘要和方法</td>
+<td>W1、W3 的最新代表</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_8">数学原理</h3>
+<ul>
+<li><strong>ELBO</strong>：<span class="arithmatex">\(\log p(o)\ge\mathbb{E}_q[\log p(o\mid z)]-\mathrm{KL}(q\|p)\)</span>，重建项 + KL 项，W1 用它的序列版本。</li>
+<li><strong>价值等价</strong>：只要模型预测的奖励和价值对，隐状态不必对应任何真实状态（W2）。</li>
+<li><strong>CEM</strong>：采样一批动作序列 → 打分 → 取最好的一部分重新拟合分布 → 重复（W3 的规划器）。</li>
+</ul>
+<h3 id="_9">公式清单</h3>
+<table>
+<thead>
+<tr>
+<th>公式</th>
+<th>派别</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(\mathcal{L}=\sum_t[-\log p(o_t\mid z_t,d_t)-\log p(r_t\mid z_t,d_t)+\beta\,\mathrm{KL}]\)</span></td>
+<td>W1 Dreamer</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\mathcal{L}=\sum_{k=0}^{K}[\ell^r+\ell^v+\ell^p]\)</span></td>
+<td>W2 MuZero</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\mathcal{L}=\|P_\phi(z_{\le t},a_{\le t})-z_{t+1}\|_1+\text{rollout 项}\)</span></td>
+<td>W3 V-JEPA 2-AC</td>
+</tr>
+<tr>
+<td>规划目标 <span class="arithmatex">\(\min_a\|\hat z_{t+H}-z_g\|_1\)</span></td>
+<td>W3 推理</td>
+</tr>
+</tbody>
+</table>
+<p>本章无代码对照。</p><nav class="pager"><a href="09-latent-action.html">← 第 9 章 · 隐动作：用无标签视频的桥</a><a href="11-four-uses.html">第 11 章 · 推理的四种用法：离线想象、在线规划、直接出动作、交互模拟 →</a></nav>
+</main>
+<footer>来自个人学习仓库的对话讲义，含练习作答记录。源码：<a href="https://github.com/wikieden/world-models-wam">github.com/wikieden/world-models-wam</a>。更多讲义书：<a href="https://wikieden.github.io/ai-books/">Physical AI 0-1-♾️（合集）</a></footer>
+</body></html>
