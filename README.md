@@ -49,6 +49,17 @@
 | [13](https://wikieden.github.io/world-models-wam/lessons/13-choose-and-frontier.html) | 选型与前沿 | 五个问题依次砍，前沿方向和开放问题 | [▶](https://wikieden.github.io/world-models-wam/animations/13-choose-and-frontier.html) | C14 | 练习待答 |
 | [附录](https://wikieden.github.io/world-models-wam/lessons/appendix-glossary.html) | 缩写与术语表 | 全书的缩写和术语 | — | — | 已完成 |
 
+## 联系与合作
+
+欢迎来信：<wikieden@gmail.com>。可以合作的方向：
+
+- 讲义勘误与建议
+- 课程 / 企业内训
+- 内容合作与转载授权
+- 赞助本系列持续更新
+
+赞助请发邮件联系。
+
 ---
 
 本仓库由私有学习仓库里的脚本 `tools/publish-transformer/build.py` 自动生成，内容摘自讲义目录，不要直接修改这里的文件。
